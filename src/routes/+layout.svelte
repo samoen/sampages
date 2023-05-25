@@ -10,7 +10,9 @@
     <a href="{base}/">Home</a>
     <a href="{base}/about">About</a>
     <div class="spacer"></div>
-    <Search />
+    <button>
+        <Search />
+    </button>
 </div>
 
 <slot />
@@ -20,9 +22,11 @@
         background-color: aqua;
         position: sticky;
         top: 0px;
-        padding: 1rem;
+        padding: 0rem;
+        padding-left: 1rem;
         display: flex;
         gap: 1rem;
+        align-items:center;
     }
     .spacer {
         flex-grow: 1;
