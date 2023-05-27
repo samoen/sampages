@@ -2,15 +2,24 @@
     import { goto } from "$app/navigation";
     import { base } from "$app/paths";
     import Search from "$lib/icons/Search.svelte";
-    let burgopen = true;
-    let oh:number;
+    let burgopen = false;
+    let oh: number;
+    let barheight:number =0;
+    let sidewidth:number =0;
 </script>
 
 <svelte:head>
     <title>Sam pages</title>
 </svelte:head>
-<div class="barandnav">
-    <div class="topbar">
+
+<!-- <svelte:body ></svelte:body> -->
+<!-- <svelte:window style="--barheight: {barheight}px; --sidewidth:{sidewidth}px"></svelte:window> -->
+
+<div class="top" style="--barheight: {barheight}px; --sidewidth:{sidewidth}px">
+
+
+<div class="barandnav" bind:offsetHeight={barheight}>
+    <div class="topbar" >
         <span
             class="baricon"
             on:click={() => {
@@ -18,8 +27,8 @@
             }}
             on:keydown>🍔</span
         >
-        <!-- <div class="spacer"></div> -->
-
+        <!-- {barheight} -->
+        <!-- {sidewidth} -->
         <div
             class="barsection"
             on:click={() => {
@@ -27,12 +36,13 @@
             }}
             on:keydown
         >
-            <!-- <span class="baricon">&#129373;</span> -->
-            <!-- <span class="barspan">OEN</span> -->
-            <img src="logooen.png" alt="hey" />
+            <p class="barp">
+                SamCorp
+            </p>
+            <!-- <img class="heroicon" src="logooen.png" alt="hey" /> -->
         </div>
-        <!-- <div class="spacer"></div> -->
-        <button class="themer baricon righty"
+        <button
+            class="themer baricon righty"
             on:click={() => {
                 window.document.body.classList.toggle("dark-mode");
             }}
@@ -54,36 +64,92 @@
             <a href="{base}/about">About</a>
             <a href="{base}/about">About</a>
         </div>
-    {/if}
+        {/if}
+
+        <div class="sidebar" bind:offsetWidth={sidewidth}>
+            {#if burgopen}
+            <div class="sidebarinner">
+                <a class="sideitem" href="{base}/">
+                    <!-- <Search></Search> -->
+                    <img class="navimg" src="pachnor.png" alt="home" />
+                    Home
+                </a>
+                <a class="sideitem" href="{base}/about">About</a>
+                <a class="sideitem" href="{base}/about">About</a>
+                <a class="sideitem" href="{base}/about">About</a>
+                <a class="sideitem" href="{base}/about">About</a>
+                <a class="sideitem" href="{base}/about">About</a>
+                <a class="sideitem" href="{base}/about">About</a>
+                <a class="sideitem" href="{base}/about">About</a>
+                <a class="sideitem" href="{base}/about">About</a>
+
+            </div>
+            {/if}
+        </div>
 </div>
 <!-- <div class="tray"> -->
-<!-- {#if burgopen} -->
-<!-- {/if} -->
-<!-- </div> -->
-<!-- <div class="slotcontain"> -->
-<slot />
-<footer class="foot">
-    <hr />
-    <p>&copy Sam Oen</p>
-    <!-- <div class="spacer" /> -->
-</footer>
 
+<div class="slotandfoot" >
+    <slot />
+    <footer class="foot">
+        <hr />
+        <p>&copy Sam Oen</p>
+        <!-- <div class="spacer" /> -->
+    </footer>
+</div>
+</div>
 <!-- </div> -->
-<!-- <div class="footer">
-</div> -->
+
 <style>
-    .slotcontain {
+    .sidebar {
+        position: fixed;
+        top:var(--barheight);
+        bottom:0;
+        background-color: var(--colorsecondary);
+        max-width: 100px;
+        overflow: auto;
+        z-index: 3;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .sidebarinner{
+        border: 4px solid var(--coloritem);
+        /* border-top: none; */
+
+    }
+    .sideitem{
+        white-space: nowrap;
+        margin:5px;
+        padding:10px
+    }
+    .tray {
+        /* display: flex; */
+        /* position: relative; */
+    }
+    .slotandfoot {
+        /* display: inline; */
         /* display: flex; */
         /* flex-direction: column; */
         /* height:fit-content; */
         /* min-height:100dvh; */
         /* justify-content: space-between; */
         /* min-height: 100%; */
-        /* position: relative; */
+        position: relative;
+        /* overflow: scroll; */
+        /* padding-top: var(--barheight); */
+        /* padding-left: var(--sidewidth); */
+        top: var(--barheight);
+        left: var(--sidewidth);
+        width: calc(100vw - var(--sidewidth));
+        background-color: var(--colorprimary);
+        /* bottom:; */
+
+        /* width: fit-content; */
+        /* height:auto; */
+        /* padding:100px */
     }
     .foot {
         /* flex-grow: 1; */
-        background-color: var(--colorsecondary);
+        /* background-color: var(--colorsecondary); */
         /* position: absolute; */
         /* bottom:0; */
         /* flex:1; */
@@ -98,23 +164,22 @@
         /* position:absolute; */
         /* bottom: 0; */
         /* margin: 10px; */
+        margin-bottom: 10px;
         width: 90%;
-        border: 2px solid #bbb;
+        border: 2px solid var(--coloritem);
         border-radius: 3px;
         border-color: var(--colortext);
         opacity: 50%;
     }
     .barandnav {
-        position: sticky;
+        position: fixed;
         top: 0;
         right: 0;
         left: 0;
         padding: 0;
+        z-index: 3;
     }
-    .stick {
-        position: sticky;
-        top: 40px;
-    }
+    
     .topbar {
         background-color: var(--colorsecondary);
         /* background-color: rgba(255, 0, 0, 0.3); */
@@ -124,6 +189,7 @@
         justify-content: space-between;
         padding-left: 10px;
         padding-right: 10px;
+        border: 4px solid var(--coloritem);
         /* align-items: stretch; */
         /* gap: 1rem; */
         /* align-items: flex-start; */
@@ -134,16 +200,13 @@
         display: flex;
         align-items: center;
     }
-    .barspan {
-        /* display:inline; */
-        /* align-content: center; */
-        /* text-align: center; */
-        font-family: fantasy;
-        font-size: 160%;
-        /* line-height: 200%; */
-        /* height: 100%; */
-
-        /* background-color: blue; */
+    .barp{
+        user-select: none;
+        font-size: 150%;
+    }
+    .heroicon{
+        width: 150%;
+        height: 90%;
     }
     .baricon {
         /* line-height: 100px; */
@@ -153,10 +216,10 @@
         background-color: var(--colorsecondary);
         border-width: 0;
         padding: 0px;
-        font-size: 180%;
+        font-size: 250%;
     }
     .baricon:hover {
-        background-color: var(--coloritem);
+        /* background-color: var(--coloritem); */
     }
     .righty {
         float: right;
@@ -165,12 +228,15 @@
         display: flex;
         /* row-gap:5px; */
         /* column-gap:min(1rem,10vh); */
-        gap:10px;
-        /* padding: 7px; */
-        flex-wrap:wrap;
+        gap: 10px;
+        padding: 7px;
+        /* padding-bottom: 7px; */
+        flex-wrap: wrap;
         justify-content: space-evenly;
         /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
-        border: 2px solid #bbb;
+        border: 4px solid var(--coloritem);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        /* border-top:none; */
         /* justify-items: center; */
         /* justify-content: center; */
         /* width: 100vw; */
@@ -183,7 +249,7 @@
         /* align-items: center; */
         /* flex-wrap:wrap; */
         /* justify-content: space-around; */
-        background-color: aquamarine;
+        background-color: var(--colorsecondary);
     }
     a {
         display: flex;
@@ -194,8 +260,8 @@
         /* width: max-content; */
         /* text-align: center; */
         /* vertical-align:middle; */
-        padding-top:5px;
-        padding-bottom:5px;
+        padding-top: 5px;
+        padding-bottom: 5px;
         padding-right: 10px;
         padding-left: 10px;
         background-color: var(--colorprimary);
@@ -217,11 +283,21 @@
         flex-grow: 1;
         /* display: inline; */
     }
+    .top{
+        /* position:relative; */
+        /* top:0; */
+        /* bottom: 0; */
+        background-color: var(--colorprimary);
+        /* height:auto; */
+    }
     :global(p, span, h1, a) {
         color: var(--colortext);
     }
     :global(*) {
         transition: background-color 0.5s;
+        transition: all 0.5s;
+        padding:0;
+        margin:0;
     }
     :global(body.red-mode) {
         --colorprimary: pink;
@@ -230,30 +306,29 @@
         --coloritem: brown;
     }
     :global(body.dark-mode) {
-        --colorprimary: black;
+        --colorprimary: rgb(2, 1, 44);
         --colorsecondary: darkblue;
         --coloritem: blue;
         --colortext: white;
     }
     :global(body) {
-        /* position: relative; */
-        padding: 0;
-        /* padding-left: 10px; */
-        /* padding-right: 10px; */
-        margin: 0;
-        /* height:100%; */
-        min-height: 100vh;
-        min-height: 100dvh;
+        /* padding: 0; */
+        /* margin: 0; */
+        /* height: fit-content; */
+        /* min-height: fit-content; */
+        /* min-height: 100dvh; */
+        
         background-color: var(--colorprimary);
         --colorprimary: beige;
-        --colorsecondary: lightgreen;
+        --colorsecondary: rgb(247, 195, 160);
         --colortext: black;
-        --coloritem: chartreuse;
+        --coloritem: aliceblue;
     }
     :global(html) {
-        margin: 0;
-        padding: 0;
+        /* margin: 0; */
+        /* padding: 0; */
         /* height:100%; */
-        background-color: rgb(126, 28, 126);
+        /* background-color: rgb(177, 209, 37); */
+        background-color: var(--colorprimary);
     }
 </style>
