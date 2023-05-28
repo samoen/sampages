@@ -5,7 +5,7 @@
 <div class="container">
     <h1>
         Welcome to my website
-        <img src="pachnor.png" alt="peachy" />
+        <img src="logooen.png" alt="peachy" />
     </h1>
     <br />
     <br />
