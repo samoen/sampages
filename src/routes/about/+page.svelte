@@ -1,3 +1,9 @@
+<script>
+    import { fly } from "svelte/transition";
+    
+    
+</script>
+
 <div class="cont">
     <h1>About</h1>
     <img src="svelte-icon.png">

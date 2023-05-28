@@ -5,37 +5,44 @@
 <div class="container">
     <h1>
         Welcome to my website
-        <img src="pachnor.png" />
+        <img src="pachnor.png" alt="peachy" />
     </h1>
     <br />
     <br />
     <br />
-    <div>
+    <div class="someting">
+        <!-- height="100"
+        width="100" -->
         <iframe
+            title="welcomegif"
             allow="fullscreen"
             frameBorder="0"
             src="https://giphy.com/embed/u2wg2uXJbHzkXkPphr/video"
-            />
-            <!-- height="320" -->
-            <!-- width="480" -->
+        />
     </div>
-    <br>
-    <p>
+    <br />
+    <!-- <p> -->
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem dicta
         fugit nobis natus optio inventore veniam distinctio fuga labore
         assumenda provident tenetur laborum odit necessitatibus, exercitationem
         maiores. Iste, esse quaerat!
-    </p>
+    <!-- </p> -->
 </div>
 
 <style>
     .container {
-        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        /* padding: 10px; */
         /* background-color:var(--colorprimary); */
         /* min-height:100vh; */
     }
-    iframe{
-        width: 100%;
+    .someting{
+        /* display: flex; */
+    }
+    iframe {
+        /* width: 50vw; */
     }
     h1 {
         display: inline;

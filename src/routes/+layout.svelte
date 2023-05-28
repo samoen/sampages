@@ -1,11 +1,24 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { base } from "$app/paths";
-    import Search from "$lib/icons/Search.svelte";
-    let burgopen = false;
-    let oh: number;
-    let barheight:number =0;
-    let sidewidth:number =0;
+    import { page } from "$app/stores";
+    import Hamburger from "$lib/icons/Hamburger.svelte";
+    import Palette from "$lib/icons/Palette.svelte";
+    import Ukflag from "$lib/icons/Ukflag.svelte";
+    import { onMount } from "svelte";
+    import { fade, fly, slide } from 'svelte/transition';
+    let burgopen = true;
+    let navheight: number = 0;
+    let barheight: number = 0;
+    let sidewidth: number = 0;
+    let ready = false;
+    onMount(()=>{
+        ready = true;
+
+    })
+    export let data;
+    
+    
 </script>
 
 <svelte:head>
@@ -14,45 +27,57 @@
 
 <!-- <svelte:body ></svelte:body> -->
 <!-- <svelte:window style="--barheight: {barheight}px; --sidewidth:{sidewidth}px"></svelte:window> -->
+{#if !ready}
+<div class="loading" transition:fly="{{delay: 0, duration: 500, y:300}}">loading...</div>
+{:else}
 
-<div class="top" style="--barheight: {barheight}px; --sidewidth:{sidewidth}px">
-
-
-<div class="barandnav" bind:offsetHeight={barheight}>
-    <div class="topbar" >
-        <span
+<div 
+transition:fly="{{delay: 300, duration: 500, y:-300}}" class="top" style="--barheight: {barheight}px; --sidewidth:{sidewidth}px; --navheight:{navheight}px;"
+>
+    <div class="topbar" bind:offsetHeight={barheight}>
+        <button
             class="baricon"
             on:click={() => {
                 burgopen = !burgopen;
             }}
-            on:keydown>🍔</span
+            on:keydown>
+            <Hamburger></Hamburger>
+            </button
         >
-        <!-- {barheight} -->
-        <!-- {sidewidth} -->
-        <div
+        <!-- {barheight}
+        {navheight}
+        {sidewidth} -->
+        <!-- <div
             class="barsection"
             on:click={() => {
                 goto(`${base}/`);
             }}
             on:keydown
-        >
-            <p class="barp">
-                SamCorp
-            </p>
+        > -->
+            <p class="barp">SamCorp</p>
             <!-- <img class="heroicon" src="logooen.png" alt="hey" /> -->
+        <!-- </div> -->
+        <div class="barsection">
+            <button
+            class="baricon"
+                on:click={() => {
+                    window.document.body.classList.toggle("dark-mode");
+                }}
+                on:keydown>
+                <Palette></Palette>
+                </button>
+                <button class="flag">
+                    <Ukflag></Ukflag>
+                </button>
         </div>
-        <button
-            class="themer baricon righty"
-            on:click={() => {
-                window.document.body.classList.toggle("dark-mode");
-            }}
-            on:keydown>💡</button
-        >
     </div>
     {#if burgopen}
-        <div class="nav" bind:offsetHeight={oh}>
+        <div 
+        class="nav"
+        transition:slide="{{delay: 0, duration: 300}}"
+        bind:offsetHeight={navheight} 
+        >
             <a href="{base}/">
-                <!-- <Search></Search> -->
                 <img class="navimg" src="pachnor.png" alt="home" />
                 Home
             </a>
@@ -64,11 +89,16 @@
             <a href="{base}/about">About</a>
             <a href="{base}/about">About</a>
         </div>
-        {/if}
+    {/if}
 
-        <div class="sidebar" bind:offsetWidth={sidewidth}>
-            {#if burgopen}
-            <div class="sidebarinner">
+    <!-- bind:offsetWidth={sidewidth} -->
+    {#if burgopen}
+    <div class="sidebar" 
+    transition:slide="{{delay: 0, duration: 300, axis:"x"}}"
+    >
+            <div class="sidebarinner" 
+            bind:offsetWidth={sidewidth} 
+            >
                 <a class="sideitem" href="{base}/">
                     <!-- <Search></Search> -->
                     <img class="navimg" src="pachnor.png" alt="home" />
@@ -82,62 +112,64 @@
                 <a class="sideitem" href="{base}/about">About</a>
                 <a class="sideitem" href="{base}/about">About</a>
                 <a class="sideitem" href="{base}/about">About</a>
-
             </div>
-            {/if}
         </div>
+        {/if}
+    <!-- <div class="tray"> -->
+    {#key data.currentRoute}
+    <div class="slotandfoot"
+    in:fade={{ duration: 150, delay: 150 }} out:fade={{ duration: 150 }}
+    >
+        <slot />
+        <footer class="foot">
+            <hr />
+            <p>&copy Sam Oen</p>
+            <!-- <div class="spacer" /> -->
+        </footer>
+    </div>
+    {/key}
 </div>
-<!-- <div class="tray"> -->
+{/if}
 
-<div class="slotandfoot" >
-    <slot />
-    <footer class="foot">
-        <hr />
-        <p>&copy Sam Oen</p>
-        <!-- <div class="spacer" /> -->
-    </footer>
-</div>
-</div>
 <!-- </div> -->
 
 <style>
+    .flag{
+        width:50px;
+        border: none;
+        line-height: 10px;
+        align-items: center;
+        padding:6px;
+        background-color: var(--colorsecondary);
+        /* background-color: blue; */
+
+    }
     .sidebar {
         position: fixed;
-        top:var(--barheight);
-        bottom:0;
+        top: calc(var(--barheight) + var(--navheight));
+        /* top: 50px; */
+        bottom: 0;
+        left:0;
         background-color: var(--colorsecondary);
         max-width: 100px;
         overflow: auto;
-        z-index: 3;
+        z-index: 4;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
-    .sidebarinner{
+    .sidebarinner {
         border: 4px solid var(--coloritem);
         /* border-top: none; */
-
     }
-    .sideitem{
+    .sideitem {
         white-space: nowrap;
-        margin:5px;
-        padding:10px
+        margin: 5px;
+        padding: 10px;
     }
-    .tray {
-        /* display: flex; */
-        /* position: relative; */
-    }
+
     .slotandfoot {
-        /* display: inline; */
-        /* display: flex; */
-        /* flex-direction: column; */
-        /* height:fit-content; */
-        /* min-height:100dvh; */
-        /* justify-content: space-between; */
-        /* min-height: 100%; */
         position: relative;
-        /* overflow: scroll; */
-        /* padding-top: var(--barheight); */
-        /* padding-left: var(--sidewidth); */
-        top: var(--barheight);
+
+        top: calc(var(--barheight) + var(--navheight));
         left: var(--sidewidth);
         width: calc(100vw - var(--sidewidth));
         background-color: var(--colorprimary);
@@ -148,22 +180,10 @@
         /* padding:100px */
     }
     .foot {
-        /* flex-grow: 1; */
-        /* background-color: var(--colorsecondary); */
-        /* position: absolute; */
-        /* bottom:0; */
-        /* flex:1; */
-        /* display: flex; */
-        /* flex-direction: column; */
-        /* justify-content: space-between; */
-        /* border-top:7px solid #bbb; */
         padding: 10px;
         /* align-items: stretch; */
     }
     hr {
-        /* position:absolute; */
-        /* bottom: 0; */
-        /* margin: 10px; */
         margin-bottom: 10px;
         width: 90%;
         border: 2px solid var(--coloritem);
@@ -171,40 +191,35 @@
         border-color: var(--colortext);
         opacity: 50%;
     }
-    .barandnav {
+
+
+    .topbar {
         position: fixed;
         top: 0;
         right: 0;
         left: 0;
-        padding: 0;
         z-index: 3;
-    }
-    
-    .topbar {
         background-color: var(--colorsecondary);
-        /* background-color: rgba(255, 0, 0, 0.3); */
-        /* height:50px; */
-        /* padding-left: 1rem; */
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding-left: 10px;
         padding-right: 10px;
+        padding-top:5px;
+        padding-bottom:5px;
         border: 4px solid var(--coloritem);
-        /* align-items: stretch; */
-        /* gap: 1rem; */
-        /* align-items: flex-start; */
-        /* align-content:baseline; */
-        /* overflow: hidden; */
     }
     .barsection {
         display: flex;
-        align-items: center;
+        gap:5px
+        /* flex-grow: 1; */
+        /* align-items: center; */
     }
-    .barp{
+    .barp {
         user-select: none;
         font-size: 150%;
     }
-    .heroicon{
+    .heroicon {
         width: 150%;
         height: 90%;
     }
@@ -216,15 +231,19 @@
         background-color: var(--colorsecondary);
         border-width: 0;
         padding: 0px;
-        font-size: 250%;
+        /* height: 100px; */
+        /* font-size: 250%; */
     }
     .baricon:hover {
         /* background-color: var(--coloritem); */
     }
-    .righty {
-        float: right;
-    }
+
     .nav {
+        position: fixed;
+        top: var(--barheight);
+        right: 0;
+        left: 0;
+        z-index: 3;
         display: flex;
         /* row-gap:5px; */
         /* column-gap:min(1rem,10vh); */
@@ -283,7 +302,7 @@
         flex-grow: 1;
         /* display: inline; */
     }
-    .top{
+    .top {
         /* position:relative; */
         /* top:0; */
         /* bottom: 0; */
@@ -294,10 +313,10 @@
         color: var(--colortext);
     }
     :global(*) {
-        transition: background-color 0.5s;
-        transition: all 0.5s;
-        padding:0;
-        margin:0;
+        /* transition: background-color 0.5s; */
+        /* transition: all 0.5s; */
+        padding: 0;
+        margin: 0;
     }
     :global(body.red-mode) {
         --colorprimary: pink;
@@ -317,7 +336,7 @@
         /* height: fit-content; */
         /* min-height: fit-content; */
         /* min-height: 100dvh; */
-        
+
         background-color: var(--colorprimary);
         --colorprimary: beige;
         --colorsecondary: rgb(247, 195, 160);
