@@ -279,7 +279,8 @@
         /* height:auto; */
     }
     button {
-        background-color: var(--coloritem);
+        /* background-color: var(--coloritem); */
+        /* transition: background-color 1s; */
     }
     .spacer {
         flex-grow: 1;
@@ -291,9 +292,14 @@
     }
     :global(p, span, h1, a) {
         color: var(--colortext);
+        transition: color 1s;
+        
     }
+    :global(div, button, body, p, a, h1, path, hr){
+        transition: background-color 1s, border-color 1s, color 1s, stroke 1s;
+    }
+
     :global(*) {
-        transition: background-color 0.5s;
         /* transition: all 0.5s; */
         padding: 0;
         margin: 0;
