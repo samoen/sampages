@@ -1,11 +1,12 @@
 <script>
     import { base } from "$app/paths";
+    import pachnor from "$lib/icons/pachnor.png"
 </script>
 
 <div class="container">
     <h1>
         Welcome to my website
-        <img src="logooen.png" alt="peachy" />
+        <img src="{pachnor}" alt="peachy" />
     </h1>
     <br />
     <br />
@@ -21,12 +22,12 @@
         />
     </div>
     <br />
-    <!-- <p> -->
+    <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem dicta
         fugit nobis natus optio inventore veniam distinctio fuga labore
         assumenda provident tenetur laborum odit necessitatibus, exercitationem
         maiores. Iste, esse quaerat!
-    <!-- </p> -->
+    </p>
 </div>
 
 <style>
@@ -40,6 +41,7 @@
     }
     .someting{
         /* display: flex; */
+        align-self: center;
     }
     iframe {
         /* width: 50vw; */

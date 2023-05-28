@@ -6,19 +6,18 @@
     import Palette from "$lib/icons/Palette.svelte";
     import Ukflag from "$lib/icons/Ukflag.svelte";
     import { onMount } from "svelte";
-    import { fade, fly, slide } from 'svelte/transition';
+    import { fade, fly, slide } from "svelte/transition";
+    import logooen from "$lib/icons/logooen.png";
+
     let burgopen = true;
     let navheight: number = 0;
     let barheight: number = 0;
     let sidewidth: number = 0;
     let ready = false;
-    onMount(()=>{
+    onMount(() => {
         ready = true;
-
-    })
+    });
     export let data;
-    
-    
 </script>
 
 <svelte:head>
@@ -28,135 +27,133 @@
 <!-- <svelte:body ></svelte:body> -->
 <!-- <svelte:window style="--barheight: {barheight}px; --sidewidth:{sidewidth}px"></svelte:window> -->
 {#if !ready}
-<div class="loading" transition:fly="{{delay: 0, duration: 500, y:300}}">loading...</div>
+    <div class="loading" transition:fly={{ delay: 0, duration: 500, y: 300 }}>
+        loading...
+    </div>
 {:else}
-
-<div 
-transition:fly="{{delay: 300, duration: 500, y:-300}}" class="top" style="--barheight: {barheight}px; --sidewidth:{sidewidth}px; --navheight:{navheight}px;"
->
-    <div class="topbar" bind:offsetHeight={barheight}>
-        <button
-            class="baricon"
-            on:click={() => {
-                burgopen = !burgopen;
-            }}
-            on:keydown>
-            <Hamburger></Hamburger>
-            </button
-        >
-        <!-- {barheight}
+    <div
+        transition:fly={{ delay: 300, duration: 500, y: -300 }}
+        class="top"
+        style="--barheight: {barheight}px; --sidewidth:{sidewidth}px; --navheight:{navheight}px;"
+    >
+        <div class="topbar" bind:offsetHeight={barheight}>
+            <button
+                class="baricon"
+                on:click={() => {
+                    burgopen = !burgopen;
+                }}
+                on:keydown
+            >
+                <Hamburger />
+            </button>
+            <!-- {barheight}
         {navheight}
         {sidewidth} -->
-        <!-- <div
-            class="barsection"
-            on:click={() => {
-                goto(`${base}/`);
-            }}
-            on:keydown
-        > -->
             <p class="barp">SamCorp</p>
-            <!-- <img class="heroicon" src="logooen.png" alt="hey" /> -->
-        <!-- </div> -->
-        <div class="barsection">
-            <button
-            class="baricon"
-                on:click={() => {
-                    window.document.body.classList.toggle("dark-mode");
-                }}
-                on:keydown>
-                <Palette></Palette>
+            <div class="barsection">
+                <button
+                    class="baricon"
+                    on:click={() => {
+                        window.document.body.classList.toggle("dark-mode");
+                    }}
+                    on:keydown
+                >
+                    <Palette />
                 </button>
                 <button class="flag">
-                    <Ukflag></Ukflag>
+                    <Ukflag />
                 </button>
-        </div>
-    </div>
-    {#if burgopen}
-        <div 
-        class="nav"
-        transition:slide="{{delay: 0, duration: 300}}"
-        bind:offsetHeight={navheight} 
-        >
-            <a href="{base}/">
-                <img class="navimg" src="logooen.png" alt="home" />
-                Home
-            </a>
-            <a href="{base}/about">About</a>
-            <a href="{base}/about">About</a>
-            <a href="{base}/about">About</a>
-            <a href="{base}/about">About</a>
-            <a href="{base}/about">About</a>
-            <a href="{base}/about">About</a>
-            <a href="{base}/about">About</a>
-        </div>
-    {/if}
-
-    <!-- bind:offsetWidth={sidewidth} -->
-    {#if burgopen}
-    <div class="sidebar" 
-    transition:slide="{{delay: 0, duration: 300, axis:"x"}}"
-    >
-            <div class="sidebarinner" 
-            bind:offsetWidth={sidewidth} 
-            >
-                <a class="sideitem" href="{base}/">
-                    <img class="navimg" src="logooen.png" alt="home" />
-                    Home
-                </a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
             </div>
         </div>
+        {#if burgopen}
+            <div
+                class="nav"
+                transition:slide={{ delay: 0, duration: 300 }}
+                bind:offsetHeight={navheight}
+            >
+                <a href="{base}/">
+                    <img class="navimg" src={logooen} alt="home" />
+                    Home
+                </a>
+                <a href="{base}/about">About</a>
+                <a href="{base}/about">About</a>
+                <a href="{base}/about">About</a>
+                <a href="{base}/about">About</a>
+                <a href="{base}/about">About</a>
+                <a href="{base}/about">About</a>
+                <a href="{base}/about">About</a>
+            </div>
         {/if}
-    <!-- <div class="tray"> -->
-    {#key data.currentRoute}
-    <div class="slotandfoot"
-    in:fade={{ duration: 150, delay: 150 }} out:fade={{ duration: 150 }}
-    >
-        <slot />
-        <footer class="foot">
-            <hr />
-            <p>&copy Sam Oen</p>
-            <!-- <div class="spacer" /> -->
-        </footer>
+
+        <!-- bind:offsetWidth={sidewidth} -->
+        {#if burgopen}
+            <div
+                class="sidebar"
+                transition:slide={{ delay: 0, duration: 300, axis: "x" }}
+                bind:offsetWidth={sidewidth}
+            >
+                <!-- <div class="sidebarinner"> -->
+                    <a class="sideitem" href="{base}/">
+                        <img class="navimg" src={logooen} alt="home" />
+                        Home
+                    </a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                <!-- </div> -->
+            </div>
+        {/if}
+        <!-- <div class="tray"> -->
+        {#key data.currentRoute}
+            <div
+                class="slotandfoot"
+                in:fade={{ duration: 150, delay: 150 }}
+                out:fade={{ duration: 150 }}
+            >
+                <slot />
+                <footer class="foot">
+                    <hr />
+                    <p>&copy Sam Oen</p>
+                    <!-- <div class="spacer" /> -->
+                </footer>
+            </div>
+        {/key}
     </div>
-    {/key}
-</div>
 {/if}
 
 <!-- </div> -->
 
 <style>
-    .flag{
-        width:50px;
+    .flag {
+        width: 50px;
         border: none;
         line-height: 10px;
         align-items: center;
-        padding:6px;
+        padding: 6px;
         background-color: var(--colorsecondary);
         /* background-color: blue; */
-
     }
     .sidebar {
         position: fixed;
         top: calc(var(--barheight) + var(--navheight));
         /* top: 50px; */
         bottom: 0;
-        left:0;
+        left: 0;
         background-color: var(--colorsecondary);
         max-width: 100px;
         overflow: auto;
         z-index: 4;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        border: 4px solid var(--coloritem);
+        border-top: none;
+        box-sizing: border-box;
     }
     .sidebarinner {
-        border: 4px solid var(--coloritem);
         /* border-top: none; */
     }
     .sideitem {
@@ -166,13 +163,14 @@ transition:fly="{{delay: 300, duration: 500, y:-300}}" class="top" style="--barh
     }
 
     .slotandfoot {
-        position: relative;
-        top: calc(var(--barheight) + var(--navheight));
-        left: var(--sidewidth);
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding-top: calc(var(--barheight) + var(--navheight));
+        padding-left: var(--sidewidth);
         width: calc(100vw - var(--sidewidth));
         background-color: var(--colorprimary);
         /* bottom:; */
-
         /* width: fit-content; */
         /* height:auto; */
         /* padding:100px */
@@ -190,26 +188,26 @@ transition:fly="{{delay: 300, duration: 500, y:-300}}" class="top" style="--barh
         opacity: 50%;
     }
 
-
     .topbar {
         position: fixed;
         top: 0;
         right: 0;
         left: 0;
         z-index: 3;
+        box-sizing: border-box;
         background-color: var(--colorsecondary);
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding-left: 10px;
         padding-right: 10px;
-        padding-top:5px;
-        padding-bottom:5px;
+        padding-top: 5px;
+        padding-bottom: 5px;
         border: 4px solid var(--coloritem);
     }
     .barsection {
         display: flex;
-        gap:5px
+        gap: 5px;
         /* flex-grow: 1; */
         /* align-items: center; */
     }
@@ -239,44 +237,23 @@ transition:fly="{{delay: 300, duration: 500, y:-300}}" class="top" style="--barh
     .nav {
         position: fixed;
         top: var(--barheight);
+        box-sizing: border-box;
         right: 0;
         left: 0;
         z-index: 3;
         display: flex;
-        /* row-gap:5px; */
-        /* column-gap:min(1rem,10vh); */
         gap: 10px;
         padding: 7px;
-        /* padding-bottom: 7px; */
         flex-wrap: wrap;
         justify-content: space-evenly;
-        /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
         border: 4px solid var(--coloritem);
+        border-top: none;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        /* border-top:none; */
-        /* justify-items: center; */
-        /* justify-content: center; */
-        /* width: 100vw; */
-        /* grid-auto-flow:column; */
-        /* grid-auto-rows:auto; */
-        /* overflow-x: hidden; */
-        /* column-gap: min(20px,10vw); */
-        /* gap: 20vw; */
-        /* padding: 1rem; */
-        /* align-items: center; */
-        /* flex-wrap:wrap; */
-        /* justify-content: space-around; */
         background-color: var(--colorsecondary);
     }
     a {
         display: flex;
         align-items: center;
-        /* min-width: max-content; */
-        /* flex:1; */
-        /* white-space: nowrap; */
-        /* width: max-content; */
-        /* text-align: center; */
-        /* vertical-align:middle; */
         padding-top: 5px;
         padding-bottom: 5px;
         padding-right: 10px;
@@ -302,9 +279,6 @@ transition:fly="{{delay: 300, duration: 500, y:-300}}" class="top" style="--barh
         /* display: inline; */
     }
     .top {
-        /* position:relative; */
-        /* top:0; */
-        /* bottom: 0; */
         background-color: var(--colorprimary);
         /* height:auto; */
     }
