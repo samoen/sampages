@@ -35,7 +35,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        /* padding: 10px; */
+        padding: 10px;
         /* background-color:var(--colorprimary); */
         /* min-height:100vh; */
     }

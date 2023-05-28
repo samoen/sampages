@@ -177,15 +177,22 @@
     }
     .foot {
         padding: 10px;
-        /* align-items: stretch; */
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* align-items: center; */
+        /* background-color: aqua; */
     }
     hr {
-        margin-bottom: 10px;
+        margin-top: 15px;
+        margin-bottom: 20px;
         width: 90%;
         border: 2px solid var(--coloritem);
         border-radius: 3px;
         border-color: var(--colortext);
         opacity: 50%;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .topbar {
