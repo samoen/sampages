@@ -78,7 +78,7 @@ transition:fly="{{delay: 300, duration: 500, y:-300}}" class="top" style="--barh
         bind:offsetHeight={navheight} 
         >
             <a href="{base}/">
-                <img class="navimg" src="pachnor.png" alt="home" />
+                <img class="navimg" src="logooen.png" alt="home" />
                 Home
             </a>
             <a href="{base}/about">About</a>
@@ -100,8 +100,7 @@ transition:fly="{{delay: 300, duration: 500, y:-300}}" class="top" style="--barh
             bind:offsetWidth={sidewidth} 
             >
                 <a class="sideitem" href="{base}/">
-                    <!-- <Search></Search> -->
-                    <img class="navimg" src="pachnor.png" alt="home" />
+                    <img class="navimg" src="logooen.png" alt="home" />
                     Home
                 </a>
                 <a class="sideitem" href="{base}/about">About</a>
@@ -168,7 +167,6 @@ transition:fly="{{delay: 300, duration: 500, y:-300}}" class="top" style="--barh
 
     .slotandfoot {
         position: relative;
-
         top: calc(var(--barheight) + var(--navheight));
         left: var(--sidewidth);
         width: calc(100vw - var(--sidewidth));
@@ -293,6 +291,7 @@ transition:fly="{{delay: 300, duration: 500, y:-300}}" class="top" style="--barh
     .navimg {
         /* aspect-ratio:inherit; */
         width: 20px;
+        margin-right: 5px;
         /* height:auto; */
     }
     button {
@@ -313,7 +312,7 @@ transition:fly="{{delay: 300, duration: 500, y:-300}}" class="top" style="--barh
         color: var(--colortext);
     }
     :global(*) {
-        /* transition: background-color 0.5s; */
+        transition: background-color 0.5s;
         /* transition: all 0.5s; */
         padding: 0;
         margin: 0;
