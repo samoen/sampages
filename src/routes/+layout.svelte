@@ -1,47 +1,61 @@
 <script lang="ts">
     import { base } from "$app/paths";
-    import Hamburger from "$lib/icons/Hamburger.svelte";
-    import Palette from "$lib/icons/Palette.svelte";
-    import Ukflag from "$lib/icons/Ukflag.svelte";
+    import Hamburger from "$lib/assets/Hamburger.svelte";
+    import Palette from "$lib/assets/Palette.svelte";
+    import Ukflag from "$lib/assets/Ukflag.svelte";
     import { onMount } from "svelte";
     import { fade, fly, slide } from "svelte/transition";
-    import logooen from "$lib/icons/logooen.png";
-    import Esflag from "$lib/icons/Esflag.svelte";
+    import logooen from "$lib/assets/logooen.png";
+    import Esflag from "$lib/assets/Esflag.svelte";
     import { mobileMode, screenWidth } from "$lib/stores";
+    import Heartbeat from "$lib/assets/Heartbeat.svelte";
+    import { preloadCode, preloadData } from "$app/navigation";
+    import svelteicon from "$lib/assets/svelte-icon.png";
+    import biggy from "$lib/assets/biggy.png";
+    import xbig from "$lib/assets/xbig.png";
 
+    export let data;
     let burgopen = true;
-    let topnavopen = true;
+    let topnavopen = false;
     let navheight: number = 0;
     let barheight: number = 0;
     let sidewidth: number = 0;
     let ready = false;
     let selectedLang = "EN";
+    let preloadableRoutes = ["/", "/about"];
 
     onMount(() => {
+        if($mobileMode){
+            burgopen = false
+        }
         ready = true;
+        for (let r of preloadableRoutes) {
+            if (data.currentRoute != r) {
+                preloadData(`${base}${r}`);
+            }
+        }
     });
-    export let data;
+
+    let preloadedImages = [xbig, biggy];
 </script>
 
 <svelte:head>
     <title>Sam pages</title>
+    {#each preloadedImages as image}
+        <link rel="preload" as="image" href={image} />
+    {/each}
 </svelte:head>
 
-<!-- <svelte:body ></svelte:body> -->
 <svelte:window bind:innerWidth={$screenWidth} />
 {#if !ready}
-    <!-- transition:fly={{ delay: 0, duration: 500, y: 300 }} -->
-    <div
-        class="loading"
-        in:fly={{ duration: 500, delay: 0, y: 200 }}
-        out:fly={{ duration: 500, delay: 0, y: 200 }}
-    >
-        loading...
+    <div class="loading" out:fade>
+        <Heartbeat />
+        <p>loading...</p>
     </div>
 {:else}
     <div
-        transition:fly={{ delay: 300, duration: 500, y: -300 }}
         class="top"
+        in:fade
         style="--barheight: {barheight}px; --sidewidth:{sidewidth}px; --navheight:{navheight}px; --mainleft:{$mobileMode
             ? 0
             : sidewidth}px"
@@ -57,7 +71,7 @@
                 <Hamburger />
             </button>
             <!-- {barheight}
-            {navbar==null? 0:navheight}
+            {navheight}
             {sidewidth} -->
             <p class="barp">SamCorp</p>
             <div class="barsection">
@@ -76,41 +90,39 @@
                 >
                     {#if selectedLang == "EN"}
                         <Ukflag />
-                        {:else if selectedLang == "ES"}
+                    {:else if selectedLang == "ES"}
                         <Esflag />
-                        {/if}
-                    </button>
-                </div>
+                    {/if}
+                </button>
             </div>
+        </div>
         {#if topnavopen}
             <div
                 class="nav"
-                transition:slide={{ delay: 0, duration: 900, axis:"y" }}
+                transition:slide|local={{ delay: 0, duration: 300, axis: "y" }}
                 bind:offsetHeight={navheight}
                 on:outroend={() => {
                     navheight = 0;
                 }}
             >
-            <button class="flag" on:click={() => (selectedLang = "EN")}>
-                <Ukflag />
-            </button>
-            <button class="flag" on:click={() => (selectedLang = "ES")}>
-                <Esflag />
+                <button class="flag" on:click={() => (selectedLang = "EN")}>
+                    <Ukflag />
+                </button>
+                <button class="flag" on:click={() => (selectedLang = "ES")}>
+                    <Esflag />
                 </button>
             </div>
         {/if}
 
-        <!-- bind:offsetWidth={sidewidth} -->
         {#if burgopen}
             <div
                 class="sidebar"
-                transition:slide={{ delay: 0, duration: 300, axis: "x" }}
+                transition:slide|local={{ delay: 0, duration: 300, axis: "x" }}
                 bind:offsetWidth={sidewidth}
                 on:outroend={() => {
                     sidewidth = 0;
                 }}
             >
-                <!-- <div class="sidebarinner"> -->
                 <a class="sideitem" href="{base}/">
                     <img class="navimg" src={logooen} alt="home" />
                     Home
@@ -123,7 +135,6 @@
                 <a class="sideitem" href="{base}/about">About</a>
                 <a class="sideitem" href="{base}/about">About</a>
                 <a class="sideitem" href="{base}/about">About</a>
-                <!-- </div> -->
             </div>
             {#if $mobileMode}
                 <div
@@ -134,18 +145,15 @@
                 />
             {/if}
         {/if}
-        <!-- <div class="tray"> -->
         {#key data.currentRoute}
-            <div
-                class="slotandfoot"
-                in:fade={{ duration: 150, delay: 150 }}
-                out:fade={{ duration: 150 }}
-            >
+        <div
+        class="slotandfoot"
+        in:fade={{ duration: 250, delay: 0 }}
+        >
                 <slot />
                 <footer class="foot">
                     <hr />
                     <p>&copy Sam Oen</p>
-                    <!-- <div class="spacer" /> -->
                 </footer>
             </div>
         {/key}
@@ -156,7 +164,10 @@
 
 <style>
     .loading {
-        margin: calc(100vw / 2);
+        position: fixed;
+        left: 47vw;
+        top: 43vh;
+        /* text-align: center; */
     }
     .flag {
         width: 50px;
@@ -173,7 +184,7 @@
         /* top: 50px; */
         /* bottom: 0; */
         /* overflow-y: ; */
-        height:100vh;
+        height: 100vh;
         left: 0;
         background-color: var(--colorsecondary);
         max-width: 100px;
@@ -182,7 +193,7 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         border: 4px solid var(--coloritem);
         border-top: none;
-        box-sizing: border-box;
+        /* box-sizing: border-box; */
     }
     .sideitem {
         white-space: nowrap;
@@ -191,22 +202,17 @@
     }
 
     .slotandfoot {
-        position: absolute;
-        /* top: 0; */
-        /* left: 0; */
-        top: calc(var(--barheight) + var(--navheight));
-        left: var(--mainleft);
-        /* width: calc(100vw - var(--sidewidth)); */
-        background-color: var(--colorprimary);
-        /* bottom:; */
-        /* padding:100px */
+        margin-top: calc(var(--barheight) + var(--navheight));
+        margin-left: var(--mainleft);
+        /* min-height: 100%; */
+        /* min-height: 100dvh; */
     }
     .shadow {
         position: fixed;
         top: calc(var(--barheight) + var(--navheight));
         left: var(--sidewidth);
         width: calc(100vw - var(--sidewidth));
-        height:100vh;
+        height: 100vh;
         /* right:500px; */
         background-color: black;
         opacity: 0.5;
@@ -215,10 +221,6 @@
     }
     .foot {
         padding: 10px;
-        /* display: flex; */
-        /* flex-direction: column; */
-        /* align-items: center; */
-        /* background-color: aqua; */
     }
     hr {
         margin-top: 15px;
@@ -303,13 +305,14 @@
     }
     a:hover {
         background-color: var(--coloritem);
+        transition: background-color 0s;
     }
     .navimg {
         width: 20px;
         margin-right: 5px;
     }
     .top {
-        background-color: var(--colorprimary);
+        /* background-color: var(--colorprimary); */
     }
     :global(p, span, h1, a) {
         color: var(--colortext);
@@ -320,7 +323,6 @@
     }
 
     :global(*) {
-        /* transition: all 0.5s; */
         padding: 0;
         margin: 0;
     }

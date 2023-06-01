@@ -1,37 +1,106 @@
 <script>
-    import { fly } from "svelte/transition";
-    
-    
+    import biggy from "$lib/assets/biggy.png";
+    import { onMount } from "svelte";
+
+    // onMount(() => {});
 </script>
 
 <div class="cont">
     <h1>About</h1>
-    <img src="svelte-icon.png">
-    <br>
     <p>Made with &hearts; by Sam Oen</p>
-    <br>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae facere. Magni repudiandae consequuntur rem autem eaque asperiores amet odit distinctio alias delectus nam reprehenderit, eos inventore corporis suscipit molestias.</p>
-    <br>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae facere. Magni repudiandae consequuntur rem autem eaque asperiores amet odit distinctio alias delectus nam reprehenderit, eos inventore corporis suscipit molestias.</p>
-    <br>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae facere. Magni repudiandae consequuntur rem autem eaque asperiores amet odit distinctio alias delectus nam reprehenderit, eos inventore corporis suscipit molestias.</p>
-    <br>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae facere. Magni repudiandae consequuntur rem autem eaque asperiores amet odit distinctio alias delectus nam reprehenderit, eos inventore corporis suscipit molestias.</p>
-    <br>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae facere. Magni repudiandae consequuntur rem autem eaque asperiores amet odit distinctio alias delectus nam reprehenderit, eos inventore corporis suscipit molestias.</p>
-    <br>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae facere. Magni repudiandae consequuntur rem autem eaque asperiores amet odit distinctio alias delectus nam reprehenderit, eos inventore corporis suscipit molestias.</p>
-    <br>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae facere. Magni repudiandae consequuntur rem autem eaque asperiores amet odit distinctio alias delectus nam reprehenderit, eos inventore corporis suscipit molestias.</p>
-    <br>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae facere. Magni repudiandae consequuntur rem autem eaque asperiores amet odit distinctio alias delectus nam reprehenderit, eos inventore corporis suscipit molestias.</p>
-    <br>
-    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae facere. Magni repudiandae consequuntur rem autem eaque asperiores amet odit distinctio alias delectus nam reprehenderit, eos inventore corporis suscipit molestias.</p>
-    
+    <div class="imgwithtext">
+        <div class="myimgcont">
+            <img
+                class="myimg"
+                height="500"
+                width="500"
+                src={biggy}
+                alt="bigish"
+            />
+        </div>
+        <div class="cardtxt">
+            <p class="cardp">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel,
+                vitae facere. Magni repudiandae consequuntur rem autem eaque
+                asperiores amet odit distinctio alias delectus nam
+                reprehenderit, eos inventore corporis suscipit molestias.
+            </p>
+        </div>
+    </div>
+    <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
+        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
+        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
+        suscipit molestias.
+    </p>
 </div>
 
+<!-- {:else} -->
+<!-- <div class="hi"> -->
+<!-- <Heartbeat /> -->
+<!-- </div> -->
+<!-- </div> -->
+
 <style>
-    .cont{
-        padding:10px;
+    .cont > * + * {
+        margin-top: 1rem;
+    }
+
+    .cont {
+        padding: 0;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .imgwithtext {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background-color: var(--colorsecondary);
+    }
+
+    @media (width > 500px) {
+        .cont {
+            --textwidth: 300px;
+            --maximagewidth: 600px;
+        }
+        .imgwithtext {
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            max-width: calc(var(--textwidth) + var(--maximagewidth));
+        }
+        .myimgcont {
+            flex: 1 1 auto;
+            position: relative;
+            align-self: stretch;
+            max-width: var(--maximagewidth);
+        }
+        .myimg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cardtxt {
+            width: var(--textwidth);
+        }
+    }
+
+    @media (width < 500px) {
+        .myimgcont {
+            text-align: center;
+        }
+        .myimg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .cardtxt {
+            margin: auto;
+            text-align: center;
+        }
     }
 </style>
