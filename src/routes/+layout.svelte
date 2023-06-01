@@ -1,18 +1,17 @@
 <script lang="ts">
+    import { preloadData } from "$app/navigation";
     import { base } from "$app/paths";
+    import Esflag from "$lib/assets/Esflag.svelte";
     import Hamburger from "$lib/assets/Hamburger.svelte";
+    import Heartbeat from "$lib/assets/Heartbeat.svelte";
     import Palette from "$lib/assets/Palette.svelte";
     import Ukflag from "$lib/assets/Ukflag.svelte";
-    import { onMount } from "svelte";
-    import { fade, fly, slide } from "svelte/transition";
-    import logooen from "$lib/assets/logooen.png";
-    import Esflag from "$lib/assets/Esflag.svelte";
-    import { mobileMode, screenWidth } from "$lib/stores";
-    import Heartbeat from "$lib/assets/Heartbeat.svelte";
-    import { preloadCode, preloadData } from "$app/navigation";
-    import svelteicon from "$lib/assets/svelte-icon.png";
     import biggy from "$lib/assets/biggy.png";
+    import logooen from "$lib/assets/logooen.png";
     import xbig from "$lib/assets/xbig.png";
+    import { mobileMode, screenWidth } from "$lib/stores";
+    import { onMount } from "svelte";
+    import { fade, slide } from "svelte/transition";
 
     export let data;
     let burgopen = true;
