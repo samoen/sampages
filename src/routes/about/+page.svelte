@@ -58,7 +58,7 @@
         background-color: var(--colorsecondary);
     }
 
-    @media (width > 500px) {
+    @media only screen and (min-width: 601px) {
         .cont {
             --textwidth: 300px;
             --maximagewidth: 600px;
@@ -89,7 +89,7 @@
         }
     }
 
-    @media (width < 500px) {
+    @media only screen and (max-width: 600px) {
         .myimgcont {
             text-align: center;
         }
