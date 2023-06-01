@@ -14,20 +14,19 @@
     import { fade, slide } from "svelte/transition";
 
     export let data;
-    let burgopen = true;
+    let burgopen = false;
     let topnavopen = false;
-    let navheight: number = 0;
-    let barheight: number = 0;
-    let sidewidth: number = 0;
     let ready = false;
+    let atTop = true;
     let selectedLang = "EN";
     let preloadableRoutes = ["/", "/about"];
-
+    
     onMount(() => {
         if($mobileMode){
             burgopen = false
         }
         ready = true;
+
         for (let r of preloadableRoutes) {
             if (data.currentRoute != r) {
                 preloadData(`${base}${r}`);
@@ -48,64 +47,76 @@
     {/each}
 </svelte:head>
 
-<svelte:window bind:innerWidth={$screenWidth} />
-{#if !ready}
+<svelte:window 
+bind:innerWidth={$screenWidth} 
+on:scroll={()=>{
+    if(window.scrollY === 0){
+        atTop = true
+    }else{
+        atTop = false
+    }
+}}
+/>
+{#if false}
     <div class="loading" out:fade>
         <Heartbeat />
         <p>loading...</p>
     </div>
 {:else}
+<!-- in:fade -->
     <div
         class="top"
+        >
+        {#if true}
+        <div 
+        class="topbar"
         in:fade
-        style="--barheight: {barheight}px; --sidewidth:{sidewidth}px; --navheight:{navheight}px; --mainleft:{$mobileMode
-            ? 0
-            : sidewidth}px"
-    >
-        <div class="topbar" bind:offsetHeight={barheight}>
+         class:opac="{(atTop && !topnavopen && !burgopen)}"
+         
+         >
+         <!-- class:opac="{(atTop && !topnavopen && !burgopen) || (!burgopen)}" -->
             <button
-                class="baricon"
-                on:click={() => {
+            class="baricon"
+            on:click={() => {
                     burgopen = !burgopen;
                 }}
                 on:keydown
             >
                 <Hamburger />
             </button>
-            <!-- {barheight}
-            {navheight}
-            {sidewidth} -->
             <p class="barp">SamCorp</p>
             <div class="barsection">
                 <button
-                    class="baricon"
-                    on:click={() => {
-                        window.document.body.classList.toggle("dark-mode");
-                    }}
+                class="baricon"
+                on:click={() => {
+                    window.document.body.classList.toggle("dark-mode");
+                }}
                     on:keydown
-                >
+                    >
                     <Palette />
                 </button>
                 <button
-                    class="flag"
-                    on:click={() => (topnavopen = !topnavopen)}
+                class="flag"
+                on:click={() => {
+                    topnavopen = !topnavopen
+                    // if(topnavopen && atTop){
+                    //     atTop = false;
+                    // }
+                }}
                 >
-                    {#if selectedLang == "EN"}
-                        <Ukflag />
-                    {:else if selectedLang == "ES"}
-                        <Esflag />
-                    {/if}
-                </button>
-            </div>
+                {#if selectedLang == "EN"}
+                <Ukflag />
+                {:else if selectedLang == "ES"}
+                <Esflag />
+                {/if}
+            </button>
         </div>
-        {#if topnavopen}
+    </div>
+    {/if}
+    {#if topnavopen}
             <div
                 class="nav"
                 transition:slide|local={{ delay: 0, duration: 300, axis: "y" }}
-                bind:offsetHeight={navheight}
-                on:outroend={() => {
-                    navheight = 0;
-                }}
             >
                 <button class="flag" on:click={() => (selectedLang = "EN")}>
                     <Ukflag />
@@ -116,55 +127,86 @@
             </div>
         {/if}
 
-        {#if burgopen}
+        <div class="sideandmain">
+            {#if burgopen}
+            <!-- transition:fade -->
             <div
-                class="sidebar"
-                transition:slide|local={{ delay: 0, duration: 300, axis: "x" }}
-                bind:offsetWidth={sidewidth}
-                on:outroend={() => {
-                    sidewidth = 0;
-                }}
-            >
-                <a class="sideitem" href="{base}/">
-                    <img class="navimg" src={logooen} alt="home" />
-                    Home
-                </a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-                <a class="sideitem" href="{base}/about">About</a>
-            </div>
-            {#if $mobileMode}
-                <div
-                    class="shadow"
-                    on:click={() => (burgopen = false)}
-                    on:keyup
-                    transition:fade
-                />
+            class="sidebar"
+            transition:slide={{ delay: 0, duration: 400, axis: "x" }}
+                >
+                    <a class="sideitem" href="{base}/">
+                        <img class="navimg" src={logooen} alt="home" />
+                        Home
+                    </a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                    <a class="sideitem" href="{base}/about">About</a>
+                </div>
+                {#if $mobileMode && burgopen}
+                    <div
+                        class="shadow"
+                        on:click={() => (burgopen = false)}
+                        on:keyup
+                        transition:fade
+                        />
+                {/if}
             {/if}
-        {/if}
-        {#key data.currentRoute}
-        <div
-        class="slotandfoot"
-        in:fade={{ duration: 250, delay: 0 }}
-        >
-                <slot />
-                <footer class="foot">
-                    <hr />
-                    <p>&copy Sam Oen</p>
-                </footer>
-            </div>
-        {/key}
+            
+            {#key data.currentRoute}
+            <div
+            class="slotandfoot"
+            in:fade={{ duration: 250, delay: 0 }}
+            >
+            <!-- class:shadowed="{$mobileMode && burgopen}" -->
+                    <slot />
+                    <footer class="foot">
+                        <hr />
+                        <p>&copy Sam Oen</p>
+                    </footer>
+                </div>
+            {/key}
+        </div>
     </div>
 {/if}
 
 <!-- </div> -->
 
 <style>
+    .top {
+      
+        /* background-color: var(--colorprimary); */
+    }
+    .topbar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        /* opacity: 0; */
+        z-index: 3;
+        box-sizing: border-box;
+        background-color: var(--colorsecondary);
+        /* background-color: tr; */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        height:var(--topbarheight);
+        border: 4px solid var(--coloritem);
+    }
+    .opac{
+        /* opacity: 1; */
+        background-color: transparent;
+        /* border-color: transparent; */
+        border: 4px solid transparent;
+    }
     .loading {
         position: fixed;
         left: 47vw;
@@ -177,19 +219,23 @@
         line-height: 10px;
         align-items: center;
         padding: 6px;
-        background-color: var(--colorsecondary);
+        background-color: transparent;
         /* background-color: blue; */
     }
+    .sideandmain{
+        display: flex;
+        align-items: flex-start;
+    }
     .sidebar {
-        position: fixed;
-        top: calc(var(--barheight) + var(--navheight));
-        /* top: 50px; */
-        /* bottom: 0; */
-        /* overflow-y: ; */
-        height: 100vh;
-        left: 0;
+        position: sticky;
+        top:var(--topbarheight);
+        overflow-y: auto;
+        flex-shrink: 0;
+        width: 100%;
         background-color: var(--colorsecondary);
         max-width: 100px;
+        min-height: 1vh;
+        max-height: calc(100dvh - var(--topbarheight));
         overflow: auto;
         z-index: 4;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -202,58 +248,44 @@
         margin: 5px;
         padding: 10px;
     }
-
+    
     .slotandfoot {
-        margin-top: calc(var(--barheight) + var(--navheight));
-        margin-left: var(--mainleft);
         /* min-height: 100%; */
         /* min-height: 100dvh; */
+        flex-grow: 1;
     }
-    .shadow {
-        position: fixed;
-        top: calc(var(--barheight) + var(--navheight));
-        left: var(--sidewidth);
-        width: calc(100vw - var(--sidewidth));
-        height: 100vh;
-        /* right:500px; */
+    .shadowed {
+        /* display: none; */
         background-color: black;
         opacity: 0.5;
-        z-index: 9;
-        overflow: hidden;
     }
-    .foot {
-        padding: 10px;
+    .shadow{
+        position: fixed;
+        top:0;
+        bottom:0;
+        left:0;
+        right:0;
+        background-color: black;
+        opacity: 0.5;
+        z-index: 2;
     }
-    hr {
-        margin-top: 15px;
-        margin-bottom: 20px;
-        width: 90%;
-        border: 2px solid var(--coloritem);
-        border-radius: 3px;
-        border-color: var(--colortext);
+        
+        .foot {
+            /* padding: 10px; */
+        }
+        hr {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            width: 90%;
+            border: 2px solid var(--coloritem);
+            border-radius: 3px;
+            border-color: var(--colortext);
         opacity: 50%;
         text-align: center;
         margin-left: auto;
         margin-right: auto;
     }
-
-    .topbar {
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 0;
-        z-index: 3;
-        box-sizing: border-box;
-        background-color: var(--colorsecondary);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-left: 10px;
-        padding-right: 10px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        border: 4px solid var(--coloritem);
-    }
+    
     .barsection {
         display: flex;
         gap: 5px;
@@ -268,7 +300,7 @@
         cursor: pointer;
         padding: 0;
         margin: 0;
-        background-color: var(--colorsecondary);
+        background-color: transparent;
         border-width: 0;
         padding: 0px;
         border-radius: 15px;
@@ -279,7 +311,7 @@
 
     .nav {
         position: fixed;
-        top: var(--barheight);
+        top: var(--topbarheight);
         box-sizing: border-box;
         right: 0;
         left: 0;
@@ -313,8 +345,10 @@
         width: 20px;
         margin-right: 5px;
     }
-    .top {
-        /* background-color: var(--colorprimary); */
+    @media only screen and (max-width: 400px) {
+        .sidebar{
+            position: fixed;
+        }
     }
     :global(p, span, h1, a) {
         color: var(--colortext);
@@ -352,6 +386,7 @@
         --colorsecondary: rgb(247, 195, 160);
         --colortext: black;
         --coloritem: aliceblue;
+        --topbarheight:70px;
     }
     :global(html) {
         /* margin: 0; */

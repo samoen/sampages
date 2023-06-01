@@ -23,34 +23,33 @@
     <br />
     <br />
     <div class="someting">
-            <img width="400" height=200 src="{squig}" alt="a squiggle">
+            <img class="normalimg" width="400" height=200 src="{squig}" alt="a squiggle">
     </div>
     <br />
 </div>
 <style>
     .container {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* align-items: flex-start; */
     }
     .splash{
         padding-top: 100px;
         padding-bottom: 100px;
+        background-repeat: no-repeat;
+        background-size:cover;
+        background-attachment:local;
     }
     h1 {
     }
     .someting{
-        /* display: flex; */
-        margin:auto;
-        height: 200px;
-        width: 400px;
-        background-color: aqua;
-        align-self: center;
+        text-align: center;
     }
     h1 {
         display: inline;
     }
-    img {
-        display: inline;
+    .normalimg{
+        height: auto;
+        width: 60%;
     }
 </style>
