@@ -43,58 +43,6 @@
         suscipit molestias.        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
         facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
         odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.
-    </p>
-    <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.
-    </p>
-    <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.
-    </p>
-    <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.
-    </p>
-    <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.
-    </p>
-    <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.
-    </p>
-    <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.
-    </p>
-    <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.
     </p>
 </div>
 
@@ -105,6 +53,9 @@
 <!-- </div> -->
 
 <style>
+    h1{
+        /* margin-top:3rem */
+    }
     .cont > * + * {
         margin-top: 1rem;
     }
@@ -113,6 +64,8 @@
         padding: 0;
         padding-left: 1rem;
         padding-right: 1rem;
+        padding-top:5rem;
+        background-image: linear-gradient(to right,red, yellow);
     }
     .imgwithtext {
         margin-top: 2rem;

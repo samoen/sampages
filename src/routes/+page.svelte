@@ -1,12 +1,13 @@
 <script lang="ts">
     import pachnor from "$lib/assets/pachnor.png";
-    import squig from "$lib/assets/squig.png";
+    import wavy from "$lib/assets/wavy.png";
     import xbig from "$lib/assets/xbig.png";
+    import gamesprites from "$lib/assets/gamesprites.png";
 
 </script>
 
 <div class="container">
-    <div class="splash" style="background-image:url({xbig});">
+    <div class="splash" style="background-image:url({wavy});">
         <h1>
             Welcome to my website
             <img width=70 height=20 src="{pachnor}" alt="peachy" />
@@ -23,15 +24,26 @@
     <br />
     <br />
     <div class="someting">
-            <img class="normalimg" width="400" height=200 src="{squig}" alt="a squiggle">
+            <img class="normalimg" width="400" height=200 src="{gamesprites}" alt="a squiggle">
     </div>
     <br />
+    <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem dicta
+        fugit nobis natus optio inventore veniam distinctio fuga labore
+        assumenda provident tenetur laborum odit necessitatibus, exercitationem
+        maiores. Iste, esse quaerat!
+    </p>
+    <br />
+    <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem dicta
+        fugit nobis natus optio inventore veniam distinctio fuga labore
+        assumenda provident tenetur laborum odit necessitatibus, exercitationem
+        maiores. Iste, esse quaerat!
+    </p>
 </div>
 <style>
     .container {
-        /* display: flex; */
-        /* flex-direction: column; */
-        /* align-items: flex-start; */
+
     }
     .splash{
         padding-top: 100px;
@@ -39,6 +51,9 @@
         background-repeat: no-repeat;
         background-size:cover;
         background-attachment:local;
+    }
+    .splash > p, h1{
+        color:black;
     }
     h1 {
     }

@@ -22,8 +22,8 @@
     let preloadableRoutes = ["/", "/about"];
     
     onMount(() => {
-        if($mobileMode){
-            burgopen = false
+        if ($mobileMode) {
+            burgopen = false;
         }
         ready = true;
 
@@ -33,9 +33,12 @@
             }
         }
     });
-    afterNavigate(()=>{
-        window.scrollTo(0,0)
-    })
+    afterNavigate(() => {
+        if ($mobileMode) {
+            burgopen = false;
+        }
+        window.scrollTo(0, 0);
+    });
 
     let preloadedImages = [xbig, biggy];
 </script>
@@ -47,15 +50,15 @@
     {/each}
 </svelte:head>
 
-<svelte:window 
-bind:innerWidth={$screenWidth} 
-on:scroll={()=>{
-    if(window.scrollY === 0){
-        atTop = true
-    }else{
-        atTop = false
-    }
-}}
+<svelte:window
+    bind:innerWidth={$screenWidth}
+    on:scroll={() => {
+        if (window.scrollY === 0) {
+            atTop = true;
+        } else {
+            atTop = false;
+        }
+    }}
 />
 {#if false}
     <div class="loading" out:fade>
@@ -63,57 +66,54 @@ on:scroll={()=>{
         <p>loading...</p>
     </div>
 {:else}
-<!-- in:fade -->
-    <div
-        class="top"
-        >
+    <!-- in:fade -->
+    <div class="top">
         {#if true}
-        <div 
-        class="topbar"
-        in:fade
-         class:opac="{(atTop && !topnavopen && !burgopen)}"
-         
-         >
-         <!-- class:opac="{(atTop && !topnavopen && !burgopen) || (!burgopen)}" -->
-            <button
-            class="baricon"
-            on:click={() => {
-                    burgopen = !burgopen;
-                }}
-                on:keydown
+            <div
+                class="topbar"
+                in:fade="{{duration:200}}"
+                class:opac={atTop && !topnavopen && !burgopen}
             >
-                <Hamburger />
-            </button>
-            <p class="barp">SamCorp</p>
-            <div class="barsection">
+                <!-- class:opac="{(atTop && !topnavopen && !burgopen) || (!burgopen)}" -->
                 <button
-                class="baricon"
-                on:click={() => {
-                    window.document.body.classList.toggle("dark-mode");
-                }}
+                    class="baricon"
+                    on:click={() => {
+                        burgopen = !burgopen;
+                    }}
                     on:keydown
-                    >
-                    <Palette />
-                </button>
-                <button
-                class="flag"
-                on:click={() => {
-                    topnavopen = !topnavopen
-                    // if(topnavopen && atTop){
-                    //     atTop = false;
-                    // }
-                }}
                 >
-                {#if selectedLang == "EN"}
-                <Ukflag />
-                {:else if selectedLang == "ES"}
-                <Esflag />
-                {/if}
-            </button>
-        </div>
-    </div>
-    {/if}
-    {#if topnavopen}
+                    <Hamburger />
+                </button>
+                <p class="barp">SamCorp</p>
+                <div class="barsection">
+                    <button
+                        class="baricon"
+                        on:click={() => {
+                            window.document.body.classList.toggle("dark-mode");
+                        }}
+                        on:keydown
+                    >
+                        <Palette />
+                    </button>
+                    <button
+                        class="flag"
+                        on:click={() => {
+                            topnavopen = !topnavopen;
+                            // if(topnavopen && atTop){
+                            //     atTop = false;
+                            // }
+                        }}
+                    >
+                        {#if selectedLang == "EN"}
+                            <Ukflag />
+                        {:else if selectedLang == "ES"}
+                            <Esflag />
+                        {/if}
+                    </button>
+                </div>
+            </div>
+        {/if}
+        {#if topnavopen}
             <div
                 class="nav"
                 transition:slide|local={{ delay: 0, duration: 300, axis: "y" }}
@@ -129,10 +129,10 @@ on:scroll={()=>{
 
         <div class="sideandmain">
             {#if burgopen}
-            <!-- transition:fade -->
-            <div
-            class="sidebar"
-            transition:slide={{ delay: 0, duration: 400, axis: "x" }}
+                <!-- transition:fade -->
+                <div
+                    class="sidebar"
+                    transition:slide={{ delay: 0, duration: 400, axis: "x" }}
                 >
                     <a class="sideitem" href="{base}/">
                         <img class="navimg" src={logooen} alt="home" />
@@ -153,16 +153,13 @@ on:scroll={()=>{
                         on:click={() => (burgopen = false)}
                         on:keyup
                         transition:fade
-                        />
+                    />
                 {/if}
             {/if}
-            
+
             {#key data.currentRoute}
-            <div
-            class="slotandfoot"
-            in:fade={{ duration: 250, delay: 0 }}
-            >
-            <!-- class:shadowed="{$mobileMode && burgopen}" -->
+                <div class="slotandfoot" in:fade={{ duration: 250, delay: 0 }}>
+                    <!-- class:shadowed="{$mobileMode && burgopen}" -->
                     <slot />
                     <footer class="foot">
                         <hr />
@@ -178,7 +175,6 @@ on:scroll={()=>{
 
 <style>
     .top {
-      
         /* background-color: var(--colorprimary); */
     }
     .topbar {
@@ -198,10 +194,10 @@ on:scroll={()=>{
         padding-right: 10px;
         padding-top: 5px;
         padding-bottom: 5px;
-        height:var(--topbarheight);
+        height: var(--topbarheight);
         border: 4px solid var(--coloritem);
     }
-    .opac{
+    .opac {
         /* opacity: 1; */
         background-color: transparent;
         /* border-color: transparent; */
@@ -222,13 +218,13 @@ on:scroll={()=>{
         background-color: transparent;
         /* background-color: blue; */
     }
-    .sideandmain{
+    .sideandmain {
         display: flex;
         align-items: flex-start;
     }
     .sidebar {
         position: sticky;
-        top:var(--topbarheight);
+        top: var(--topbarheight);
         overflow-y: auto;
         flex-shrink: 0;
         width: 100%;
@@ -248,7 +244,7 @@ on:scroll={()=>{
         margin: 5px;
         padding: 10px;
     }
-    
+
     .slotandfoot {
         /* min-height: 100%; */
         /* min-height: 100dvh; */
@@ -259,33 +255,33 @@ on:scroll={()=>{
         background-color: black;
         opacity: 0.5;
     }
-    .shadow{
+    .shadow {
         position: fixed;
-        top:0;
-        bottom:0;
-        left:0;
-        right:0;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
         background-color: black;
         opacity: 0.5;
         z-index: 2;
     }
-        
-        .foot {
-            /* padding: 10px; */
-        }
-        hr {
-            margin-top: 15px;
-            margin-bottom: 20px;
-            width: 90%;
-            border: 2px solid var(--coloritem);
-            border-radius: 3px;
-            border-color: var(--colortext);
+
+    .foot {
+        /* padding: 10px; */
+    }
+    hr {
+        margin-top: 15px;
+        margin-bottom: 20px;
+        width: 90%;
+        border: 2px solid var(--coloritem);
+        border-radius: 3px;
+        border-color: var(--colortext);
         opacity: 50%;
         text-align: center;
         margin-left: auto;
         margin-right: auto;
     }
-    
+
     .barsection {
         display: flex;
         gap: 5px;
@@ -346,7 +342,7 @@ on:scroll={()=>{
         margin-right: 5px;
     }
     @media only screen and (max-width: 400px) {
-        .sidebar{
+        .sidebar {
             position: fixed;
         }
     }
@@ -386,7 +382,7 @@ on:scroll={()=>{
         --colorsecondary: rgb(247, 195, 160);
         --colortext: black;
         --coloritem: aliceblue;
-        --topbarheight:70px;
+        --topbarheight: 70px;
     }
     :global(html) {
         /* margin: 0; */
