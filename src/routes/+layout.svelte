@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { preloadData } from "$app/navigation";
+    import { afterNavigate, preloadData } from "$app/navigation";
     import { base } from "$app/paths";
     import Esflag from "$lib/assets/Esflag.svelte";
     import Hamburger from "$lib/assets/Hamburger.svelte";
@@ -34,6 +34,9 @@
             }
         }
     });
+    afterNavigate(()=>{
+        window.scrollTo(0,0)
+    })
 
     let preloadedImages = [xbig, biggy];
 </script>
