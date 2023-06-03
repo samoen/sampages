@@ -230,9 +230,9 @@
     .sideandmain {
         display: grid;
         grid-template-columns: auto 1fr;
-        background-color: brown;
     }
     .sidebar {
+        grid-column: 1;
         align-self: baseline;
         position: sticky;
         /* top:0px; */
@@ -242,7 +242,6 @@
         /* max-width: 100px; */
         /* min-height: 1px; */
         /* max-height: calc(100dvh - var(--topbarheight)); */
-        background-color: blue;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         border: 4px solid var(--coloritem);
         border-top: none;
@@ -257,16 +256,12 @@
     }
 
     .sidenav {
-        /* height: 100%; */
-        /* width: 100%; */
-        /* overflow-y: scroll; */
         height: 100%;
     }
     .sidenav ul {
         height: 100%;
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
-        background-color: aquamarine;
         display: flex;
         flex-direction: column;
         /* min-height:min(calc(90vh - var(--topbarheight)),100%); */
@@ -293,6 +288,7 @@
         /* min-height: 100dvh; */
         /* flex-basis: 100%; */
         /* flex-grow: 1; */
+        grid-column: 2;
     }
     .shadowed {
         /* display: none; */

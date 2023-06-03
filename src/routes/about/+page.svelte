@@ -66,6 +66,9 @@
         padding-right: 1rem;
         padding-top:5rem;
         background-image: linear-gradient(to right,red, yellow);
+        --textwidth: 300px;
+        --maximagewidth: 600px;
+        container: conty / inline-size;
     }
     .imgwithtext {
         margin-top: 2rem;
@@ -74,11 +77,8 @@
         background-color: var(--colorsecondary);
     }
 
-    @media only screen and (min-width: 601px) {
-        .cont {
-            --textwidth: 300px;
-            --maximagewidth: 600px;
-        }
+
+    @container conty (width >= 600px) {
         .imgwithtext {
             margin-left: auto;
             margin-right: auto;
@@ -93,6 +93,7 @@
             align-self: stretch;
             max-width: var(--maximagewidth);
         }
+
         .myimg {
             position: absolute;
             width: 100%;
@@ -102,10 +103,10 @@
 
         .cardtxt {
             width: var(--textwidth);
+            background-color:blue;
         }
     }
-
-    @media only screen and (max-width: 600px) {
+    @container conty (width < 600px) {
         .myimgcont {
             text-align: center;
         }
