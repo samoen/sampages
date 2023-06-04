@@ -11,7 +11,7 @@
     import xbig from "$lib/assets/xbig.png";
     import { mobileMode, screenWidth } from "$lib/stores";
     import { onMount } from "svelte";
-    import { fade, slide } from "svelte/transition";
+    import { fade, slide, fly } from "svelte/transition";
 
     export let data;
     let burgopen = false;
@@ -47,26 +47,26 @@
 <svelte:head>
     <title>Sam pages</title>
     {#each preloadedImages as image}
-        <link rel="preload" as="image" href={image} />
+        <link rel="preload" as="image" href="{image}" />
     {/each}
 </svelte:head>
 
-<svelte:window bind:innerWidth={$screenWidth} bind:scrollY />
+<svelte:window bind:innerWidth="{$screenWidth}" bind:scrollY="{scrollY}" />
 
 <!-- in:fade -->
 <div class="top">
     {#if true}
         <div
             class="topbar"
-            in:fade={{ duration: 200 }}
-            class:opac={scrollY < 70 && !topnavopen && !burgopen}
+            in:fade="{{ duration: 200 }}"
+            class:opac="{scrollY < 70 && !topnavopen && !burgopen}"
         >
             <!-- class:opac="{(atTop && !topnavopen && !burgopen) || (!burgopen)}" -->
             <button
                 class="baricon"
-                on:click={() => {
+                on:click="{() => {
                     burgopen = !burgopen;
-                }}
+                }}"
                 on:keydown
             >
                 <Hamburger />
@@ -75,21 +75,21 @@
             <div class="barsection">
                 <button
                     class="baricon"
-                    on:click={() => {
-                        window.document.body.classList.toggle("dark-mode");
-                    }}
+                    on:click="{() => {
+                        window.document.body.classList.toggle('dark-mode');
+                    }}"
                     on:keydown
                 >
                     <Palette />
                 </button>
                 <button
                     class="flag"
-                    on:click={() => {
+                    on:click="{() => {
                         topnavopen = !topnavopen;
                         // if(topnavopen && atTop){
                         //     atTop = false;
                         // }
-                    }}
+                    }}"
                 >
                     {#if selectedLang == "EN"}
                         <Ukflag />
@@ -100,26 +100,13 @@
             </div>
         </div>
     {/if}
-    {#if topnavopen}
-        <div
-            class="topnav"
-            transition:slide|local={{ delay: 0, duration: 300, axis: "y" }}
-        >
-            <button class="flag" on:click={() => (selectedLang = "EN")}>
-                <Ukflag />
-            </button>
-            <button class="flag" on:click={() => (selectedLang = "ES")}>
-                <Esflag />
-            </button>
-        </div>
-    {/if}
 
     <div class="sideandmain">
         {#if burgopen}
             <!-- transition:fade -->
             <div
                 class="sidebar"
-                transition:slide={{ delay: 0, duration: 400, axis: "x" }}
+                transition:slide="{{ delay: 0, duration: 400, axis: 'x' }}"
             >
                 <nav class="sidenav">
                     <ul>
@@ -165,15 +152,32 @@
             {#if $mobileMode && burgopen}
                 <div
                     class="shadow"
-                    on:click={() => (burgopen = false)}
+                    on:click="{() => (burgopen = false)}"
                     on:keyup
                     transition:fade
-                />
+                ></div>
             {/if}
+        {/if}
+        {#if topnavopen}
+            <div
+                class="topnav"
+                transition:slide|local="{{
+                    delay: 0,
+                    duration: 300,
+                    // axis: 'y',
+                }}"
+            >
+                <button class="flag" on:click="{() => (selectedLang = 'EN')}">
+                    <Ukflag />
+                </button>
+                <button class="flag" on:click="{() => (selectedLang = 'ES')}">
+                    <Esflag />
+                </button>
+            </div>
         {/if}
 
         {#key data.currentRoute}
-            <div class="slotandfoot" in:fade={{ duration: 250, delay: 0 }}>
+            <div class="slotandfoot" in:fade="{{ duration: 250, delay: 0 }}">
                 <!-- class:shadowed="{$mobileMode && burgopen}" -->
                 <slot />
                 <footer class="foot">
@@ -211,6 +215,27 @@
         height: var(--topbarheight);
         border: 4px solid var(--coloritem);
     }
+    .topnav {
+        /* position: fixed; */
+        /* top: var(--topbarheight); */
+        /* right: 0; */
+        /* left: 0; */
+        margin-top: var(--topbarheight);
+        align-self: self-start;
+        grid-row:1;
+        grid-column: 2;
+        box-sizing: border-box;
+        z-index: 3;
+        display: flex;
+        gap: 10px;
+        padding: 7px;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        border: 4px solid var(--coloritem);
+        border-top: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        background-color: var(--colorsecondary);
+    }
     .opac {
         /* opacity: 1; */
         background-color: transparent;
@@ -230,6 +255,7 @@
     .sideandmain {
         display: grid;
         grid-template-columns: auto 1fr;
+        background-color: white;
     }
     .sidebar {
         grid-column: 1;
@@ -289,6 +315,7 @@
         /* flex-basis: 100%; */
         /* flex-grow: 1; */
         grid-column: 2;
+        grid-row:1;
     }
     .shadowed {
         /* display: none; */
@@ -345,23 +372,6 @@
         background-color: var(--coloritem);
     }
 
-    .topnav {
-        position: fixed;
-        top: var(--topbarheight);
-        box-sizing: border-box;
-        right: 0;
-        left: 0;
-        z-index: 3;
-        display: flex;
-        gap: 10px;
-        padding: 7px;
-        flex-wrap: wrap;
-        justify-content: space-evenly;
-        border: 4px solid var(--coloritem);
-        border-top: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        background-color: var(--colorsecondary);
-    }
 
     a:hover {
         background-color: var(--coloritem);

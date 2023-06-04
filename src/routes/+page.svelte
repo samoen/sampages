@@ -10,7 +10,7 @@
     <div class="splash" style="background-image:url({wavy});">
         <h1>
             Welcome to my website
-            <img width=70 height=20 src="{pachnor}" alt="peachy" />
+            <img width=70 height=40 src="{pachnor}" alt="peachy" />
         </h1>
         <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem dicta
