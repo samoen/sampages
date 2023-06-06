@@ -103,7 +103,6 @@
 
         .cardtxt {
             width: var(--textwidth);
-            background-color:blue;
         }
     }
     @container conty (width < 600px) {

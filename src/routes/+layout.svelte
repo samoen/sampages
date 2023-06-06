@@ -2,6 +2,7 @@
     import { afterNavigate, preloadData } from "$app/navigation";
     import { base } from "$app/paths";
     import Esflag from "$lib/assets/Esflag.svelte";
+    import Github from "$lib/assets/Github.svelte";
     import Hamburger from "$lib/assets/Hamburger.svelte";
     import Heartbeat from "$lib/assets/Heartbeat.svelte";
     import Palette from "$lib/assets/Palette.svelte";
@@ -55,7 +56,8 @@
 
 <!-- in:fade -->
 <div class="top">
-    {#if true}
+    
+    <div class="sideandmain">
         <div
             class="topbar"
             in:fade="{{ duration: 200 }}"
@@ -86,9 +88,9 @@
                     class="flag"
                     on:click="{() => {
                         topnavopen = !topnavopen;
-                        // if(topnavopen && atTop){
-                        //     atTop = false;
-                        // }
+                        if($mobileMode){
+                            burgopen = false;
+                        }
                     }}"
                 >
                     {#if selectedLang == "EN"}
@@ -97,11 +99,9 @@
                         <Esflag />
                     {/if}
                 </button>
+                <a class="barlink" href="https://github.com/samoen"><Github></Github></a>
             </div>
         </div>
-    {/if}
-
-    <div class="sideandmain">
         {#if burgopen}
             <!-- transition:fade -->
             <div
@@ -113,7 +113,7 @@
                         <li>
                             <a href="{base}/">
                                 <Hamburger />
-                                Home page is the place
+                                Home
                             </a>
                         </li>
                         <li>
@@ -196,11 +196,11 @@
         /* background-color: var(--colorprimary); */
     }
     .topbar {
-        position: fixed;
+        position: sticky;
         top: 0;
-        right: 0;
-        left: 0;
-        /* opacity: 0; */
+        
+        grid-column: 1 / span 2;
+        grid-row:1;
         z-index: 3;
         box-sizing: border-box;
         background-color: var(--colorsecondary);
@@ -210,19 +210,19 @@
         align-items: center;
         padding-left: 10px;
         padding-right: 10px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        height: var(--topbarheight);
+        /* padding-top: 5px; */
+        /* padding-bottom: 5px; */
+        /* height: var(--topbarheight); */
+        height: 4rem;
         border: 4px solid var(--coloritem);
     }
     .topnav {
-        /* position: fixed; */
-        /* top: var(--topbarheight); */
-        /* right: 0; */
-        /* left: 0; */
-        margin-top: var(--topbarheight);
+        position: sticky;
+        /* top:0; */
+        top: var(--topbarheight);
+        /* margin-top: var(--topbarheight); */
         align-self: self-start;
-        grid-row:1;
+        grid-row:2;
         grid-column: 2;
         box-sizing: border-box;
         z-index: 3;
@@ -236,6 +236,16 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         background-color: var(--colorsecondary);
     }
+    .barlink{
+        background-color: aqua;
+        /* width:150px; */
+        height:100%;
+        width: 100%;
+        /* display:block; */
+        /* height:100%; */
+        /* width:100% */
+
+    }
     .opac {
         /* opacity: 1; */
         background-color: transparent;
@@ -246,23 +256,26 @@
     .flag {
         width: 50px;
         border: none;
-        line-height: 10px;
-        align-items: center;
-        padding: 6px;
+        /* line-height: 10px; */
+        /* align-items: center; */
+        /* padding: 6px; */
         background-color: transparent;
         /* background-color: blue; */
     }
     .sideandmain {
         display: grid;
         grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto 1fr;
         background-color: white;
     }
     .sidebar {
         grid-column: 1;
-        align-self: baseline;
+        grid-row:2 / span 2;
+        align-self: start;
         position: sticky;
         /* top:0px; */
-        top: var(--topbarheight);
+        /* top: var(--top
+        barheight); */
         padding: 5px;
         background-color: var(--colorsecondary);
         /* max-width: 100px; */
@@ -273,12 +286,12 @@
         border-top: none;
         box-sizing: border-box;
         z-index: 4;
-        /* height:min(calc(100vh - var(--topbarheight)),calc(100% - var(--topbarheight))); */
+        height:min(100%, 100dvh);
         /* overflow-y: scroll; */
-        height: min(
+        /* height: min(
             calc(100dvh - var(--topbarheight)),
             calc(100% - var(--topbarheight))
-        );
+        ); */
     }
 
     .sidenav {
@@ -304,6 +317,7 @@
         align-items: center;
         justify-items: start;
         padding: 5px;
+        padding-right:10px;
         background-color: var(--colorprimary);
         text-decoration: none;
         /* cursor: pointer; */
@@ -315,7 +329,7 @@
         /* flex-basis: 100%; */
         /* flex-grow: 1; */
         grid-column: 2;
-        grid-row:1;
+        grid-row:1 / span 2;
     }
     .shadowed {
         /* display: none; */
