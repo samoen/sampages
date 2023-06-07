@@ -9,11 +9,12 @@
     import xbig from "$lib/assets/xbig.png";
     import { burgopen, croute, mobileMode, nocolortransition, screenWidth, toggleSidebar, toggleTopNav, topnavopen, topnavshouldslideaway, transparentTopBar, wscrollY } from "$lib/stores";
     import { onMount } from "svelte";
+    import { get } from "svelte/store";
     import { fade, slide } from "svelte/transition";
 
     export let data;
     $croute = data.currentRoute;
-    let ready = false;
+    // let ready = false;
     let selectedLang = "EN";
     let preloadableRoutes = ["/", "/about"];
 
@@ -21,7 +22,7 @@
         // if ($mobileMode) {
         //     $burgopen = false;
         // }
-        ready = true;
+        // ready = true;
 
         for (let r of preloadableRoutes) {
             if (data.currentRoute != r) {
@@ -30,22 +31,21 @@
         }
     });
     afterNavigate(() => {
-        if ($mobileMode) {
-            $burgopen = false;
+
+        if (get(mobileMode) && get(burgopen)) {
+            toggleSidebar()
         }
         window.scrollTo(0, 0);
     });
 
-    let preloadedImages = [xbig, biggy];
-    // let scrollY =0;
-    // $: {
-    //     $viewModel.wscrollY = scrollY
-    // }
+    // let preloadedImages = [xbig, biggy];
     function mayslide(node: Element){
         if($topnavshouldslideaway){
             return slide(node, {delay: 0,duration: 300,})
         }else{
-            return slide(node, {delay: 0,duration: 0,})
+            return {
+                duration:0
+            }
         }
     }
     
