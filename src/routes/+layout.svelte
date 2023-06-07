@@ -2,31 +2,25 @@
     import { afterNavigate, preloadData } from "$app/navigation";
     import { base } from "$app/paths";
     import Esflag from "$lib/assets/Esflag.svelte";
-    import Github from "$lib/assets/Github.svelte";
     import Hamburger from "$lib/assets/Hamburger.svelte";
-    import Heartbeat from "$lib/assets/Heartbeat.svelte";
     import Palette from "$lib/assets/Palette.svelte";
     import Ukflag from "$lib/assets/Ukflag.svelte";
     import biggy from "$lib/assets/biggy.png";
-    import logooen from "$lib/assets/logooen.png";
     import xbig from "$lib/assets/xbig.png";
-    import { mobileMode, screenWidth } from "$lib/stores";
+    import { burgopen, croute, mobileMode, nocolortransition, screenWidth, toggleSidebar, toggleTopNav, topnavopen, topnavshouldslideaway, transparentTopBar, wscrollY } from "$lib/stores";
     import { onMount } from "svelte";
-    import { fade, slide, fly } from "svelte/transition";
+    import { fade, slide } from "svelte/transition";
 
     export let data;
-    let burgopen = false;
-    let topnavopen = false;
+    $croute = data.currentRoute;
     let ready = false;
-    let atTop = true;
-    let scrollY = 0;
     let selectedLang = "EN";
     let preloadableRoutes = ["/", "/about"];
 
     onMount(() => {
-        if ($mobileMode) {
-            burgopen = false;
-        }
+        // if ($mobileMode) {
+        //     $burgopen = false;
+        // }
         ready = true;
 
         for (let r of preloadableRoutes) {
@@ -37,44 +31,56 @@
     });
     afterNavigate(() => {
         if ($mobileMode) {
-            burgopen = false;
+            $burgopen = false;
         }
         window.scrollTo(0, 0);
     });
 
     let preloadedImages = [xbig, biggy];
+    // let scrollY =0;
+    // $: {
+    //     $viewModel.wscrollY = scrollY
+    // }
+    function mayslide(node: Element){
+        if($topnavshouldslideaway){
+            return slide(node, {delay: 0,duration: 300,})
+        }else{
+            return slide(node, {delay: 0,duration: 0,})
+        }
+    }
+    
 </script>
 
 <svelte:head>
     <title>Sam pages</title>
-    {#each preloadedImages as image}
+    <!-- {#each preloadedImages as image}
         <link rel="preload" as="image" href="{image}" />
-    {/each}
+    {/each} -->
 </svelte:head>
 
-<svelte:window bind:innerWidth="{$screenWidth}" bind:scrollY="{scrollY}" />
+<svelte:window bind:innerWidth="{$screenWidth}" bind:scrollY="{$wscrollY}" />
 
 <!-- in:fade -->
 <div class="top">
     
     <div class="sideandmain">
+        <!-- in:mayfade="{{ fn:fade, duration: 200 }}" -->
         <div
             class="topbar"
-            in:fade="{{ duration: 200 }}"
-            class:opac="{scrollY < 70 && !topnavopen && !burgopen}"
+            class:opac="{$transparentTopBar}"
+            class:nocolortransition="{$nocolortransition}"
         >
             <!-- class:opac="{(atTop && !topnavopen && !burgopen) || (!burgopen)}" -->
             <button
                 class="baricon"
                 on:click="{() => {
-                    burgopen = !burgopen;
+                    toggleSidebar()
                 }}"
                 on:keydown
             >
                 <Hamburger />
             </button>
             <p class="barp">SamCorp</p>
-            <div class="barsection">
                 <button
                     class="baricon"
                     on:click="{() => {
@@ -87,10 +93,7 @@
                 <button
                     class="flag"
                     on:click="{() => {
-                        topnavopen = !topnavopen;
-                        if($mobileMode){
-                            burgopen = false;
-                        }
+                        toggleTopNav();
                     }}"
                 >
                     {#if selectedLang == "EN"}
@@ -99,11 +102,11 @@
                         <Esflag />
                     {/if}
                 </button>
-                <a class="barlink" href="https://github.com/samoen"><Github></Github></a>
-            </div>
+                <!-- <a class="barlink" href="https://github.com/samoen"><Github></Github></a> -->
         </div>
-        {#if burgopen}
+        {#if $burgopen}
             <!-- transition:fade -->
+            <!-- transition:slide="{{ delay: 0, duration: 400, axis: 'x' }}" -->
             <div
                 class="sidebar"
                 transition:slide="{{ delay: 0, duration: 400, axis: 'x' }}"
@@ -149,24 +152,26 @@
                     </ul>
                 </nav>
             </div>
-            {#if $mobileMode && burgopen}
+            {#if $mobileMode && $burgopen}
                 <div
                     class="shadow"
-                    on:click="{() => (burgopen = false)}"
+                    on:click="{() => {toggleSidebar()}}"
                     on:keyup
                     transition:fade
                 ></div>
             {/if}
         {/if}
-        {#if topnavopen}
+        {#if $topnavopen}
             <div
                 class="topnav"
-                transition:slide|local="{{
+                in:slide|local="{{
                     delay: 0,
                     duration: 300,
                     // axis: 'y',
                 }}"
+                out:mayslide
             >
+            <!-- out:fade -->
                 <button class="flag" on:click="{() => (selectedLang = 'EN')}">
                     <Ukflag />
                 </button>
@@ -180,10 +185,7 @@
             <div class="slotandfoot" in:fade="{{ duration: 250, delay: 0 }}">
                 <!-- class:shadowed="{$mobileMode && burgopen}" -->
                 <slot />
-                <footer class="foot">
-                    <hr />
-                    <p>&copy Sam Oen</p>
-                </footer>
+
             </div>
         {/key}
     </div>
@@ -195,9 +197,21 @@
     .top {
         /* background-color: var(--colorprimary); */
     }
+    .sideandmain {
+        /* position: fixed; */
+        /* height: 100dvh; */
+        /* overflow-y:auto; */
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: var(--topbarheight) auto 1fr;
+        align-items: start;
+        /* overflow-x: hidden; */
+        /* margin-right: 40px; */
+        /* background-color: gray; */
+    }
     .topbar {
         position: sticky;
-        top: 0;
+        top: 0; 
         
         grid-column: 1 / span 2;
         grid-row:1;
@@ -205,23 +219,26 @@
         box-sizing: border-box;
         background-color: var(--colorsecondary);
         /* background-color: tr; */
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: 3rem 1fr 3rem 3rem 3rem ;
+        place-items: center;
+        overflow-x: hidden;
+        /* justify-content: space-between; */
         align-items: center;
-        padding-left: 10px;
-        padding-right: 10px;
+        /* padding-left: 10px; */
+        /* padding-right: 10px; */
         /* padding-top: 5px; */
         /* padding-bottom: 5px; */
-        /* height: var(--topbarheight); */
-        height: 4rem;
+        height: var(--topbarheight);
         border: 4px solid var(--coloritem);
     }
     .topnav {
+        /* position: fixed; */
         position: sticky;
         /* top:0; */
         top: var(--topbarheight);
         /* margin-top: var(--topbarheight); */
-        align-self: self-start;
+        /* align-self: self-start; */
         grid-row:2;
         grid-column: 2;
         box-sizing: border-box;
@@ -244,13 +261,15 @@
         /* display:block; */
         /* height:100%; */
         /* width:100% */
-
     }
     .opac {
         /* opacity: 1; */
         background-color: transparent;
         /* border-color: transparent; */
         border: 4px solid transparent;
+    }
+    .nocolortransition{
+        transition: background-color 0s;
     }
 
     .flag {
@@ -262,32 +281,26 @@
         background-color: transparent;
         /* background-color: blue; */
     }
-    .sideandmain {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-template-rows: auto auto 1fr;
-        background-color: white;
-    }
     .sidebar {
         grid-column: 1;
         grid-row:2 / span 2;
-        align-self: start;
+        /* align-self: stretch; */
         position: sticky;
         /* top:0px; */
-        /* top: var(--top
-        barheight); */
+        top: var(--topbarheight);
         padding: 5px;
         background-color: var(--colorsecondary);
         /* max-width: 100px; */
         /* min-height: 1px; */
-        /* max-height: calc(100dvh - var(--topbarheight)); */
+        /* height: calc(100dvh - var(--topbarheight)); */
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         border: 4px solid var(--coloritem);
         border-top: none;
         box-sizing: border-box;
         z-index: 4;
-        height:min(100%, 100dvh);
-        /* overflow-y: scroll; */
+        /* height:100%; */
+        height: calc(100dvh - var(--topbarheight));
+        /* overflow-y: hidden; */
         /* height: min(
             calc(100dvh - var(--topbarheight)),
             calc(100% - var(--topbarheight))
@@ -328,8 +341,9 @@
         /* min-height: 100dvh; */
         /* flex-basis: 100%; */
         /* flex-grow: 1; */
+        overflow-y: auto;
         grid-column: 2;
-        grid-row:1 / span 2;
+        grid-row:1 / span 3;
     }
     .shadowed {
         /* display: none; */
@@ -345,22 +359,6 @@
         background-color: black;
         opacity: 0.5;
         z-index: 2;
-    }
-
-    .foot {
-        /* padding: 10px; */
-    }
-    hr {
-        margin-top: 15px;
-        margin-bottom: 20px;
-        width: 90%;
-        border: 2px solid var(--coloritem);
-        border-radius: 3px;
-        border-color: var(--colortext);
-        opacity: 50%;
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
     }
 
     .barsection {
@@ -397,7 +395,10 @@
     }
     @media only screen and (max-width: 400px) {
         .sidebar {
-            position: fixed;
+            /* position: fixed; */
+        }
+        .slotandfoot{
+            grid-column: 1 / span 2;
         }
     }
     :global(p, span, h1, a) {

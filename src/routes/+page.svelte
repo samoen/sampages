@@ -3,6 +3,7 @@
     import wavy from "$lib/assets/wavy.png";
     import xbig from "$lib/assets/xbig.png";
     import gamesprites from "$lib/assets/gamesprites.png";
+    import Footer from "$lib/components/Footer.svelte";
 
 </script>
 
@@ -40,10 +41,11 @@
         assumenda provident tenetur laborum odit necessitatibus, exercitationem
         maiores. Iste, esse quaerat!
     </p>
+    <Footer></Footer>
 </div>
 <style>
     .container {
-
+        background-color: blueviolet;
     }
     .splash{
         padding-top: 100px;
