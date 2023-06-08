@@ -10,17 +10,19 @@
     import xbig from "$lib/assets/xbig.png";
     import Footer from "$lib/components/Footer.svelte";
     import {
+        SIDEBAR_SLIDE_TIME,
+        barbordercolor,
+        barcolor,
         burgopen,
-        croute,
         mobileMode,
-        nocolortransition,
         screenWidth,
         themeMode,
+        themes,
         toggleSidebar,
         toggleTopNav,
         topnavopen,
-        topnavshouldslideaway,
-        transparentTopBar,
+        toptransdelay,
+        toptransduration,
         wscrollY,
     } from "$lib/stores";
     import { onMount } from "svelte";
@@ -41,59 +43,42 @@
         }
     });
     afterNavigate(() => {
-        if (get(mobileMode) && get(burgopen)) {
-            toggleSidebar();
-        }
         window.scrollTo(0, 0);
     });
 
     // let preloadedImages = [xbig, biggy];
-    function mayslide(node: Element) {
-        if ($topnavshouldslideaway) {
-            return slide(node, { delay: 0, duration: 300 });
-        } else {
-            return {
-                duration: 0,
-            };
-        }
-    }
+    // function mayslide(node: Element) {
+    //     if ($topnavshouldslideaway) {
+    //         return slide(node, { delay: 0, duration: 300 });
+    //     } else {
+    //         return {
+    //             duration: 0,
+    //         };
+    //     }
+    // }
 </script>
+
 
 <svelte:head>
     <title>Sam pages</title>
     <!-- {#each preloadedImages as image}
-        <link rel="preload" as="image" href="{image}" />
+    <link rel="preload" as="image" href="{image}" />
     {/each} -->
     <style>
-        :root{
+        :root {
             --topbarheight: 70px;
         }
     </style>
-    {#if $themeMode == "light"}
+    {#if $themeMode.name == "light"}
         <style>
-            :root {
-                --colorprimary: beige;
-                --colorsecondary: rgb(247, 195, 160);
-                --colortext: black;
-                --coloritem: aliceblue;
+            body {
+                background-color: white;
             }
         </style>
-    {:else if $themeMode == "dark"}
+    {:else}
         <style>
-            :root {
-                --colorprimary: rgb(2, 1, 44);
-                --colorsecondary: darkblue;
-                --coloritem: blue;
-                --colortext: white;
-            }
-        </style>
-    {:else if $themeMode == "red"}
-        <style>
-            :root {
-                --colorprimary: pink;
-                --colorsecondary: red;
-                --colortext: aliceblue;
-                --coloritem: brown;
+            body {
+                background-color: black;
             }
         </style>
     {/if}
@@ -101,13 +86,19 @@
 
 <svelte:window bind:innerWidth="{$screenWidth}" bind:scrollY="{$wscrollY}" />
 
-<div class="top">
+<div
+    style:--barTcolor="{$barcolor}"
+    style:--barBorderColor="{$barbordercolor}"
+    style:--barTDelay="{$toptransdelay}ms"
+    style:--barTDur="{$toptransduration}ms"
+    style:--colorprimary="{$themeMode.primary}"
+    style:--colorsecondary="{$themeMode.secondary}"
+    style:--coloritem="{$themeMode.item}"
+    style:--colortext="{$themeMode.text}"
+    class="top"
+>
     <div class="sideandmain">
-        <div
-            class="topbar"
-            class:opac="{$transparentTopBar}"
-            class:nocolortransition="{$nocolortransition}"
-        >
+        <div class="topbar">
             <button
                 class="baricon"
                 on:click="{() => {
@@ -121,11 +112,10 @@
             <button
                 class="baricon"
                 on:click="{() => {
-                    $nocolortransition = false;
-                    if ($themeMode == 'light') {
-                        themeMode.set('dark');
+                    if ($themeMode == themes.light) {
+                        $themeMode = themes.dark;
                     } else {
-                        themeMode.set('light');
+                        $themeMode = themes.light;
                     }
                 }}"
                 on:keydown
@@ -149,42 +139,36 @@
         {#if $burgopen}
             <div
                 class="sidebar"
-                transition:slide="{{ delay: 0, duration: 400, axis: 'x' }}"
+                transition:slide="{{
+                    delay: 0,
+                    duration: SIDEBAR_SLIDE_TIME,
+                    axis: 'x',
+                }}"
             >
                 <nav class="sidenav">
                     <ul>
                         <li>
-                            <a href="{base}/">
+                            <a
+                                on:click="{() => {
+                                    if ($mobileMode && $burgopen) {
+                                        toggleSidebar();
+                                    }
+                                }}"
+                                href="{base}/"
+                            >
                                 <Hamburger />
                                 Home
                             </a>
                         </li>
                         <li>
-                            <a href="{base}/about">
-                                <Hamburger />
-                                About
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{base}/about">
-                                <Hamburger />
-                                About
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{base}/about">
-                                <Hamburger />
-                                About
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{base}/about">
-                                <Hamburger />
-                                About
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{base}/about">
+                            <a 
+                                on:click="{() => {
+                                    if ($mobileMode && $burgopen) {
+                                        toggleSidebar();
+                                    }
+                                }}"
+                            
+                            href="{base}/about">
                                 <Hamburger />
                                 About
                             </a>
@@ -206,14 +190,8 @@
         {#if $topnavopen}
             <div
                 class="topnav"
-                in:slide|local="{{
-                    delay: 0,
-                    duration: 300,
-                    // axis: 'y',
-                }}"
-                out:mayslide
+                transition:slide|local="{{ duration: SIDEBAR_SLIDE_TIME }}"
             >
-                <!-- out:fade -->
                 <button class="flag" on:click="{() => (selectedLang = 'EN')}">
                     <Ukflag />
                 </button>
@@ -263,7 +241,6 @@
         grid-row: 1;
         z-index: 3;
         box-sizing: border-box;
-        background-color: var(--colorsecondary);
         /* background-color: tr; */
         display: grid;
         grid-template-columns: 3rem 1fr 3rem 3rem 3rem;
@@ -276,7 +253,14 @@
         /* padding-top: 5px; */
         /* padding-bottom: 5px; */
         height: var(--topbarheight);
-        border: 4px solid var(--coloritem);
+        background-color: var(--barTcolor);
+        /* border-color: var(--barBorderColor); */
+        border: 4px solid var(--barBorderColor);
+        transition: background-color var(--barTDur) ease-in-out var(--barTDelay),
+            border-color var(--barTDur) ease-in-out var(--barTDelay);
+        /* transition-property: background-color; */
+        /* transition-delay: var(--barTDelay); */
+        /* transition-duration:var(--barTDur); */
     }
     .topnav {
         /* position: fixed; */
@@ -307,15 +291,6 @@
         /* display:block; */
         /* height:100%; */
         /* width:100% */
-    }
-    .opac {
-        /* opacity: 1; */
-        background-color: transparent;
-        /* border-color: transparent; */
-        border: 4px solid transparent;
-    }
-    .nocolortransition {
-        transition: background-color 0s;
     }
 
     .flag {
@@ -416,12 +391,9 @@
         margin-left: auto;
         margin-right: auto;
     }
-    .shadowed {
-        /* display: none; */
-        background-color: black;
-        opacity: 0.5;
-    }
+
     .shadow {
+        display: none;
         position: fixed;
         top: 0;
         bottom: 0;
@@ -432,12 +404,6 @@
         z-index: 2;
     }
 
-    .barsection {
-        display: flex;
-        gap: 5px;
-        /* flex-grow: 1; */
-        /* align-items: center; */
-    }
     .barp {
         user-select: none;
         font-size: 150%;
@@ -452,32 +418,40 @@
         border-radius: 15px;
         touch-action: none;
     }
-    .baricon:hover {
-        background-color: var(--colortext);
-    }
 
-    a:hover {
-        background-color: var(--coloritem);
-        transition: background-color 0s;
+    @media (hover: hover) and (pointer: fine){
+        .baricon:hover {
+            background-color: var(--coloritem);
+            transition: background-color 0s;
+        }
+    
+        a:hover {
+            background-color: var(--coloritem);
+            transition: background-color 0s;
+        }
     }
     .navimg {
         width: 20px;
         margin-right: 5px;
     }
     @media only screen and (max-width: 400px) {
-        .sidebar {
-            /* position: fixed; */
-        }
         .slotandfoot {
             grid-column: 1 / span 2;
         }
+        .shadow {
+            display: block;
+        }
+        
     }
     :global(p, span, h1, a) {
         color: var(--colortext);
         transition: color 1s;
     }
-    :global(div, button, body, p, a, h1, path, hr) {
+    :global(button, p, a, h1, path, hr) {
         transition: background-color 1s, border-color 0.4s, color 1s, stroke 1s;
+    }
+    :global(div) {
+        background-color: var(--colorprimary);
     }
 
     :global(*) {
@@ -485,11 +459,11 @@
         margin: 0;
     }
 
-    :global(body) {
-        background-color: var(--colorprimary);
-    }
+    /* :global(body) { */
+    /* background-color: pink; */
+    /* } */
 
     :global(html) {
-        background-color: var(--colorprimary);
+        /* background-color: purple; */
     }
 </style>

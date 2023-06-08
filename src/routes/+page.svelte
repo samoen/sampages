@@ -7,7 +7,7 @@
     import Footer from "$lib/components/Footer.svelte";
     import { themeMode } from "$lib/stores";
 
-    $: splashimg = $themeMode == 'dark' ? wavydark : wavy
+    $: splashimg = $themeMode.name == 'dark' ? wavydark : wavy
 
 </script>
 
@@ -58,9 +58,7 @@
         background-size:cover;
         background-attachment:local;
     }
-    /* .splash > p, h1{
-        color:black;
-    } */
+
     h1 {
     }
     .someting{
