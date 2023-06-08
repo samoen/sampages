@@ -1,14 +1,18 @@
 <script lang="ts">
     import pachnor from "$lib/assets/pachnor.png";
     import wavy from "$lib/assets/wavy.png";
+    import wavydark from "$lib/assets/wavydark.png";
     import xbig from "$lib/assets/xbig.png";
     import gamesprites from "$lib/assets/gamesprites.png";
     import Footer from "$lib/components/Footer.svelte";
+    import { themeMode } from "$lib/stores";
+
+    $: splashimg = $themeMode == 'dark' ? wavydark : wavy
 
 </script>
 
 <div class="container">
-    <div class="splash" style="background-image:url({wavy});">
+    <div class="splash" style="background-image:url({splashimg});">
         <h1>
             Welcome to my website
             <img width=70 height=40 src="{pachnor}" alt="peachy" />
@@ -41,11 +45,11 @@
         assumenda provident tenetur laborum odit necessitatibus, exercitationem
         maiores. Iste, esse quaerat!
     </p>
-    <Footer></Footer>
+    <!-- <Footer></Footer> -->
 </div>
 <style>
     .container {
-        background-color: blueviolet;
+        /* background-color: blueviolet; */
     }
     .splash{
         padding-top: 100px;
@@ -54,9 +58,9 @@
         background-size:cover;
         background-attachment:local;
     }
-    .splash > p, h1{
+    /* .splash > p, h1{
         color:black;
-    }
+    } */
     h1 {
     }
     .someting{

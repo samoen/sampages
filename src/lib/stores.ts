@@ -17,6 +17,14 @@ export const wscrollY = writable(0)
 export const atTop = derived(wscrollY,($s)=>{
   return $s < 60
 })
+const themes = {
+  light:'li',
+  dark:'da',
+  red:'re',
+}
+type Theme = keyof typeof themes
+export const themeMode = writable<Theme>('light')
+
 export const burgopen = writable(false)
 export const topnavopen = writable(false)
 export const transparentTopBar = writable(true)
@@ -65,7 +73,7 @@ export const toggleSidebar = () => {
   burgopen.set(burgnext)
   topnavopen.set(navnext)
   transparentTopBar.set(toptransparentnext)
-  nocolortransition.set(false)
+  nocolortransition.set(true)
 }
 export const toggleTopNav = () => {
   let navnext = !get(topnavopen)

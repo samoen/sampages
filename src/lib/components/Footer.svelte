@@ -6,8 +6,8 @@
 <style>
     footer {
         /* padding: 10px; */
-        height: 200px;
-        background-color: blue;
+        /* height: 200px; */
+        /* background-color: blue; */
         margin: 0;
         padding: 0;
     }

@@ -1,5 +1,6 @@
 <script>
     import biggy from "$lib/assets/biggy.png";
+    import Footer from "$lib/components/Footer.svelte";
     import { onMount } from "svelte";
 
     // onMount(() => {});
@@ -44,6 +45,9 @@
         facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
         odit distinctio alias delectus nam reprehenderit, eos inventore corporis
     </p>
+    <!-- <div class="foothold">
+        <Footer></Footer>
+    </div> -->
 </div>
 
 <!-- {:else} -->
@@ -53,6 +57,10 @@
 <!-- </div> -->
 
 <style>
+    .foothold{
+        /* float: inline-end; */
+        margin-top: min();
+    }
     h1{
         /* margin-top:3rem */
     }
@@ -66,6 +74,7 @@
         padding-right: 1rem;
         padding-top:5rem;
         background-image: linear-gradient(to right,red, yellow);
+        /* min-height: 100vh; */
         --textwidth: 300px;
         --maximagewidth: 600px;
         container: conty / inline-size;
