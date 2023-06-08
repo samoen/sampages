@@ -10,7 +10,8 @@
     import xbig from "$lib/assets/xbig.png";
     import Footer from "$lib/components/Footer.svelte";
     import {
-        SIDEBAR_SLIDE_TIME,
+        DEFAULT_COLOR_TRANSITION_DURATION,
+        MENU_SLIDE_DURATION,
         barbordercolor,
         barcolor,
         burgopen,
@@ -58,60 +59,67 @@
     // }
 </script>
 
-
 <svelte:head>
     <title>Sam pages</title>
-    <!-- {#each preloadedImages as image}
-    <link rel="preload" as="image" href="{image}" />
-    {/each} -->
-    <style>
-        :root {
-            --topbarheight: 70px;
-        }
-    </style>
-    {#if $themeMode.name == "light"}
+
+    {#if $themeMode == themes.light}
         <style>
-            body {
-                background-color: white;
+            html {
+                --colorprimary: beige;
+                --colorsecondary: rgb(247, 195, 160);
+                --colortext: black;
+                --coloritem: aliceblue;
             }
         </style>
     {:else}
         <style>
-            body {
-                background-color: black;
+            html {
+                --colorprimary: rgb(2, 1, 44);
+                --colorsecondary: darkblue;
+                --coloritem: blue;
+                --colortext: white;
             }
         </style>
     {/if}
+    <!-- {#each preloadedImages as image}
+    <link rel="preload" as="image" href="{image}" />
+    {/each} -->
 </svelte:head>
 
 <svelte:window bind:innerWidth="{$screenWidth}" bind:scrollY="{$wscrollY}" />
 
 <div
+    class="top"
     style:--barTcolor="{$barcolor}"
     style:--barBorderColor="{$barbordercolor}"
     style:--barTDelay="{$toptransdelay}ms"
     style:--barTDur="{$toptransduration}ms"
-    style:--colorprimary="{$themeMode.primary}"
-    style:--colorsecondary="{$themeMode.secondary}"
-    style:--coloritem="{$themeMode.item}"
-    style:--colortext="{$themeMode.text}"
-    class="top"
+    style:--defaultTransitionDuration="{DEFAULT_COLOR_TRANSITION_DURATION}ms"
+    style:--scrolly="{$wscrollY}px"
 >
-    <div class="sideandmain">
+    <div 
+    class="sideandmain"
+    on:drag="{(e)=>{
+        // e.preventDefault()
+    }}"
+    >
         <div class="topbar">
             <button
-                class="baricon"
-                on:click="{() => {
-                    toggleSidebar();
-                }}"
+            class="baricon"
+            on:click="{() => {
+                toggleSidebar();
+            }}"
                 on:keydown
-            >
+                >
                 <Hamburger />
             </button>
-            <p class="barp">SamCorp</p>
+            {$wscrollY}
+            <!-- <p class="barp">SamCorp</p> -->
             <button
                 class="baricon"
                 on:click="{() => {
+                    $toptransduration = DEFAULT_COLOR_TRANSITION_DURATION;
+                    $toptransdelay = 0;
                     if ($themeMode == themes.light) {
                         $themeMode = themes.dark;
                     } else {
@@ -139,9 +147,12 @@
         {#if $burgopen}
             <div
                 class="sidebar"
+                on:drag="{(e)=>{
+                    e.preventDefault()
+                }}"
                 transition:slide="{{
                     delay: 0,
-                    duration: SIDEBAR_SLIDE_TIME,
+                    duration: MENU_SLIDE_DURATION,
                     axis: 'x',
                 }}"
             >
@@ -161,19 +172,19 @@
                             </a>
                         </li>
                         <li>
-                            <a 
+                            <a
                                 on:click="{() => {
                                     if ($mobileMode && $burgopen) {
                                         toggleSidebar();
                                     }
                                 }}"
-                            
-                            href="{base}/about">
+                                href="{base}/about"
+                            >
                                 <Hamburger />
                                 About
                             </a>
                         </li>
-                    </ul>
+
                 </nav>
             </div>
             {#if $mobileMode && $burgopen}
@@ -190,7 +201,7 @@
         {#if $topnavopen}
             <div
                 class="topnav"
-                transition:slide|local="{{ duration: SIDEBAR_SLIDE_TIME }}"
+                transition:slide|local="{{ duration: MENU_SLIDE_DURATION }}"
             >
                 <button class="flag" on:click="{() => (selectedLang = 'EN')}">
                     <Ukflag />
@@ -203,9 +214,7 @@
 
         {#key $page.url.pathname}
             <div class="slotandfoot" in:fade="{{ duration: 500, delay: 0 }}">
-                <!-- class:shadowed="{$mobileMode && burgopen}" -->
                 <slot />
-                <!-- <Footer></Footer> -->
                 <footer>
                     <hr />
                     <p>&copy Sam Oen</p>
@@ -219,19 +228,25 @@
 
 <style>
     .top {
-        /* background-color: var(--colorprimary); */
+        --topbarheight: 70px;
     }
     .sideandmain {
-        /* position: fixed; */
-        /* height: 100dvh; */
-        /* overflow-y:auto; */
         display: grid;
         grid-template-columns: auto 1fr;
         grid-template-rows: var(--topbarheight) auto 1fr;
         align-items: start;
-        /* overflow-x: hidden; */
-        /* margin-right: 40px; */
-        /* background-color: gray; */
+    }
+    .slotandfoot {
+        /* min-height: 100%; */
+        /* min-height: 100dvh; */
+        /* flex-basis: 100%; */
+        /* flex-grow: 1; */
+        grid-column: 2;
+        grid-row: 1 / span 3;
+
+        display: grid;
+        grid-template-rows: 1fr auto;
+        /* flex-direction: column; */
     }
     .topbar {
         position: sticky;
@@ -241,26 +256,16 @@
         grid-row: 1;
         z-index: 3;
         box-sizing: border-box;
-        /* background-color: tr; */
         display: grid;
         grid-template-columns: 3rem 1fr 3rem 3rem 3rem;
         place-items: center;
         overflow-x: hidden;
-        /* justify-content: space-between; */
         align-items: center;
-        /* padding-left: 10px; */
-        /* padding-right: 10px; */
-        /* padding-top: 5px; */
-        /* padding-bottom: 5px; */
         height: var(--topbarheight);
         background-color: var(--barTcolor);
-        /* border-color: var(--barBorderColor); */
         border: 4px solid var(--barBorderColor);
         transition: background-color var(--barTDur) ease-in-out var(--barTDelay),
             border-color var(--barTDur) ease-in-out var(--barTDelay);
-        /* transition-property: background-color; */
-        /* transition-delay: var(--barTDelay); */
-        /* transition-duration:var(--barTDur); */
     }
     .topnav {
         /* position: fixed; */
@@ -284,7 +289,6 @@
         background-color: var(--colorsecondary);
     }
     .barlink {
-        background-color: aqua;
         /* width:150px; */
         height: 100%;
         width: 100%;
@@ -306,7 +310,7 @@
     .sidebar {
         grid-column: 1;
         grid-row: 2 / span 2;
-        /* align-self: stretch; */
+        /* align-self: start; */
         position: sticky;
         /* top:0px; */
         top: var(--topbarheight);
@@ -320,9 +324,20 @@
         border-top: none;
         box-sizing: border-box;
         z-index: 4;
-        /* height:100%; */
-        height: calc(100dvh - var(--topbarheight));
-        /* overflow-y: hidden; */
+        /* bottom:100vh; */
+        /* height:300px; */
+        /* height: 100%; */
+        overflow-y: auto;
+        /* overscroll-behavior: contain; */
+        /* height:calc(100% - var(--scrolly)) */
+        /* height: clamp(10px, calc(100dvh - var(--topbarheight)),calc(100% - var(--scrolly))); */
+        height:calc(100dvh - var(--topbarheight));
+        max-height:calc(100% - var(--scrolly));
+        /* height:min(
+            calc(100% - var(--scrolly)),
+            calc(100vh - var(--topbarheight))
+        ) */
+
         /* height: min(
             calc(100dvh - var(--topbarheight)),
             calc(100% - var(--topbarheight))
@@ -330,11 +345,11 @@
     }
 
     .sidenav {
-        height: 100%;
+        /* height:100%; */
     }
     .sidenav ul {
         height: 100%;
-        overflow-y: auto;
+        /* overflow-y: auto; */
         overflow-x: hidden;
         display: flex;
         flex-direction: column;
@@ -358,20 +373,7 @@
         /* cursor: pointer; */
     }
 
-    .slotandfoot {
-        /* min-height: 100%; */
-        /* min-height: 100dvh; */
-        /* flex-basis: 100%; */
-        /* flex-grow: 1; */
-        overflow-y: auto;
-        grid-column: 2;
-        grid-row: 1 / span 3;
 
-        display: grid;
-        grid-template-rows: 1fr auto;
-        /* flex-direction: column; */
-        min-height: 100vh;
-    }
     footer {
         /* padding: 10px; */
         /* height: 200px; */
@@ -393,12 +395,9 @@
     }
 
     .shadow {
-        display: none;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        grid-column: 1 / span 2;
+        grid-row: 1 / span 3;
+        place-self: stretch;
         background-color: black;
         opacity: 0.5;
         z-index: 2;
@@ -406,7 +405,7 @@
 
     .barp {
         user-select: none;
-        font-size: 150%;
+        font-size: 1.5rem;
     }
     .baricon {
         cursor: pointer;
@@ -419,12 +418,12 @@
         touch-action: none;
     }
 
-    @media (hover: hover) and (pointer: fine){
+    @media (hover: hover) and (pointer: fine) {
         .baricon:hover {
             background-color: var(--coloritem);
             transition: background-color 0s;
         }
-    
+
         a:hover {
             background-color: var(--coloritem);
             transition: background-color 0s;
@@ -438,32 +437,37 @@
         .slotandfoot {
             grid-column: 1 / span 2;
         }
-        .shadow {
-            display: block;
-        }
-        
     }
     :global(p, span, h1, a) {
         color: var(--colortext);
         transition: color 1s;
+        font-size:1rem;
     }
-    :global(button, p, a, h1, path, hr) {
-        transition: background-color 1s, border-color 0.4s, color 1s, stroke 1s;
+    :global(div, button, p, a, h1, path, hr) {
+        transition: background-color var(--defaultTransitionDuration)
+                ease-in-out,
+            border-color var(--defaultTransitionDuration) ease-in-out,
+            color var(--defaultTransitionDuration),
+            stroke var(--defaultTransitionDuration);
     }
-    :global(div) {
-        background-color: var(--colorprimary);
+    :global(body) {
+        transition: background-color 1s ease-in-out;
+    }
+    :global(html) {
+        transition: background-color 1s ease-in-out;
     }
 
     :global(*) {
         padding: 0;
         margin: 0;
+        overscroll-behavior: contain;
     }
 
-    /* :global(body) { */
-    /* background-color: pink; */
-    /* } */
-
+    :global(body) {
+        background-color: var(--colorprimary);
+    }
+    
     :global(html) {
-        /* background-color: purple; */
+        background-color: purple;
     }
 </style>

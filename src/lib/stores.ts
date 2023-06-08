@@ -1,6 +1,10 @@
 import { derived, get, writable } from "svelte/store"
 
-export const SIDEBAR_SLIDE_TIME = 500;
+export const MENU_SLIDE_DURATION = 500;
+export const DEFAULT_BAR_COLOR = 'var(--colorsecondary)'
+export const DEFAULT_BAR_BORDER_COLOR = 'var(--coloritem)'
+export const DEFAULT_COLOR_TRANSITION_DURATION = 600
+
 export const screenWidth = writable(0)
 export const mobileMode = derived(
   screenWidth,
@@ -20,31 +24,11 @@ export const atTop = derived(wscrollY,($s)=>{
 })
 
 export const themes = {
-  light:{
-    name:'light',
-    primary: 'beige',
-    secondary: 'gray',
-    text: 'black',
-    item: 'aliceblue',
-  },
-  dark:{ 
-    name:'dark',
-    primary:'black',
-    secondary: 'darkblue',
-    item: 'blue',
-    text: 'white',
-  },
-}satisfies Record<string,Theme>
-type Theme = {
-  name:string
-  primary:string,
-  secondary:string,
-  text:string,
-  item:string,
-}
+  light:'light',
+  dark:'dark',  
+} as const;
+type Theme = typeof themes[keyof typeof themes]
 
-export const DEFAULT_BAR_COLOR = 'var(--colorsecondary)'
-export const DEFAULT_BAR_BORDER_COLOR = 'var(--coloritem)'
 
 export const themeMode = writable<Theme>(themes.light)
 export const burgopen = writable(false)
@@ -111,12 +95,12 @@ export const toggleSidebar = () => {
   if(!get(burgopen)){
     toptrandurNext = 0
   }else{
-    toptrandurNext = 500
+    toptrandurNext = DEFAULT_COLOR_TRANSITION_DURATION
   }
 
   let topTransDelayNext = get(toptransdelay)
   if(get(burgopen)){
-    topTransDelayNext = SIDEBAR_SLIDE_TIME
+    topTransDelayNext = MENU_SLIDE_DURATION
   }else{
     topTransDelayNext = 0
   }
@@ -149,17 +133,14 @@ export const toggleTopNav = () => {
     barbordcolnext = 'transparent'
   }
 
-  // let noColTransNext = get(nocolortransition)
   let ttdelaynext = get(toptransdelay)
   let ttdurnext = get(toptransduration)
   if(!get(topnavopen)){
-    // noColTransNext = true
     ttdurnext = 0
     ttdelaynext = 0
   }else{
-    console.log('ye')
-    ttdurnext = 500
-    ttdelaynext = SIDEBAR_SLIDE_TIME
+    ttdurnext = DEFAULT_COLOR_TRANSITION_DURATION
+    ttdelaynext = MENU_SLIDE_DURATION
   }
  
   burgopen.set(burgnext)
@@ -169,10 +150,3 @@ export const toggleTopNav = () => {
   toptransdelay.set(ttdelaynext)
   toptransduration.set(ttdurnext)
 }
-
-// export const transparentTopBar = derived(
-//   [wscrollY, topnavopen, burgopen],([$s, $t, $b])=>{
-//     return $s < 70 && !$t && !$b
-//   }
-// )
-

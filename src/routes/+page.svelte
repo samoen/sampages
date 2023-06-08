@@ -5,9 +5,9 @@
     import xbig from "$lib/assets/xbig.png";
     import gamesprites from "$lib/assets/gamesprites.png";
     import Footer from "$lib/components/Footer.svelte";
-    import { themeMode } from "$lib/stores";
+    import { themeMode, themes } from "$lib/stores";
 
-    $: splashimg = $themeMode.name == 'dark' ? wavydark : wavy
+    $: splashimg = $themeMode == themes.dark ? wavydark : wavy
 
 </script>
 
