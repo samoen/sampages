@@ -113,8 +113,8 @@
                 >
                 <Hamburger />
             </button>
-            {$wscrollY}
-            <!-- <p class="barp">SamCorp</p> -->
+            <!-- {$wscrollY} -->
+            <p class="barp">SamCorp</p>
             <button
                 class="baricon"
                 on:click="{() => {
@@ -237,16 +237,11 @@
         align-items: start;
     }
     .slotandfoot {
-        /* min-height: 100%; */
-        /* min-height: 100dvh; */
-        /* flex-basis: 100%; */
-        /* flex-grow: 1; */
+        min-height: 100dvh;
         grid-column: 2;
         grid-row: 1 / span 3;
-
         display: grid;
         grid-template-rows: 1fr auto;
-        /* flex-direction: column; */
     }
     .topbar {
         position: sticky;
@@ -254,7 +249,7 @@
 
         grid-column: 1 / span 2;
         grid-row: 1;
-        z-index: 3;
+        z-index: 5;
         box-sizing: border-box;
         display: grid;
         grid-template-columns: 3rem 1fr 3rem 3rem 3rem;
@@ -268,12 +263,8 @@
             border-color var(--barTDur) ease-in-out var(--barTDelay);
     }
     .topnav {
-        /* position: fixed; */
         position: sticky;
-        /* top:0; */
         top: var(--topbarheight);
-        /* margin-top: var(--topbarheight); */
-        /* align-self: self-start; */
         grid-row: 2;
         grid-column: 2;
         box-sizing: border-box;
@@ -289,59 +280,33 @@
         background-color: var(--colorsecondary);
     }
     .barlink {
-        /* width:150px; */
         height: 100%;
         width: 100%;
-        /* display:block; */
-        /* height:100%; */
-        /* width:100% */
     }
 
     .flag {
         width: 50px;
         border: none;
-        /* line-height: 10px; */
-        /* align-items: center; */
-        /* padding: 6px; */
         background-color: transparent;
         touch-action: none;
-        /* background-color: blue; */
     }
     .sidebar {
         grid-column: 1;
         grid-row: 2 / span 2;
-        /* align-self: start; */
         position: sticky;
-        /* top:0px; */
         top: var(--topbarheight);
         padding: 5px;
         background-color: var(--colorsecondary);
-        /* max-width: 100px; */
-        /* min-height: 1px; */
-        /* height: calc(100dvh - var(--topbarheight)); */
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         border: 4px solid var(--coloritem);
         border-top: none;
         box-sizing: border-box;
         z-index: 4;
-        /* bottom:100vh; */
-        /* height:300px; */
-        /* height: 100%; */
         overflow-y: auto;
-        /* overscroll-behavior: contain; */
-        /* height:calc(100% - var(--scrolly)) */
-        /* height: clamp(10px, calc(100dvh - var(--topbarheight)),calc(100% - var(--scrolly))); */
-        height:calc(100dvh - var(--topbarheight));
-        max-height:calc(100% - var(--scrolly));
-        /* height:min(
-            calc(100% - var(--scrolly)),
-            calc(100vh - var(--topbarheight))
-        ) */
-
-        /* height: min(
-            calc(100dvh - var(--topbarheight)),
-            calc(100% - var(--topbarheight))
-        ); */
+        height: min(
+            calc(100vh - var(--topbarheight)),
+            100%
+        );
     }
 
     .sidenav {
@@ -351,8 +316,8 @@
         height: 100%;
         /* overflow-y: auto; */
         overflow-x: hidden;
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        /* flex-direction: column; */
         /* min-height:min(calc(90vh - var(--topbarheight)),100%); */
         /* max-height:calc(80%); */
         gap: 10px;
@@ -375,11 +340,6 @@
 
 
     footer {
-        /* padding: 10px; */
-        /* height: 200px; */
-        /* background-color: blue; */
-        margin: 0;
-        padding: 0;
     }
     hr {
         margin-top: 15px;
@@ -441,7 +401,7 @@
     :global(p, span, h1, a) {
         color: var(--colortext);
         transition: color 1s;
-        font-size:1rem;
+        /* font-size:0.1rem; */
     }
     :global(div, button, p, a, h1, path, hr) {
         transition: background-color var(--defaultTransitionDuration)

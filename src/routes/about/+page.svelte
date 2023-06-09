@@ -34,6 +34,7 @@
         odit distinctio alias delectus nam reprehenderit, eos inventore corporis
         suscipit molestias.
     </p>
+    <br/>
     <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
         facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
@@ -57,16 +58,12 @@
 <!-- </div> -->
 
 <style>
-    .foothold{
-        /* float: inline-end; */
-        margin-top: min();
-    }
-    h1{
-        /* margin-top:3rem */
-    }
-    .cont > * + * {
+    /* p{
+        font-size: 4rem;
+    } */
+    /* .cont > * + * {
         margin-top: 1rem;
-    }
+    } */
 
     .cont {
         padding: 0;
@@ -87,7 +84,7 @@
     }
 
 
-    @container conty (width >= 600px) {
+    @container conty (min-width: 600px) {
         .imgwithtext {
             margin-left: auto;
             margin-right: auto;
@@ -114,7 +111,7 @@
             width: var(--textwidth);
         }
     }
-    @container conty (width < 600px) {
+    @container conty (max-width: 600px) {
         .myimgcont {
             text-align: center;
         }
