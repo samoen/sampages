@@ -1,6 +1,7 @@
 import { derived, get, writable } from "svelte/store"
 
 export const MENU_SLIDE_DURATION = 500;
+export const WAIT_FOR_MENU_SLIDE = MENU_SLIDE_DURATION - 200;
 export const DEFAULT_BAR_COLOR = 'var(--colorsecondary)'
 export const DEFAULT_BAR_BORDER_COLOR = 'var(--coloritem)'
 export const DEFAULT_COLOR_TRANSITION_DURATION = 600
@@ -40,6 +41,7 @@ export const barcolor = writable(DEFAULT_BAR_COLOR);
 export const barbordercolor = writable(DEFAULT_BAR_BORDER_COLOR);
 export const showShadow = writable(false)
 
+
 mobileMode.subscribe((val) => {
     if (get(mobileMode) && get(burgopen) && get(topnavopen)) {
       topnavopen.set(false)
@@ -68,6 +70,15 @@ wscrollY.subscribe((value) => {
   // nocolortransition.set(noColTransNext)
 })
 
+export const toggleTheme = () =>{
+  toptransduration.set(DEFAULT_COLOR_TRANSITION_DURATION);
+  toptransdelay.set(0);
+  if (get(themeMode) == themes.light) {
+      themeMode.set(themes.dark);
+  } else {
+      themeMode.set(themes.light);
+  }
+}
 
 export const toggleSidebar = () => {
   console.log('toggling sidebar')
@@ -100,7 +111,7 @@ export const toggleSidebar = () => {
 
   let topTransDelayNext = get(toptransdelay)
   if(get(burgopen)){
-    topTransDelayNext = MENU_SLIDE_DURATION
+    topTransDelayNext = WAIT_FOR_MENU_SLIDE
   }else{
     topTransDelayNext = 0
   }
@@ -140,7 +151,7 @@ export const toggleTopNav = () => {
     ttdelaynext = 0
   }else{
     ttdurnext = DEFAULT_COLOR_TRANSITION_DURATION
-    ttdelaynext = MENU_SLIDE_DURATION
+    ttdelaynext = WAIT_FOR_MENU_SLIDE
   }
  
   burgopen.set(burgnext)

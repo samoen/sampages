@@ -20,6 +20,7 @@
         themeMode,
         themes,
         toggleSidebar,
+        toggleTheme,
         toggleTopNav,
         topnavopen,
         toptransdelay,
@@ -97,20 +98,20 @@
     style:--defaultTransitionDuration="{DEFAULT_COLOR_TRANSITION_DURATION}ms"
     style:--scrolly="{$wscrollY}px"
 >
-    <div 
-    class="sideandmain"
-    on:drag="{(e)=>{
-        // e.preventDefault()
-    }}"
+    <div
+        class="sideandmain"
+        on:drag="{(e) => {
+            // e.preventDefault()
+        }}"
     >
         <div class="topbar">
             <button
-            class="baricon"
-            on:click="{() => {
-                toggleSidebar();
-            }}"
+                class="baricon"
+                on:click="{() => {
+                    toggleSidebar();
+                }}"
                 on:keydown
-                >
+            >
                 <Hamburger />
             </button>
             <!-- {$wscrollY} -->
@@ -118,13 +119,7 @@
             <button
                 class="baricon"
                 on:click="{() => {
-                    $toptransduration = DEFAULT_COLOR_TRANSITION_DURATION;
-                    $toptransdelay = 0;
-                    if ($themeMode == themes.light) {
-                        $themeMode = themes.dark;
-                    } else {
-                        $themeMode = themes.light;
-                    }
+                    toggleTheme();
                 }}"
                 on:keydown
             >
@@ -147,8 +142,8 @@
         {#if $burgopen}
             <div
                 class="sidebar"
-                on:drag="{(e)=>{
-                    e.preventDefault()
+                on:drag="{(e) => {
+                    e.preventDefault();
                 }}"
                 transition:slide="{{
                     delay: 0,
@@ -184,7 +179,7 @@
                                 About
                             </a>
                         </li>
-
+                    </ul>
                 </nav>
             </div>
             {#if $mobileMode && $burgopen}
@@ -229,6 +224,7 @@
 <style>
     .top {
         --topbarheight: 70px;
+        /* overflow-y: scroll; */
     }
     .sideandmain {
         display: grid;
@@ -242,6 +238,7 @@
         grid-row: 1 / span 3;
         display: grid;
         grid-template-rows: 1fr auto;
+        /* overflow-y: scroll; */
     }
     .topbar {
         position: sticky;
@@ -295,36 +292,34 @@
         grid-row: 2 / span 2;
         position: sticky;
         top: var(--topbarheight);
-        padding: 5px;
         background-color: var(--colorsecondary);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         border: 4px solid var(--coloritem);
         border-top: none;
         box-sizing: border-box;
         z-index: 4;
-        overflow-y: auto;
-        height: min(
-            calc(100vh - var(--topbarheight)),
-            100%
-        );
+        height: 
+        /* min( */
+            calc(100vh - var(--topbarheight));
+            /* 100% */
+            /* ); */
     }
 
     .sidenav {
-        /* height:100%; */
+        height:100%;
+        overflow-x: hidden;
     }
     .sidenav ul {
         height: 100%;
-        /* overflow-y: auto; */
-        overflow-x: hidden;
-        display: grid;
-        /* flex-direction: column; */
-        /* min-height:min(calc(90vh - var(--topbarheight)),100%); */
-        /* max-height:calc(80%); */
-        gap: 10px;
-        /* padding-right: 20px; */
+        overflow-y: auto;
+        list-style: none;
+    }
+    .sidenav li {
+        margin:1rem;
     }
     .sidenav a {
         /* white-space: nowrap; */
+        overflow-x: hidden;
         display: grid;
         grid-template-columns: auto minmax(max-content, 1fr);
         grid-auto-flow: column;
@@ -337,7 +332,6 @@
         text-decoration: none;
         /* cursor: pointer; */
     }
-
 
     footer {
     }
@@ -426,7 +420,7 @@
     :global(body) {
         background-color: var(--colorprimary);
     }
-    
+
     :global(html) {
         background-color: purple;
     }
