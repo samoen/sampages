@@ -6,12 +6,14 @@
     import Hamburger from "$lib/assets/Hamburger.svelte";
     import Palette from "$lib/assets/Palette.svelte";
     import Ukflag from "$lib/assets/Ukflag.svelte";
+    import Github from "$lib/assets/Github.svelte";
     import biggy from "$lib/assets/biggy.png";
     import xbig from "$lib/assets/xbig.png";
     import Footer from "$lib/components/Footer.svelte";
     import {
         DEFAULT_COLOR_TRANSITION_DURATION,
         MENU_SLIDE_DURATION,
+        TOP_BAR_HEIGHT,
         barbordercolor,
         barcolor,
         burgopen,
@@ -97,6 +99,7 @@
     style:--barTDur="{$toptransduration}ms"
     style:--defaultTransitionDuration="{DEFAULT_COLOR_TRANSITION_DURATION}ms"
     style:--scrolly="{$wscrollY}px"
+    style:--topbarheight="{TOP_BAR_HEIGHT}"
 >
     <div
         class="sideandmain"
@@ -123,10 +126,10 @@
                 }}"
                 on:keydown
             >
-                <Palette />
+                <Palette --pad="0.1rem" />
             </button>
             <button
-                class="flag"
+                class="baricon"
                 on:click="{() => {
                     toggleTopNav();
                 }}"
@@ -162,8 +165,12 @@
                                 }}"
                                 href="{base}/"
                             >
-                                <Hamburger />
-                                Home
+                                <div class="sideicon">
+                                    <Palette />
+                                </div>
+                                <span>
+                                    Home
+                                </span>
                             </a>
                         </li>
                         <li>
@@ -175,8 +182,12 @@
                                 }}"
                                 href="{base}/about"
                             >
+                            <div class="sideicon">
                                 <Hamburger />
+                            </div>
+                            <span>
                                 About
+                            </span>
                             </a>
                         </li>
                     </ul>
@@ -223,14 +234,14 @@
 
 <style>
     .top {
-        --topbarheight: 70px;
+        /* --topbarheight: 4rem; */
         /* overflow-y: scroll; */
     }
     .sideandmain {
         display: grid;
         grid-template-columns: auto 1fr;
         grid-template-rows: var(--topbarheight) auto 1fr;
-        align-items: start;
+        align-items: stretch;
     }
     .slotandfoot {
         min-height: 100dvh;
@@ -249,16 +260,43 @@
         z-index: 5;
         box-sizing: border-box;
         display: grid;
+        column-gap: 1rem;
         grid-template-columns: 3rem 1fr 3rem 3rem 3rem;
-        place-items: center;
-        overflow-x: hidden;
-        align-items: center;
+        grid-template-rows: 1fr;
+        /* align-self: stretch; */
+        /* grid-auto-rows: var(--topbarheight); */
         height: var(--topbarheight);
+        place-items: center;
+        /* overflow-y: hidden; */
+        /* overflow-x: hidden; */
+        /* justify-items: stretch; */
+        /* align-items: stretch; */
+        /* height: var(--topbarheight); */
         background-color: var(--barTcolor);
         border: 4px solid var(--barBorderColor);
         transition: background-color var(--barTDur) ease-in-out var(--barTDelay),
             border-color var(--barTDur) ease-in-out var(--barTDelay);
     }
+    .barlink {
+        display: block;
+        height: 100%;
+        padding:0.3rem;
+        display: none;
+        /* box-sizing: border-box; */
+    }
+    .barp {
+        user-select: none;
+        font-size: 1.1rem;
+    }
+    .baricon {
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+        border-width: 0;
+        background-color: transparent;
+        cursor: pointer;
+    }
+
     .topnav {
         position: sticky;
         top: var(--topbarheight);
@@ -276,11 +314,6 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         background-color: var(--colorsecondary);
     }
-    .barlink {
-        height: 100%;
-        width: 100%;
-    }
-
     .flag {
         width: 50px;
         border: none;
@@ -291,46 +324,72 @@
         grid-column: 1;
         grid-row: 2 / span 2;
         position: sticky;
-        top: var(--topbarheight);
+        top: calc(var(--topbarheight));
         background-color: var(--colorsecondary);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         border: 4px solid var(--coloritem);
         border-top: none;
-        box-sizing: border-box;
+        /* padding-top:10px; */
+        box-sizing:border-box;
         z-index: 4;
+        overflow-x: hidden;
+        overflow-y: hidden;
         height: 
         /* min( */
             calc(100vh - var(--topbarheight));
             /* 100% */
             /* ); */
+        /* width: 15rem; */
+        padding-top: 1rem;
     }
 
     .sidenav {
         height:100%;
-        overflow-x: hidden;
+        /* padding-inline: 1rem; */
+        /* width: auto; */
+        /* overflow-x: hidden; */
+        overflow-y: auto;
+        /* height:auto; */
     }
     .sidenav ul {
-        height: 100%;
-        overflow-y: auto;
+        overflow-x: hidden;
         list-style: none;
+        display: grid;
+        grid-template-columns: 100%;
+        place-items: center;
+        row-gap: 0.3rem;
     }
     .sidenav li {
-        margin:1rem;
+        /* overflow-x: hidden; */
     }
     .sidenav a {
-        /* white-space: nowrap; */
-        overflow-x: hidden;
+        padding-inline: 0.5rem;
+        margin-inline: 1rem;
         display: grid;
-        grid-template-columns: auto minmax(max-content, 1fr);
+        grid-template-columns: 2rem auto;
+        grid-template-rows: 1.5rem;
         grid-auto-flow: column;
-        gap: 5px;
         align-items: center;
-        justify-items: start;
-        padding: 5px;
-        padding-right: 10px;
+        justify-items:start;
         background-color: var(--colorprimary);
         text-decoration: none;
+        border: 2px solid var(--coloritem);
+        /* margin-top: 0.5rem; */
         /* cursor: pointer; */
+    }
+    .sidenav span{
+        width: max-content;
+        font-size: 1.2rem;
+        padding-right: 0.5rem;
+    }
+    .sideicon{
+        height:100%;
+        width: 100%;
+        box-sizing: border-box;
+        padding-top:0.4rem;
+        padding-bottom: 0.5rem;
+        display: grid;
+        place-items: center;
     }
 
     footer {
@@ -357,20 +416,6 @@
         z-index: 2;
     }
 
-    .barp {
-        user-select: none;
-        font-size: 1.5rem;
-    }
-    .baricon {
-        cursor: pointer;
-        padding: 0;
-        margin: 0;
-        background-color: transparent;
-        border-width: 0;
-        padding: 0px;
-        border-radius: 15px;
-        touch-action: none;
-    }
 
     @media (hover: hover) and (pointer: fine) {
         .baricon:hover {
@@ -412,9 +457,12 @@
     }
 
     :global(*) {
-        padding: 0;
-        margin: 0;
+        padding: 0px;
+        margin: 0px;
+        /* font-size:1rem; */
         overscroll-behavior: contain;
+        touch-action: none;
+        box-sizing: border-box;
     }
 
     :global(body) {

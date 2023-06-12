@@ -5,6 +5,7 @@ export const WAIT_FOR_MENU_SLIDE = MENU_SLIDE_DURATION - 200;
 export const DEFAULT_BAR_COLOR = 'var(--colorsecondary)'
 export const DEFAULT_BAR_BORDER_COLOR = 'var(--coloritem)'
 export const DEFAULT_COLOR_TRANSITION_DURATION = 600
+export const TOP_BAR_HEIGHT = '3rem'
 
 export const screenWidth = writable(0)
 export const mobileMode = derived(

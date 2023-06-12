@@ -1,4 +1,7 @@
-<svg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'><rect width='24' height='24' stroke='none' fill='#003020' opacity='0'/>
+<!-- width='24'  -->
+<!-- height='24'  -->
+<svg 
+viewBox='3 6 18 11'><rect width='24' height='24' stroke='none' fill='#003020' opacity='0'/>
     <g transform="matrix(0.83 0 0 0.83 12 12)" >
     <g style="" >
     <g transform="matrix(1 0 0 1 0 -5)" >
@@ -13,3 +16,16 @@
     </g>
     </g>
     </svg>
+
+    <style>
+        svg{
+            display: block;
+            /* background-color: blueviolet; */
+            width: 100%;
+            height:100%;
+            /* background-color: bisque; */
+            /* height:2.5rem; */
+            /* max-height: 100%; */
+            /* background-color: aqua; */
+        }
+    </style>

@@ -12,9 +12,8 @@ viewBox="0 0 100 100"
 >
 <style>
     svg{
-        /* vertical-align: center; */
-        /* height: 100%; */
-        /* width: auto; */
+        height:100%;
+        width: 100%;
     }
 
 </style>
