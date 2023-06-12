@@ -123,7 +123,7 @@
             width: auto;
             height:auto;
             /* transform: translate(-50%, -50%); */
-            padding:var(--pad, 0px);
+            padding:var(--pad, 0);
             /* height:4rem; */
             /* width: 2.5rem; */
             /* display: none; */

@@ -140,7 +140,7 @@
                     <Esflag />
                 {/if}
             </button>
-            <!-- <a class="barlink" href="https://github.com/samoen"><Github></Github></a> -->
+            <a class="barlink" href="https://github.com/samoen"><Github --pad="0.4rem"></Github></a>
         </div>
         {#if $burgopen}
             <div
@@ -236,12 +236,13 @@
     .top {
         /* --topbarheight: 4rem; */
         /* overflow-y: scroll; */
+        /* width: 100vw; */
     }
     .sideandmain {
         display: grid;
         grid-template-columns: auto 1fr;
         grid-template-rows: var(--topbarheight) auto 1fr;
-        align-items: stretch;
+        /* align-items: start; */
     }
     .slotandfoot {
         min-height: 100dvh;
@@ -254,6 +255,9 @@
     .topbar {
         position: sticky;
         top: 0;
+        overflow-x: auto;
+        /* overflow-y: auto; */
+        /* overflow: visible; */
 
         grid-column: 1 / span 2;
         grid-row: 1;
@@ -263,30 +267,25 @@
         column-gap: 1rem;
         grid-template-columns: 3rem 1fr 3rem 3rem 3rem;
         grid-template-rows: 1fr;
-        /* align-self: stretch; */
-        /* grid-auto-rows: var(--topbarheight); */
         height: var(--topbarheight);
         place-items: center;
-        /* overflow-y: hidden; */
-        /* overflow-x: hidden; */
-        /* justify-items: stretch; */
-        /* align-items: stretch; */
-        /* height: var(--topbarheight); */
         background-color: var(--barTcolor);
         border: 4px solid var(--barBorderColor);
         transition: background-color var(--barTDur) ease-in-out var(--barTDelay),
             border-color var(--barTDur) ease-in-out var(--barTDelay);
     }
     .barlink {
-        display: block;
+        /* position: relative; */
+        /* display: block; */
         height: 100%;
-        padding:0.3rem;
-        display: none;
-        /* box-sizing: border-box; */
+        width: 100%;
+        /* display: grid; */
+        /* place-items: center; */
+        /* overflow: visible; */
     }
     .barp {
         user-select: none;
-        font-size: 1.1rem;
+        /* font-size: 1rem; */
     }
     .baricon {
         width: 100%;
@@ -304,21 +303,26 @@
         grid-column: 2;
         box-sizing: border-box;
         z-index: 3;
-        display: flex;
-        gap: 10px;
-        padding: 7px;
-        flex-wrap: wrap;
-        justify-content: space-evenly;
+        display: grid;
+        /* grid-template-columns: repeat(auto-fit, minmax(1rem,1fr)); */
+        grid-template-columns: repeat(auto-fit, 3rem);
+        grid-auto-flow: column;
+        /* grid-auto-columns: 4rem; */
+        grid-auto-rows: 4rem;
+        /* gap: 1rem; */
+        /* padding: 0rem; */
         border: 4px solid var(--coloritem);
         border-top: none;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         background-color: var(--colorsecondary);
     }
     .flag {
-        width: 50px;
-        border: none;
-        background-color: transparent;
+        width: 100%;
+        height: 100%;
         touch-action: none;
+        border-width: 0;
+        background-color: transparent;
+        cursor: pointer;
     }
     .sidebar {
         grid-column: 1;
@@ -336,7 +340,7 @@
         overflow-y: hidden;
         height: 
         /* min( */
-            calc(100vh - var(--topbarheight));
+            calc(100dvh - var(--topbarheight));
             /* 100% */
             /* ); */
         /* width: 15rem; */
@@ -428,10 +432,6 @@
             transition: background-color 0s;
         }
     }
-    .navimg {
-        width: 20px;
-        margin-right: 5px;
-    }
     @media only screen and (max-width: 400px) {
         .slotandfoot {
             grid-column: 1 / span 2;
@@ -457,11 +457,10 @@
     }
 
     :global(*) {
-        padding: 0px;
-        margin: 0px;
+        padding: 0;
+        margin: 0;
         /* font-size:1rem; */
         overscroll-behavior: contain;
-        touch-action: none;
         box-sizing: border-box;
     }
 
