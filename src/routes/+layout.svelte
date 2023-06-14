@@ -10,7 +10,7 @@
     import biggy from "$lib/assets/biggy.png";
     import xbig from "$lib/assets/xbig.png";
     import Footer from "$lib/components/Footer.svelte";
-    import { DEFAULT_COLOR_TRANSITION_DURATION, MENU_SLIDE_DURATION, TOP_BAR_HEIGHT, barbordercolor, barcolor, burgopen, mobileMode, screenWidth, themeMode, themes, toggleSidebar, toggleTheme, toggleTopNav, topnavopen, toptransdelay, toptransduration, wscrollY } from "$lib/stores";
+    import { DEFAULT_COLOR_TRANSITION_DURATION, MENU_SLIDE_DURATION, TOP_BAR_HEIGHT, barbordercolor, barcolor, burgopen, mobileMode, screenWidth, sidebarwidth, themeMode, themes, toggleSidebar, toggleTheme, toggleTopNav, topbarheight, topnavopen, toptransdelay, toptransduration, wscrollY } from "$lib/stores";
     import { onMount } from "svelte";
     import { get } from "svelte/store";
     import { fade, slide } from "svelte/transition";
@@ -21,7 +21,6 @@
 
     let selectedLang = "EN";
     let preloadableRoutes = ["/", "/about"];
-    let sidebarwidth : number = 0
 
     onMount(() => {
         for (let r of preloadableRoutes) {
@@ -62,9 +61,9 @@
     {:else}
         <style>
             html {
-                --colorprimary: rgb(2, 1, 44);
-                --colorsecondary: darkblue;
-                --coloritem: blue;
+                --colorprimary: cadetblue;
+                --colorsecondary: blue;
+                --coloritem: teal;
                 --colortext: white;
                 --colorshadow: black;
             }
@@ -77,14 +76,20 @@
 
 <svelte:window bind:innerWidth="{$screenWidth}" bind:scrollY="{$wscrollY}" />
 
-<div class="top" style:--barTcolor="{$barcolor}" style:--barBorderColor="{$barbordercolor}" style:--barTDelay="{$toptransdelay}ms" style:--barTDur="{$toptransduration}ms" style:--defaultTransitionDuration="{DEFAULT_COLOR_TRANSITION_DURATION}ms" style:--scrolly="{$wscrollY}px" style:--topbarheight="{TOP_BAR_HEIGHT}">
-    <div
-        class="sideandmain"
-        on:drag="{(e) => {
-            // e.preventDefault()
-        }}"
-    >
-        <div class="topbar">
+<div class="top" style:--barTcolor="{$barcolor}" style:--barBorderColor="{$barbordercolor}" style:--barTDelay="{$toptransdelay}ms" style:--barTDur="{$toptransduration}ms" style:--defaultTransitionDuration="{DEFAULT_COLOR_TRANSITION_DURATION}ms" style:--scrolly="{$wscrollY}px" style:--sidebarwidth="{$sidebarwidth}px" style:--topbarheight="{$topbarheight}px">
+    {#if $mobileMode && $burgopen}
+        <div
+            class="shadow"
+            on:click="{() => {
+                toggleSidebar();
+            }}"
+            on:keyup
+            transition:fade
+        ></div>
+    {/if}
+
+    <div class="menus">
+        <div class="topbar" bind:clientHeight="{$topbarheight}">
             <button
                 class="baricon"
                 on:click="{() => {
@@ -94,7 +99,7 @@
             >
                 <Hamburger />
             </button>
-            <!-- {$wscrollY} -->
+            <!-- {sidebarwidth} -->
             <p class="barp">SamCorp</p>
             <button
                 class="baricon"
@@ -119,24 +124,17 @@
             </button>
             <a class="barlink" href="https://github.com/samoen"><Github --pad="0.4rem" /></a>
         </div>
-        {#if $topnavopen}
-            <div class="topnav" transition:slide|local="{{ duration: MENU_SLIDE_DURATION }}">
-                <button class="flag" on:click="{() => (selectedLang = 'EN')}">
-                    <Ukflag />
-                </button>
-                <button class="flag" on:click="{() => (selectedLang = 'ES')}">
-                    <Esflag />
-                </button>
-            </div>
-        {/if}
         {#if $burgopen}
             <div
-            class="sidebar"
-            bind:innerWidth="{sidebarwidth}"
+                class="sidebar"
+                bind:offsetWidth="{$sidebarwidth}"
                 transition:slide="{{
                     delay: 0,
                     duration: MENU_SLIDE_DURATION,
                     axis: 'x',
+                }}"
+                on:outroend="{() => {
+                    $sidebarwidth = 0;
                 }}"
             >
                 <nav class="sidenav">
@@ -174,28 +172,39 @@
                     </ul>
                 </nav>
             </div>
-            {#if $mobileMode && $burgopen}
-                <div
-                    class="shadow"
-                    on:click="{() => {
-                        toggleSidebar();
-                    }}"
-                    on:keyup
-                    transition:fade
-                ></div>
-            {/if}
         {/if}
-
     </div>
-        {#key $page.url.pathname}
-            <div class="slotandfoot" in:fade="{{ duration: 500, delay: 0 }}">
-                <slot />
-                <footer>
-                    <hr />
-                    <p>&copy Sam Oen</p>
-                </footer>
+    {#if $topnavopen}
+        <div class="topnav" transition:slide|local="{{ duration: MENU_SLIDE_DURATION }}">
+            <div class="langs">
+                <button class="flag" on:click="{() => (selectedLang = 'EN')}">
+                    <Ukflag />
+                </button>
+                <button class="flag" on:click="{() => (selectedLang = 'ES')}">
+                    <Esflag />
+                </button>
             </div>
-        {/key}
+        </div>
+    {/if}
+    {#if $mobileMode && $burgopen}
+        <div
+            class="shadowclick"
+            on:click="{() => {
+                toggleSidebar();
+            }}"
+            on:keyup
+        ></div>
+    {/if}
+
+    {#key $page.url.pathname}
+        <div class="slotandfoot" in:fade="{{ duration: 500, delay: 0 }}">
+            <slot />
+            <footer>
+                <hr />
+                <p>&copy Sam Oen</p>
+            </footer>
+        </div>
+    {/key}
 </div>
 
 <!-- </div> -->
@@ -206,12 +215,13 @@
         /* overflow-y: scroll; */
         /* width: 100vw; */
     }
-    .sideandmain {
-        position:fixed;
-        top:0;
-        left:0;
-        right:0;
-        bottom:0;
+    .menus {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
 
         /* background-color: blue; */
         /* display: grid; */
@@ -222,11 +232,11 @@
         /* align-items: start; */
     }
     .slotandfoot {
+        padding-left: var(--sidebarwidth);
         min-height: 100dvh;
-        grid-column: 2;
-        grid-row: 1 / span 3;
         display: grid;
         grid-template-rows: 1fr auto;
+        /* z-index: 1; */
         /* overflow-y: scroll; */
     }
     .topbar {
@@ -237,24 +247,28 @@
         /* overflow: visible; */
         /* grid-column: 1 / span 2; */
         /* grid-row: 1; */
-        z-index: 5;
+        /* margin-left: 0px; */
+        margin-right: 5px;
+        /* margin-top: 3px; */
+        padding: 5px;
+        /* z-index: 5; */
+        min-height: 40px;
         display: grid;
-        column-gap: 1rem;
+        column-gap: clamp(4px, 3vw, 8rem);
         grid-template-columns: 3rem 1fr 3rem 3rem 3rem;
-        grid-template-rows: 1fr;
-        height: var(--topbarheight);
+        grid-template-rows: auto;
         place-items: center;
         background-color: var(--barTcolor);
         border: 2px solid var(--barBorderColor);
         border-radius: 6px;
-        box-shadow: 1px 1px 3px 1px var(--barBorderColor);
+        box-shadow: 2px 2px 1px 0px var(--barBorderColor);
         transition: background-color var(--barTDur) ease-in-out var(--barTDelay), border-color var(--barTDur) ease-in-out var(--barTDelay);
     }
     .barlink {
         /* position: relative; */
         /* display: block; */
-        height: 100%;
-        width: 100%;
+        height: 50px;
+        width: 50px;
         /* display: grid; */
         /* place-items: center; */
         /* overflow: visible; */
@@ -270,52 +284,60 @@
         height: 100%;
         touch-action: none;
         border-width: 0;
-        background-color: transparent;
+        background-color: var(--colorsecondary);
         cursor: pointer;
+        border: 2px solid var(--colorshadow);
+        border-radius: 6px;
+        box-shadow: 2px 2px 2px 1px var(--colorshadow);
     }
 
     .topnav {
-        /* position: sticky; */
-        /* top: calc(var(--topbarheight) + 2px); */
-        /* grid-row: 2; */
-        /* grid-column: 2; */
+        position: fixed;
+        top: calc(var(--topbarheight) + 12px);
+        left: calc(var(--sidebarwidth) + 10px);
+        /* display: inline-block; */
+        /* vertical-align: top; */
+        /* margin-top: 5px; */
+        /* margin-left: 25px; */
         z-index: 3;
-        display: grid;
-        /* overflow-y: hidden; */
-        /* grid-template-columns: repeat(auto-fit, minmax(1rem,1fr)); */
-        grid-template-columns: repeat(auto-fit, 3rem);
-        /* grid-auto-flow: column; */
-        /* grid-auto-columns: 4rem; */
-        /* grid-auto-rows: 4rem; */
-        gap: 1rem;
         padding-inline: 1rem;
         padding-block: 0.5rem;
-        border: 4px solid var(--coloritem);
-        border-top: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        border: 2px solid var(--colorshadow);
+        border-radius: 7px;
+        box-shadow: 2px 2px 1px 0px var(--colorshadow);
         background-color: var(--colorsecondary);
     }
+    .langs {
+        grid-template-columns: repeat(auto-fit, minmax(1rem, 1fr));
+        grid-template-rows: 3rem;
+        grid-auto-flow: column;
+        gap: 1rem;
+    }
     .flag {
-        width: auto;
-        height: 2rem;
+        width: 2rem;
+        height: 1.2rem;
         touch-action: none;
         border-width: 0;
         background-color: transparent;
         cursor: pointer;
+        border: 1px solid var(--colorshadow);
+        border-radius: 3px;
+        box-shadow: 1px 1px 3px 1px var(--colorshadow);
     }
     .sidebar {
+        /* position: relative; */
         display: inline-block;
+        margin-top: 5px;
+        margin-left: 3px;
         background-color: var(--colorprimary);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        border: 3px solid var(--colorshadow);
+        border: 2px solid var(--colorshadow);
         border-radius: 9px;
-        /* border-top: none; */
-        box-shadow: 1px 1px 6px 1px var(--colorshadow);
-        z-index: 4;
+        box-shadow: 2px 2px 2px 1px var(--colorshadow);
+        /* z-index: 4; */
         overflow-x: hidden;
         overflow-y: hidden;
         height: 
-        /* min( */ calc(100dvh - var(--topbarheight) - 10px);
+        /* min( */ calc(100dvh - var(--topbarheight) - 20px);
         /* 100% */
         /* ); */
         /* width: 15rem; */
@@ -365,6 +387,9 @@
         font-size: 1.3rem;
     }
 
+    footer {
+    }
+
     hr {
         margin-top: 15px;
         margin-bottom: 20px;
@@ -379,12 +404,28 @@
     }
 
     .shadow {
-        grid-column: 1 / span 2;
-        grid-row: 1 / span 3;
-        place-self: stretch;
+        /* grid-column: 1 / span 2; */
+        /* grid-row: 1 / span 3; */
+        /* place-self: stretch; */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        /* height: 400px; */
+        /* width: 400px; */
         background-color: black;
         opacity: 0.5;
-        z-index: 2;
+        z-index: 1;
+    }
+    .shadowclick {
+        position: fixed;
+        left: var(--sidebarwidth);
+        top: var(--topbarheight);
+        z-index: 3;
+        height: calc(100vh - var(--topbarheight));
+        width: calc(100vw - var(--sidebarwidth));
+        background-color: transparent;
     }
 
     @media (hover: hover) and (pointer: fine) {
@@ -400,7 +441,15 @@
     }
     @media only screen and (max-width: 400px) {
         .slotandfoot {
-            grid-column: 1 / span 2;
+            padding-left: 0px;
+        }
+        .shadow {
+            display: block;
+        }
+    }
+    @media only screen and (min-width: 400px) {
+        .shadow {
+            display: none;
         }
     }
     :global(p, span, h1, a) {

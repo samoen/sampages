@@ -49,11 +49,13 @@
 </div>
 <style>
     .container {
-        background-color: blueviolet;
+        /* padding-left: 10px; */
+        /* background-color: blueviolet; */
         border: none;
         box-sizing: content-box;
     }
     .splash{
+        padding-left: 10px;
         padding-top: 100px;
         padding-bottom: 100px;
         background-repeat: no-repeat;

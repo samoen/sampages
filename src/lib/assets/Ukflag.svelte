@@ -4,7 +4,7 @@
 
 <style>
     div{
-        position: relative;
+        /* position: relative; */
         display: grid;
         place-items: center;
         /* background-color: aqua; */
@@ -15,7 +15,7 @@
     svg{
         /* display: grid; */
         /* place-items: center; */
-        position:absolute;
+        /* position:absolute; */
         /* top:50%; */
         /* left:50%; */
         /* top: 0;
@@ -26,10 +26,11 @@
             min-height: 24px; */
             max-width: 100%;
             max-height:100%;
-            width: auto;
-            height:auto;
+            /* width: 40px; */
+            /* height:40px; */
             /* transform: translate(-50%, -50%); */
             padding:var(--pad, 0);
+            padding-inline: 5px;
             /* height:4rem; */
             /* width: 2.5rem; */
             /* display: none; */
