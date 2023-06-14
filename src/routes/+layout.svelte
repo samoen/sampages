@@ -255,7 +255,7 @@
     .topbar {
         position: sticky;
         top: 0;
-        overflow-x: auto;
+        /* overflow-x: auto; */
         /* overflow-y: auto; */
         /* overflow: visible; */
 
@@ -284,7 +284,9 @@
         /* overflow: visible; */
     }
     .barp {
+        display: block;
         user-select: none;
+        overflow-x: hidden;
         /* font-size: 1rem; */
     }
     .baricon {
@@ -390,10 +392,10 @@
         height:100%;
         width: 100%;
         box-sizing: border-box;
-        padding-top:0.4rem;
-        padding-bottom: 0.5rem;
-        display: grid;
-        place-items: center;
+        /* padding-top:0.4rem; */
+        /* padding-bottom: 0.5rem; */
+        /* display: grid; */
+        /* place-items: center; */
     }
 
     footer {

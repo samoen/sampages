@@ -5,13 +5,13 @@
     <g transform="matrix(0.83 0 0 0.83 12 12)" >
         <g style="" >
             <g transform="matrix(1 0 0 1 0 -5)" >
-                <path style="stroke: var(--colortext); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -7)" d="M 21 7 L 3 7" stroke-linecap="round" />
+                <path style=" stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -7)" d="M 21 7 L 3 7" stroke-linecap="round" />
             </g>
             <g transform="matrix(1 0 0 1 0 0)" >
-                <path style="stroke: var(--colortext); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 21 12 L 3 12" stroke-linecap="round" />
+                <path style="stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -12)" d="M 21 12 L 3 12" stroke-linecap="round" />
             </g>
             <g transform="matrix(1 0 0 1 0 5)" >
-                <path style="stroke: var(--colortext); stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -17)" d="M 21 17 L 3 17" stroke-linecap="round" />
+                <path style="stroke-width: 1; stroke-dasharray: none; stroke-linecap: round; stroke-dashoffset: 0; stroke-linejoin: round; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;" transform=" translate(-12, -17)" d="M 21 17 L 3 17" stroke-linecap="round" />
             </g>
         </g>
     </g>
@@ -19,6 +19,10 @@
 </div>
 
 <style>
+        path {
+        stroke: var(--colortext);
+        fill: var(--colortext);
+    }
         div{
         position: relative;
         display: grid;
@@ -38,8 +42,8 @@
         left: 0;
         right:0;
         bottom: 0; */
-            min-width: 24px;
-            min-height: 24px;
+            /* min-width: 24px; */
+            /* min-height: 24px; */
             max-width: 100%;
             max-height:100%;
             width: auto;
