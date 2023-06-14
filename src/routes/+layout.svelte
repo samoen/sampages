@@ -10,28 +10,11 @@
     import biggy from "$lib/assets/biggy.png";
     import xbig from "$lib/assets/xbig.png";
     import Footer from "$lib/components/Footer.svelte";
-    import {
-        DEFAULT_COLOR_TRANSITION_DURATION,
-        MENU_SLIDE_DURATION,
-        TOP_BAR_HEIGHT,
-        barbordercolor,
-        barcolor,
-        burgopen,
-        mobileMode,
-        screenWidth,
-        themeMode,
-        themes,
-        toggleSidebar,
-        toggleTheme,
-        toggleTopNav,
-        topnavopen,
-        toptransdelay,
-        toptransduration,
-        wscrollY,
-    } from "$lib/stores";
+    import { DEFAULT_COLOR_TRANSITION_DURATION, MENU_SLIDE_DURATION, TOP_BAR_HEIGHT, barbordercolor, barcolor, burgopen, mobileMode, screenWidth, themeMode, themes, toggleSidebar, toggleTheme, toggleTopNav, topnavopen, toptransdelay, toptransduration, wscrollY } from "$lib/stores";
     import { onMount } from "svelte";
     import { get } from "svelte/store";
     import { fade, slide } from "svelte/transition";
+    import { blank_object } from "svelte/internal";
 
     // export let data;
     // $croute = data.currentRoute;
@@ -72,6 +55,7 @@
                 --colorsecondary: rgb(247, 195, 160);
                 --colortext: black;
                 --coloritem: aliceblue;
+                --colorshadow: black;
             }
         </style>
     {:else}
@@ -81,6 +65,7 @@
                 --colorsecondary: darkblue;
                 --coloritem: blue;
                 --colortext: white;
+                --colorshadow: black;
             }
         </style>
     {/if}
@@ -91,16 +76,7 @@
 
 <svelte:window bind:innerWidth="{$screenWidth}" bind:scrollY="{$wscrollY}" />
 
-<div
-    class="top"
-    style:--barTcolor="{$barcolor}"
-    style:--barBorderColor="{$barbordercolor}"
-    style:--barTDelay="{$toptransdelay}ms"
-    style:--barTDur="{$toptransduration}ms"
-    style:--defaultTransitionDuration="{DEFAULT_COLOR_TRANSITION_DURATION}ms"
-    style:--scrolly="{$wscrollY}px"
-    style:--topbarheight="{TOP_BAR_HEIGHT}"
->
+<div class="top" style:--barTcolor="{$barcolor}" style:--barBorderColor="{$barbordercolor}" style:--barTDelay="{$toptransdelay}ms" style:--barTDur="{$toptransduration}ms" style:--defaultTransitionDuration="{DEFAULT_COLOR_TRANSITION_DURATION}ms" style:--scrolly="{$wscrollY}px" style:--topbarheight="{TOP_BAR_HEIGHT}">
     <div
         class="sideandmain"
         on:drag="{(e) => {
@@ -140,8 +116,18 @@
                     <Esflag />
                 {/if}
             </button>
-            <a class="barlink" href="https://github.com/samoen"><Github --pad="0.4rem"></Github></a>
+            <a class="barlink" href="https://github.com/samoen"><Github --pad="0.4rem" /></a>
         </div>
+        {#if $topnavopen}
+            <div class="topnav" transition:slide|local="{{ duration: MENU_SLIDE_DURATION }}">
+                <button class="flag" on:click="{() => (selectedLang = 'EN')}">
+                    <Ukflag />
+                </button>
+                <button class="flag" on:click="{() => (selectedLang = 'ES')}">
+                    <Esflag />
+                </button>
+            </div>
+        {/if}
         {#if $burgopen}
             <div
                 class="sidebar"
@@ -168,9 +154,7 @@
                                 <div class="sideicon">
                                     <Palette />
                                 </div>
-                                <span>
-                                    Home
-                                </span>
+                                <span> Home Page </span>
                             </a>
                         </li>
                         <li>
@@ -182,12 +166,10 @@
                                 }}"
                                 href="{base}/about"
                             >
-                            <div class="sideicon">
-                                <Hamburger />
-                            </div>
-                            <span>
-                                About
-                            </span>
+                                <div class="sideicon">
+                                    <Hamburger />
+                                </div>
+                                <span> About </span>
                             </a>
                         </li>
                     </ul>
@@ -203,19 +185,6 @@
                     transition:fade
                 ></div>
             {/if}
-        {/if}
-        {#if $topnavopen}
-            <div
-                class="topnav"
-                transition:slide|local="{{ duration: MENU_SLIDE_DURATION }}"
-            >
-                <button class="flag" on:click="{() => (selectedLang = 'EN')}">
-                    <Ukflag />
-                </button>
-                <button class="flag" on:click="{() => (selectedLang = 'ES')}">
-                    <Esflag />
-                </button>
-            </div>
         {/if}
 
         {#key $page.url.pathname}
@@ -242,6 +211,7 @@
         display: grid;
         grid-template-columns: auto 1fr;
         grid-template-rows: var(--topbarheight) auto 1fr;
+        gap: 4px;
         /* align-items: start; */
     }
     .slotandfoot {
@@ -270,9 +240,10 @@
         height: var(--topbarheight);
         place-items: center;
         background-color: var(--barTcolor);
-        border: 4px solid var(--barBorderColor);
-        transition: background-color var(--barTDur) ease-in-out var(--barTDelay),
-            border-color var(--barTDur) ease-in-out var(--barTDelay);
+        border: 2px solid var(--barBorderColor);
+        border-radius: 6px;
+        box-shadow: 1px 1px 3px 1px var(--barBorderColor);
+        transition: background-color var(--barTDur) ease-in-out var(--barTDelay), border-color var(--barTDur) ease-in-out var(--barTDelay);
     }
     .barlink {
         /* position: relative; */
@@ -287,7 +258,7 @@
         display: block;
         user-select: none;
         overflow-x: hidden;
-        /* font-size: 1rem; */
+        font-size: 1.4rem;
     }
     .baricon {
         width: 100%;
@@ -300,27 +271,28 @@
 
     .topnav {
         position: sticky;
-        top: var(--topbarheight);
+        top: calc(var(--topbarheight) + 2px);
         grid-row: 2;
         grid-column: 2;
-        box-sizing: border-box;
         z-index: 3;
         display: grid;
+        /* overflow-y: hidden; */
         /* grid-template-columns: repeat(auto-fit, minmax(1rem,1fr)); */
         grid-template-columns: repeat(auto-fit, 3rem);
-        grid-auto-flow: column;
+        /* grid-auto-flow: column; */
         /* grid-auto-columns: 4rem; */
-        grid-auto-rows: 4rem;
-        /* gap: 1rem; */
-        /* padding: 0rem; */
+        /* grid-auto-rows: 4rem; */
+        gap: 1rem;
+        padding-inline: 1rem;
+        padding-block: 0.5rem;
         border: 4px solid var(--coloritem);
         border-top: none;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         background-color: var(--colorsecondary);
     }
     .flag {
-        width: 100%;
-        height: 100%;
+        width: auto;
+        height: 2rem;
         touch-action: none;
         border-width: 0;
         background-color: transparent;
@@ -331,75 +303,66 @@
         grid-row: 2 / span 2;
         position: sticky;
         top: calc(var(--topbarheight));
-        background-color: var(--colorsecondary);
+        background-color: var(--colorprimary);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        border: 4px solid var(--coloritem);
-        border-top: none;
-        /* padding-top:10px; */
-        box-sizing:border-box;
+        border: 3px solid var(--colorshadow);
+        border-radius: 9px;
+        /* border-top: none; */
+        box-shadow: 1px 1px 6px 1px var(--colorshadow);
         z-index: 4;
         overflow-x: hidden;
         overflow-y: hidden;
         height: 
-        /* min( */
-            calc(100dvh - var(--topbarheight));
-            /* 100% */
-            /* ); */
+        /* min( */ calc(100dvh - var(--topbarheight) - 10px);
+        /* 100% */
+        /* ); */
         /* width: 15rem; */
-        padding-top: 1rem;
     }
 
     .sidenav {
-        height:100%;
+        height: 100%;
         /* padding-inline: 1rem; */
         /* width: auto; */
-        /* overflow-x: hidden; */
+        overflow-x: hidden;
         overflow-y: auto;
+        /* background-color: brown; */
         /* height:auto; */
     }
     .sidenav ul {
-        overflow-x: hidden;
+        /* overflow-x: hidden; */
         list-style: none;
         display: grid;
-        grid-template-columns: 100%;
-        place-items: center;
-        row-gap: 0.3rem;
+        grid-template-columns: auto;
+        grid-auto-flow: row;
+        place-items: start;
+        padding-inline: 1rem;
+        padding-block: 1rem;
+        row-gap: 0.5rem;
     }
     .sidenav li {
-        /* overflow-x: hidden; */
     }
     .sidenav a {
-        padding-inline: 0.5rem;
-        margin-inline: 1rem;
         display: grid;
-        grid-template-columns: 2rem auto;
-        grid-template-rows: 1.5rem;
-        grid-auto-flow: column;
+        column-gap: 0rem;
+        grid-template-columns: auto auto;
         align-items: center;
-        justify-items:start;
-        background-color: var(--colorprimary);
+        background-color: var(--colorsecondary);
         text-decoration: none;
-        border: 2px solid var(--coloritem);
-        /* margin-top: 0.5rem; */
-        /* cursor: pointer; */
+        border: 2px solid var(--colorshadow);
+        border-radius: 3px;
+        box-shadow: 2px 2px 1px 0px var(--colorshadow);
     }
-    .sidenav span{
+    .sideicon {
+        height: 2rem;
+        width: 2rem;
+    }
+    .sidenav span {
+        padding-right: 1rem;
         width: max-content;
-        font-size: 1.2rem;
-        padding-right: 0.5rem;
-    }
-    .sideicon{
-        height:100%;
-        width: 100%;
-        box-sizing: border-box;
-        /* padding-top:0.4rem; */
-        /* padding-bottom: 0.5rem; */
-        /* display: grid; */
-        /* place-items: center; */
+        white-space: nowrap;
+        font-size: 1.3rem;
     }
 
-    footer {
-    }
     hr {
         margin-top: 15px;
         margin-bottom: 20px;
@@ -421,7 +384,6 @@
         opacity: 0.5;
         z-index: 2;
     }
-
 
     @media (hover: hover) and (pointer: fine) {
         .baricon:hover {
@@ -445,11 +407,7 @@
         /* font-size:0.1rem; */
     }
     :global(div, button, p, a, h1, path, hr) {
-        transition: background-color var(--defaultTransitionDuration)
-                ease-in-out,
-            border-color var(--defaultTransitionDuration) ease-in-out,
-            color var(--defaultTransitionDuration),
-            stroke var(--defaultTransitionDuration);
+        transition: background-color var(--defaultTransitionDuration) ease-in-out, border-color var(--defaultTransitionDuration) ease-in-out, color var(--defaultTransitionDuration), stroke var(--defaultTransitionDuration);
     }
     :global(body) {
         transition: background-color 1s ease-in-out;
@@ -464,6 +422,7 @@
         /* font-size:1rem; */
         overscroll-behavior: contain;
         box-sizing: border-box;
+        /* border-radius: 4px; */
     }
 
     :global(body) {
