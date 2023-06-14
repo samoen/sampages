@@ -67,6 +67,7 @@
 
     .cont {
         padding: 0;
+        margin:0;
         padding-left: 1rem;
         padding-right: 1rem;
         padding-top:5rem;

@@ -49,7 +49,9 @@
 </div>
 <style>
     .container {
-        /* background-color: blueviolet; */
+        background-color: blueviolet;
+        border: none;
+        box-sizing: content-box;
     }
     .splash{
         padding-top: 100px;

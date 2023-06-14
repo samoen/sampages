@@ -21,6 +21,7 @@
 
     let selectedLang = "EN";
     let preloadableRoutes = ["/", "/about"];
+    let sidebarwidth : number = 0
 
     onMount(() => {
         for (let r of preloadableRoutes) {
@@ -130,10 +131,8 @@
         {/if}
         {#if $burgopen}
             <div
-                class="sidebar"
-                on:drag="{(e) => {
-                    e.preventDefault();
-                }}"
+            class="sidebar"
+            bind:innerWidth="{sidebarwidth}"
                 transition:slide="{{
                     delay: 0,
                     duration: MENU_SLIDE_DURATION,
@@ -187,6 +186,7 @@
             {/if}
         {/if}
 
+    </div>
         {#key $page.url.pathname}
             <div class="slotandfoot" in:fade="{{ duration: 500, delay: 0 }}">
                 <slot />
@@ -196,7 +196,6 @@
                 </footer>
             </div>
         {/key}
-    </div>
 </div>
 
 <!-- </div> -->
@@ -208,10 +207,18 @@
         /* width: 100vw; */
     }
     .sideandmain {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-template-rows: var(--topbarheight) auto 1fr;
-        gap: 4px;
+        position:fixed;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+
+        /* background-color: blue; */
+        /* display: grid; */
+        /* grid-template-columns: auto 1fr; */
+        /* grid-template-rows: var(--topbarheight) auto 1fr; */
+
+        /* gap: 4px; */
         /* align-items: start; */
     }
     .slotandfoot {
@@ -223,16 +230,14 @@
         /* overflow-y: scroll; */
     }
     .topbar {
-        position: sticky;
-        top: 0;
+        /* position: sticky; */
+        /* top: 0; */
         /* overflow-x: auto; */
         /* overflow-y: auto; */
         /* overflow: visible; */
-
-        grid-column: 1 / span 2;
-        grid-row: 1;
+        /* grid-column: 1 / span 2; */
+        /* grid-row: 1; */
         z-index: 5;
-        box-sizing: border-box;
         display: grid;
         column-gap: 1rem;
         grid-template-columns: 3rem 1fr 3rem 3rem 3rem;
@@ -270,10 +275,10 @@
     }
 
     .topnav {
-        position: sticky;
-        top: calc(var(--topbarheight) + 2px);
-        grid-row: 2;
-        grid-column: 2;
+        /* position: sticky; */
+        /* top: calc(var(--topbarheight) + 2px); */
+        /* grid-row: 2; */
+        /* grid-column: 2; */
         z-index: 3;
         display: grid;
         /* overflow-y: hidden; */
@@ -299,10 +304,7 @@
         cursor: pointer;
     }
     .sidebar {
-        grid-column: 1;
-        grid-row: 2 / span 2;
-        position: sticky;
-        top: calc(var(--topbarheight));
+        display: inline-block;
         background-color: var(--colorprimary);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         border: 3px solid var(--colorshadow);
