@@ -12,35 +12,42 @@
     import Footer from "$lib/components/Footer.svelte";
     import {
         DEFAULT_COLOR_TRANSITION_DURATION,
-        MENU_SLIDE_DURATION,
+        DEFAULT_MENU_SLIDE_DURATION as DEFAULT_MENU_SLIDE_DURATION,
         barbordercolor,
         barcolor,
         burgopen,
         mobileMode,
         screenWidth,
+        showJsButtons,
         sidebarwidth,
         themeMode,
         themes,
         toggleSidebar,
         toggleTheme,
-        toggleTopNav,
+        toggleSettings,
         topbarheight,
-        topnavopen,
         toptransdelay,
         toptransduration,
         wscrollY,
+        toggleContact,
+        topNavOutDuration,
+        navSelect,
     } from "$lib/stores";
     import { onMount } from "svelte";
     import { get } from "svelte/store";
     import { fade, slide } from "svelte/transition";
     import { blank_object } from "svelte/internal";
+    import TopBarIcon from "$lib/components/TopBarIcon.svelte";
+    import Hand from "$lib/assets/Hand.svelte";
+    import Contact from "$lib/components/Contact.svelte";
+    import Gear from "$lib/assets/Gear.svelte";
+    import Settings from "$lib/components/Settings.svelte";
 
     // export let data;
     // $croute = data.currentRoute;
 
-    let selectedLang = "EN";
     let preloadableRoutes = ["/", "/about"];
-    let mounted = false
+    let mounted = false;
 
     onMount(() => {
         for (let r of preloadableRoutes) {
@@ -48,10 +55,11 @@
                 preloadData(`${base}${r}`);
             }
         }
-        mounted = true
+        showJsButtons.set(true);
+        mounted = true;
     });
     // afterNavigate(() => {
-        // window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
     // });
 
     // let preloadedImages = [xbig, biggy];
@@ -98,7 +106,7 @@
 <svelte:window
     bind:innerWidth="{$screenWidth}"
     bind:scrollY="{$wscrollY}"
-    />
+/>
 
 <div
     class="top"
@@ -124,45 +132,28 @@
 
     <div class="menus">
         <div class="topbar" bind:clientHeight="{$topbarheight}">
-            {#if mounted}
-            <button
-                class="baricon"
-                on:click="{() => {
+            <TopBarIcon
+                push="{() => {
                     toggleSidebar();
                 }}"
-                on:keydown
-                in:fade
             >
                 <Hamburger />
-            </button>
-            {:else}
-            <div></div>
-            {/if}
+            </TopBarIcon>
             <p class="barp">SamCorp</p>
-            <button
-                class="baricon"
-                on:click="{() => {
-                    toggleTheme();
-                }}"
-                on:keydown
-            >
-                <Palette --pad="0.1rem" />
-            </button>
-            <button
-                class="baricon"
-                on:click="{() => {
-                    toggleTopNav();
+            <TopBarIcon
+                push="{() => {
+                    toggleSettings();
                 }}"
             >
-                {#if selectedLang == "EN"}
-                    <Ukflag />
-                {:else if selectedLang == "ES"}
-                    <Esflag />
-                {/if}
-            </button>
-            <a class="barlink" href="https://github.com/samoen"
-                ><Github --pad="0.4rem" /></a
+                <Gear />
+            </TopBarIcon>
+            <TopBarIcon
+                push="{() => {
+                    toggleContact();
+                }}"
             >
+                <Hand />
+            </TopBarIcon>
         </div>
         {#if $burgopen}
             <div
@@ -170,7 +161,7 @@
                 bind:offsetWidth="{$sidebarwidth}"
                 transition:slide="{{
                     delay: 0,
-                    duration: MENU_SLIDE_DURATION,
+                    duration: DEFAULT_MENU_SLIDE_DURATION,
                     axis: 'x',
                 }}"
                 on:outroend="{() => {
@@ -214,29 +205,33 @@
             </div>
         {/if}
     </div>
-    {#if $topnavopen}
+
+    {#if $navSelect == 'settings'}
         <div
             class="topnav"
-            transition:slide|local="{{
-                duration: MENU_SLIDE_DURATION,
+            in:slide|local="{{
+                duration: DEFAULT_MENU_SLIDE_DURATION,
+            }}"
+            out:slide|local="{{
+                duration: $topNavOutDuration,
             }}"
         >
-            <div class="langs">
-                <button
-                    class="flag"
-                    on:click="{() => (selectedLang = 'EN')}"
-                >
-                    <Ukflag />
-                </button>
-                <button
-                    class="flag"
-                    on:click="{() => (selectedLang = 'ES')}"
-                >
-                    <Esflag />
-                </button>
-            </div>
+            <Settings />
+        </div>
+    {:else if $navSelect == 'contact'}
+        <div
+            class="topnav"
+            in:slide|local="{{
+                duration: DEFAULT_MENU_SLIDE_DURATION,
+            }}"
+            out:slide|local="{{
+                duration: $topNavOutDuration,
+            }}"
+        >
+            <Contact />
         </div>
     {/if}
+
     {#if $mobileMode && $burgopen}
         <div
             class="shadowclick"
@@ -290,8 +285,9 @@
         min-height: 40px;
         display: grid;
         column-gap: clamp(4px, 3vw, 8rem);
-        grid-template-columns: 3rem 1fr 3rem 3rem 3rem;
+        grid-template-columns: 3rem 1fr 3rem 3rem;
         grid-template-rows: auto;
+        grid-auto-flow: column;
         place-items: center;
         background-color: var(--barTcolor);
         border: 2px solid var(--barBorderColor);
@@ -315,17 +311,7 @@
         user-select: none;
         /* overflow-x: hidden; */
         font-size: 1.4rem;
-    }
-    .baricon {
-        width: 100%;
-        height: 100%;
-        touch-action: none;
-        border-width: 0;
-        background-color: var(--colorsecondary);
-        cursor: pointer;
-        border: 2px solid var(--colorshadow);
-        border-radius: 6px;
-        box-shadow: 2px 2px 2px 1px var(--colorshadow);
+        grid-column: 1fr;
     }
 
     .topnav {
@@ -344,23 +330,7 @@
         box-shadow: 2px 2px 1px 0px var(--colorshadow);
         background-color: var(--colorsecondary);
     }
-    .langs {
-        grid-template-columns: repeat(auto-fit, minmax(1rem, 1fr));
-        grid-template-rows: 3rem;
-        grid-auto-flow: column;
-        gap: 1rem;
-    }
-    .flag {
-        width: 2rem;
-        height: 1.2rem;
-        touch-action: none;
-        border-width: 0;
-        background-color: transparent;
-        cursor: pointer;
-        border: 1px solid var(--colorshadow);
-        border-radius: 3px;
-        box-shadow: 1px 1px 3px 1px var(--colorshadow);
-    }
+
     .sidebar {
         /* position: relative; */
         display: inline-block;
@@ -468,11 +438,6 @@
     }
 
     @media (hover: hover) and (pointer: fine) {
-        .baricon:hover {
-            background-color: var(--coloritem);
-            transition: background-color 0s;
-        }
-
         a:hover {
             background-color: var(--coloritem);
             transition: background-color 0s;
