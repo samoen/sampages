@@ -10,7 +10,26 @@
     import biggy from "$lib/assets/biggy.png";
     import xbig from "$lib/assets/xbig.png";
     import Footer from "$lib/components/Footer.svelte";
-    import { DEFAULT_COLOR_TRANSITION_DURATION, MENU_SLIDE_DURATION, TOP_BAR_HEIGHT, barbordercolor, barcolor, burgopen, mobileMode, screenWidth, sidebarwidth, themeMode, themes, toggleSidebar, toggleTheme, toggleTopNav, topbarheight, topnavopen, toptransdelay, toptransduration, wscrollY } from "$lib/stores";
+    import {
+        DEFAULT_COLOR_TRANSITION_DURATION,
+        MENU_SLIDE_DURATION,
+        barbordercolor,
+        barcolor,
+        burgopen,
+        mobileMode,
+        screenWidth,
+        sidebarwidth,
+        themeMode,
+        themes,
+        toggleSidebar,
+        toggleTheme,
+        toggleTopNav,
+        topbarheight,
+        topnavopen,
+        toptransdelay,
+        toptransduration,
+        wscrollY,
+    } from "$lib/stores";
     import { onMount } from "svelte";
     import { get } from "svelte/store";
     import { fade, slide } from "svelte/transition";
@@ -21,6 +40,7 @@
 
     let selectedLang = "EN";
     let preloadableRoutes = ["/", "/about"];
+    let mounted = false
 
     onMount(() => {
         for (let r of preloadableRoutes) {
@@ -28,10 +48,11 @@
                 preloadData(`${base}${r}`);
             }
         }
+        mounted = true
     });
-    afterNavigate(() => {
-        window.scrollTo(0, 0);
-    });
+    // afterNavigate(() => {
+        // window.scrollTo(0, 0);
+    // });
 
     // let preloadedImages = [xbig, biggy];
     // function mayslide(node: Element) {
@@ -74,9 +95,22 @@
     {/each} -->
 </svelte:head>
 
-<svelte:window bind:innerWidth="{$screenWidth}" bind:scrollY="{$wscrollY}" />
+<svelte:window
+    bind:innerWidth="{$screenWidth}"
+    bind:scrollY="{$wscrollY}"
+    />
 
-<div class="top" style:--barTcolor="{$barcolor}" style:--barBorderColor="{$barbordercolor}" style:--barTDelay="{$toptransdelay}ms" style:--barTDur="{$toptransduration}ms" style:--defaultTransitionDuration="{DEFAULT_COLOR_TRANSITION_DURATION}ms" style:--scrolly="{$wscrollY}px" style:--sidebarwidth="{$sidebarwidth}px" style:--topbarheight="{$topbarheight}px">
+<div
+    class="top"
+    style:--barTcolor="{$barcolor}"
+    style:--barBorderColor="{$barbordercolor}"
+    style:--barTDelay="{$toptransdelay}ms"
+    style:--barTDur="{$toptransduration}ms"
+    style:--defaultTransitionDuration="{DEFAULT_COLOR_TRANSITION_DURATION}ms"
+    style:--scrolly="{$wscrollY}px"
+    style:--sidebarwidth="{$sidebarwidth}px"
+    style:--topbarheight="{$topbarheight}px"
+>
     {#if $mobileMode && $burgopen}
         <div
             class="shadow"
@@ -90,16 +124,20 @@
 
     <div class="menus">
         <div class="topbar" bind:clientHeight="{$topbarheight}">
+            {#if mounted}
             <button
                 class="baricon"
                 on:click="{() => {
                     toggleSidebar();
                 }}"
                 on:keydown
+                in:fade
             >
                 <Hamburger />
             </button>
-            <!-- {sidebarwidth} -->
+            {:else}
+            <div></div>
+            {/if}
             <p class="barp">SamCorp</p>
             <button
                 class="baricon"
@@ -122,7 +160,9 @@
                     <Esflag />
                 {/if}
             </button>
-            <a class="barlink" href="https://github.com/samoen"><Github --pad="0.4rem" /></a>
+            <a class="barlink" href="https://github.com/samoen"
+                ><Github --pad="0.4rem" /></a
+            >
         </div>
         {#if $burgopen}
             <div
@@ -175,12 +215,23 @@
         {/if}
     </div>
     {#if $topnavopen}
-        <div class="topnav" transition:slide|local="{{ duration: MENU_SLIDE_DURATION }}">
+        <div
+            class="topnav"
+            transition:slide|local="{{
+                duration: MENU_SLIDE_DURATION,
+            }}"
+        >
             <div class="langs">
-                <button class="flag" on:click="{() => (selectedLang = 'EN')}">
+                <button
+                    class="flag"
+                    on:click="{() => (selectedLang = 'EN')}"
+                >
                     <Ukflag />
                 </button>
-                <button class="flag" on:click="{() => (selectedLang = 'ES')}">
+                <button
+                    class="flag"
+                    on:click="{() => (selectedLang = 'ES')}"
+                >
                     <Esflag />
                 </button>
             </div>
@@ -195,9 +246,11 @@
             on:keyup
         ></div>
     {/if}
-
     {#key $page.url.pathname}
-        <div class="slotandfoot" in:fade="{{ duration: 500, delay: 0 }}">
+        <div
+            class="slotandfoot"
+            in:fade="{{ duration: 500, delay: 0 }}"
+        >
             <slot />
             <footer>
                 <hr />
@@ -222,14 +275,6 @@
         right: 0;
         bottom: 0;
         z-index: 2;
-
-        /* background-color: blue; */
-        /* display: grid; */
-        /* grid-template-columns: auto 1fr; */
-        /* grid-template-rows: var(--topbarheight) auto 1fr; */
-
-        /* gap: 4px; */
-        /* align-items: start; */
     }
     .slotandfoot {
         padding-left: var(--sidebarwidth);
@@ -240,18 +285,8 @@
         /* overflow-y: scroll; */
     }
     .topbar {
-        /* position: sticky; */
-        /* top: 0; */
-        /* overflow-x: auto; */
-        /* overflow-y: auto; */
-        /* overflow: visible; */
-        /* grid-column: 1 / span 2; */
-        /* grid-row: 1; */
-        /* margin-left: 0px; */
         margin-right: 5px;
-        /* margin-top: 3px; */
         padding: 5px;
-        /* z-index: 5; */
         min-height: 40px;
         display: grid;
         column-gap: clamp(4px, 3vw, 8rem);
@@ -262,7 +297,9 @@
         border: 2px solid var(--barBorderColor);
         border-radius: 6px;
         box-shadow: 2px 2px 1px 0px var(--barBorderColor);
-        transition: background-color var(--barTDur) ease-in-out var(--barTDelay), border-color var(--barTDur) ease-in-out var(--barTDelay);
+        transition: background-color var(--barTDur) ease-in-out
+                var(--barTDelay),
+            border-color var(--barTDur) ease-in-out var(--barTDelay);
     }
     .barlink {
         /* position: relative; */
@@ -276,7 +313,7 @@
     .barp {
         display: block;
         user-select: none;
-        overflow-x: hidden;
+        /* overflow-x: hidden; */
         font-size: 1.4rem;
     }
     .baricon {
@@ -337,7 +374,9 @@
         overflow-x: hidden;
         overflow-y: hidden;
         height: 
-        /* min( */ calc(100dvh - var(--topbarheight) - 20px);
+        /* min( */ calc(
+            100dvh - var(--topbarheight) - 20px
+        );
         /* 100% */
         /* ); */
         /* width: 15rem; */
@@ -458,7 +497,11 @@
         /* font-size:0.1rem; */
     }
     :global(div, button, p, a, h1, path, hr) {
-        transition: background-color var(--defaultTransitionDuration) ease-in-out, border-color var(--defaultTransitionDuration) ease-in-out, color var(--defaultTransitionDuration), stroke var(--defaultTransitionDuration);
+        transition: background-color var(--defaultTransitionDuration)
+                ease-in-out,
+            border-color var(--defaultTransitionDuration) ease-in-out,
+            color var(--defaultTransitionDuration),
+            stroke var(--defaultTransitionDuration);
     }
     :global(body) {
         transition: background-color 1s ease-in-out;

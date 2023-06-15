@@ -5,7 +5,6 @@ export const WAIT_FOR_MENU_SLIDE = MENU_SLIDE_DURATION - 200;
 export const DEFAULT_BAR_COLOR = 'var(--colorprimary)'
 export const DEFAULT_BAR_BORDER_COLOR = 'var(--colorshadow)'
 export const DEFAULT_COLOR_TRANSITION_DURATION = 600
-export const TOP_BAR_HEIGHT = '3rem'
 
 export const screenWidth = writable(0)
 export const mobileMode = derived(
@@ -63,14 +62,10 @@ wscrollY.subscribe((value) => {
     barbordcolnext = DEFAULT_BAR_BORDER_COLOR
   }
   
-  // let noColTransNext = get(toptransduration)
-  // noColTransNext = 0
   barcolor.set(toptransparentnext)
   barbordercolor.set(barbordcolnext)
-  // transparentTopBar.set(toptransparentnext)
-  toptransduration.set(499)
+  toptransduration.set(DEFAULT_COLOR_TRANSITION_DURATION)
   toptransdelay.set(0)
-  // nocolortransition.set(noColTransNext)
 })
 
 export const toggleTheme = () =>{

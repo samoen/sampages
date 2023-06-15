@@ -14,8 +14,8 @@
 <div class="container">
     <div class="splash" style="background-image:url({splashimg});">
         <h1>
-            Welcome to my website
             <img width=70 height=40 src="{pachnor}" alt="peachy" />
+            Welcome to my website
         </h1>
         <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem dicta
@@ -48,11 +48,14 @@
     <!-- <Footer></Footer> -->
 </div>
 <style>
-    .container {
-        /* padding-left: 10px; */
+    .container p, h1 {
+        margin-top: 1em;
         /* background-color: blueviolet; */
-        border: none;
-        box-sizing: content-box;
+        /* border: none; */
+        /* box-sizing: content-box; */
+        max-width: clamp(0px, 80vw, 700px);
+        /* text-align: center; */
+        margin-inline: auto;
     }
     .splash{
         padding-left: 10px;
@@ -63,14 +66,19 @@
         background-attachment:local;
     }
 
+    p{
+        display:block;
+    }
+    
     h1 {
+        display: block;
+        /* text-align: center; */
+
     }
     .someting{
         text-align: center;
     }
-    h1 {
-        display: inline;
-    }
+    
     .normalimg{
         height: auto;
         width: 60%;
