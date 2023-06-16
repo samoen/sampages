@@ -272,7 +272,6 @@
         z-index: 2;
     }
     .slotandfoot {
-        padding-left: var(--sidebarwidth);
         min-height: 100dvh;
         display: grid;
         grid-template-rows: 1fr auto;
@@ -281,6 +280,7 @@
     }
     .topbar {
         margin-right: 5px;
+        margin-left:2px;
         padding: 5px;
         min-height: 40px;
         display: grid;
@@ -297,15 +297,7 @@
                 var(--barTDelay),
             border-color var(--barTDur) ease-in-out var(--barTDelay);
     }
-    .barlink {
-        /* position: relative; */
-        /* display: block; */
-        height: 50px;
-        width: 50px;
-        /* display: grid; */
-        /* place-items: center; */
-        /* overflow: visible; */
-    }
+
     .barp {
         display: block;
         user-select: none;
@@ -318,7 +310,7 @@
         position: fixed;
         top: calc(var(--topbarheight) + 12px);
         /* left: calc(var(--sidebarwidth) + 10px); */
-        right:0;
+        right:5px;
         /* display: inline-block; */
         /* vertical-align: top; */
         /* margin-top: 5px; */
@@ -398,8 +390,6 @@
         font-size: 1.3rem;
     }
 
-    footer {
-    }
 
     hr {
         margin-top: 15px;
@@ -438,6 +428,9 @@
         width: calc(100vw - var(--sidebarwidth));
         background-color: transparent;
     }
+    footer{
+        padding-left: 10px;
+    }
 
     @media (hover: hover) and (pointer: fine) {
         a:hover {
@@ -445,6 +438,7 @@
             transition: background-color 0s;
         }
     }
+
     @media only screen and (max-width: 400px) {
         .slotandfoot {
             padding-left: 0px;
@@ -454,6 +448,10 @@
         }
     }
     @media only screen and (min-width: 400px) {
+        .slotandfoot{
+
+            padding-left: var(--sidebarwidth);
+        }
         .shadow {
             display: none;
         }
@@ -468,7 +466,9 @@
                 ease-in-out,
             border-color var(--defaultTransitionDuration) ease-in-out,
             color var(--defaultTransitionDuration),
-            stroke var(--defaultTransitionDuration);
+            stroke var(--defaultTransitionDuration),
+            box-shadow var(--defaultTransitionDuration) ease-in-out;
+
     }
     :global(body) {
         transition: background-color 1s ease-in-out;

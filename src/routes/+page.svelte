@@ -28,9 +28,7 @@
     <br />
     <br />
     <br />
-    <div class="someting">
             <img class="normalimg" width="400" height=200 src="{gamesprites}" alt="a squiggle">
-    </div>
     <br />
     <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem dicta
@@ -75,12 +73,11 @@
         /* text-align: center; */
 
     }
-    .someting{
-        text-align: center;
-    }
     
     .normalimg{
+        display: block;
+        margin-inline: auto;
         height: auto;
-        width: 60%;
+        width: clamp(200px, 60vw, 900px);
     }
 </style>

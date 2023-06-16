@@ -66,17 +66,18 @@
     } */
 
     .cont {
-        padding: 0;
+        padding-left: 10px;
         margin:0;
-        padding-left: 1rem;
+        /* padding-left: calc(var(--sidebarwidth) + 20px); */
         padding-right: 1rem;
         padding-top:5rem;
-        background-image: linear-gradient(to right,red, yellow);
+        /* background-image: linear-gradient(to right,red, yellow); */
         /* min-height: 100vh; */
         --textwidth: 300px;
         --maximagewidth: 600px;
         container: conty / inline-size;
     }
+
     .imgwithtext {
         margin-top: 2rem;
         margin-bottom: 2rem;

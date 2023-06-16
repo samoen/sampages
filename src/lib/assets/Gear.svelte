@@ -11,6 +11,10 @@
 >
 
 <style>
+            path {
+        stroke: var(--colortext);
+        fill: var(--colortext);
+    }
     svg{
         height:20px;
         width: 20px;
