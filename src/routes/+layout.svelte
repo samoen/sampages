@@ -81,9 +81,9 @@
         <style>
             html {
                 --colorprimary: beige;
-                --colorsecondary: rgb(247, 195, 160);
+                --colorsecondary: wheat;
                 --colortext: black;
-                --coloritem: aliceblue;
+                --coloritem: limegreen;
                 --colorshadow: black;
             }
         </style>
@@ -281,7 +281,9 @@
     .topbar {
         margin-right: 5px;
         margin-left:2px;
-        padding: 5px;
+        padding-block: 10px;
+        padding-right:10px;
+        padding-left:10px;
         min-height: 40px;
         display: grid;
         column-gap: clamp(4px, 3vw, 8rem);
@@ -293,9 +295,9 @@
         border: 2px solid var(--barBorderColor);
         border-radius: 6px;
         box-shadow: 2px 2px 1px 0px var(--barBorderColor);
-        transition: background-color var(--barTDur) ease-in-out
-                var(--barTDelay),
-            border-color var(--barTDur) ease-in-out var(--barTDelay);
+        transition: background-color var(--barTDur) ease-in-out var(--barTDelay),
+            border-color var(--barTDur) ease-in-out var(--barTDelay),
+            box-shadow var(--barTDur) ease-in-out var(--barTDelay);
     }
 
     .barp {
@@ -303,6 +305,9 @@
         user-select: none;
         /* overflow-x: hidden; */
         font-size: 1.4rem;
+        font-family:fantasy;
+        /* font-weight: 700; */
+        color: var(--colortext);
         grid-column: 1fr;
     }
 
@@ -376,7 +381,7 @@
         background-color: var(--colorsecondary);
         text-decoration: none;
         border: 2px solid var(--colorshadow);
-        border-radius: 3px;
+        border-radius: 6px;
         box-shadow: 2px 2px 1px 0px var(--colorshadow);
     }
     .sideicon {
@@ -450,7 +455,7 @@
     @media only screen and (min-width: 400px) {
         .slotandfoot{
 
-            padding-left: var(--sidebarwidth);
+            padding-left: calc(var(--sidebarwidth) + calc(var(--sidebarwidth)*0.1));
         }
         .shadow {
             display: none;

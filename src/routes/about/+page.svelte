@@ -58,9 +58,11 @@
 <!-- </div> -->
 
 <style>
-    /* p{
-        font-size: 4rem;
-    } */
+    p{
+        display: block;
+        margin-inline:auto;
+        max-width: 120ch;
+    }
     /* .cont > * + * {
         margin-top: 1rem;
     } */
@@ -115,15 +117,20 @@
     }
     @container conty (max-width: 600px) {
         .myimgcont {
-            text-align: center;
+            /* text-align: center; */
         }
         .myimg {
-            max-width: 100%;
-            height: auto;
+            display:block;
+            /* max-width: 300px; */
+            max-height:100px;
+            width: clamp(0px,100%,600px);
+            margin-inline:auto;
+            object-fit:cover;
         }
 
         .cardtxt {
-            margin: auto;
+            margin-top:1em;
+            margin-inline: auto;
             text-align: center;
         }
     }

@@ -12,11 +12,13 @@
 
 <style>
             path {
-        stroke: var(--colortext);
+        /* stroke: var(--colortext); */
         fill: var(--colortext);
     }
     svg{
-        height:20px;
-        width: 20px;
+        /* background-color: blue; */
+        padding-top:2px;
+        height:auto;
+        width: 29px;
     }
 </style>

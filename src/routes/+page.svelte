@@ -14,7 +14,7 @@
 <div class="container">
     <div class="splash" style="background-image:url({splashimg});">
         <h1>
-            <img width=70 height=40 src="{pachnor}" alt="peachy" />
+            <!-- <img width=70 height=40 src="{pachnor}" alt="peachy" /> -->
             Welcome to my website
         </h1>
         <p>
@@ -57,11 +57,17 @@
     }
     .splash{
         padding-left: 10px;
-        padding-top: 100px;
-        padding-bottom: 100px;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        margin-right: 25px;
+        margin-left:20px;
+        margin-top: 6px;
         background-repeat: no-repeat;
         background-size:cover;
         background-attachment:local;
+        border-radius: 9px;
+        border: 2px solid var(--colorshadow);
+        box-shadow: 2px 2px 1px 0px var(--colorshadow);
     }
 
     p{
@@ -78,6 +84,8 @@
         display: block;
         margin-inline: auto;
         height: auto;
-        width: clamp(200px, 60vw, 900px);
+        width: clamp(200px, 60%, 500px);
+        object-fit: cover;
+        border-radius: 13px;
     }
 </style>
