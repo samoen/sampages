@@ -142,17 +142,17 @@
             <p class="barp">SamCorp</p>
             <TopBarIcon
                 push="{() => {
-                    toggleSettings();
-                }}"
-            >
-                <Gear />
-            </TopBarIcon>
-            <TopBarIcon
-                push="{() => {
                     toggleContact();
                 }}"
             >
                 <Hand />
+            </TopBarIcon>
+            <TopBarIcon
+                push="{() => {
+                    toggleSettings();
+                }}"
+            >
+                <Gear />
             </TopBarIcon>
         </div>
         {#if $burgopen}
@@ -317,11 +317,13 @@
     .topnav {
         position: fixed;
         top: calc(var(--topbarheight) + 12px);
-        left: calc(var(--sidebarwidth) + 10px);
+        /* left: calc(var(--sidebarwidth) + 10px); */
+        right:0;
         /* display: inline-block; */
         /* vertical-align: top; */
         /* margin-top: 5px; */
         /* margin-left: 25px; */
+        max-width: calc(100vw - var(--sidebarwidth) - 10px);
         z-index: 3;
         padding-inline: 1rem;
         padding-block: 0.5rem;

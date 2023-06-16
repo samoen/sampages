@@ -103,7 +103,7 @@ export const toggleSidebar = () => {
   } else if (get(burgopen) && !get(atTop)) {
     toptransparentnext = DEFAULT_BAR_COLOR
     barbordcolnext = DEFAULT_BAR_BORDER_COLOR
-  } else if (get(burgopen) && get(navSelect) != 'none' && get(atTop)) {
+  } else if (get(burgopen) && get(navSelect) == 'none' && get(atTop)) {
     toptransparentnext = 'transparent'
     barbordcolnext = 'transparent'
   }
@@ -161,7 +161,7 @@ export const toggleSettings = () => {
 
   let ttdelaynext = get(toptransdelay)
   let ttdurnext = get(toptransduration)
-  if(get(navSelect) != 'none'){
+  if(get(navSelect) != 'settings'){
     ttdurnext = 0
     ttdelaynext = 0
   }else{
