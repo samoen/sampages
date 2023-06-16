@@ -45,7 +45,7 @@
         background-color: transparent;
     }
     @media (hover: hover) and (pointer: fine) {
-        .baricon:hover {
+        .brutal:hover {
             background-color: var(--coloritem);
             transition: background-color 0s;
         }

@@ -1,47 +1,37 @@
 <script lang="ts">
-    import { afterNavigate, preloadData } from "$app/navigation";
+    import { preloadData } from "$app/navigation";
     import { base } from "$app/paths";
     import { page } from "$app/stores";
-    import Esflag from "$lib/assets/Esflag.svelte";
+    import Gear from "$lib/assets/Gear.svelte";
     import Hamburger from "$lib/assets/Hamburger.svelte";
+    import Hand from "$lib/assets/Hand.svelte";
     import Palette from "$lib/assets/Palette.svelte";
-    import Ukflag from "$lib/assets/Ukflag.svelte";
-    import Github from "$lib/assets/Github.svelte";
-    import biggy from "$lib/assets/biggy.png";
-    import xbig from "$lib/assets/xbig.png";
-    import Footer from "$lib/components/Footer.svelte";
+    import Contact from "$lib/components/Contact.svelte";
+    import Settings from "$lib/components/Settings.svelte";
+    import TopBarIcon from "$lib/components/TopBarIcon.svelte";
     import {
         DEFAULT_COLOR_TRANSITION_DURATION,
-        DEFAULT_MENU_SLIDE_DURATION as DEFAULT_MENU_SLIDE_DURATION,
-        barbordercolor,
-        barcolor,
+        DEFAULT_MENU_SLIDE_DURATION,
+        barColorState,
         burgopen,
         mobileMode,
+        navSelect,
         screenWidth,
         showJsButtons,
         sidebarwidth,
         themeMode,
         themes,
-        toggleSidebar,
-        toggleTheme,
-        toggleSettings,
-        topbarheight,
-        toptransdelay,
-        toptransduration,
-        wscrollY,
         toggleContact,
+        toggleSettings,
+        toggleSidebar,
+        topBarTransitionQuick,
         topNavOutDuration,
-        navSelect,
+        topbarheight,
+        topBarTransitionDelayed,
+        wscrollY
     } from "$lib/stores";
     import { onMount } from "svelte";
-    import { get } from "svelte/store";
     import { fade, slide } from "svelte/transition";
-    import { blank_object } from "svelte/internal";
-    import TopBarIcon from "$lib/components/TopBarIcon.svelte";
-    import Hand from "$lib/assets/Hand.svelte";
-    import Contact from "$lib/components/Contact.svelte";
-    import Gear from "$lib/assets/Gear.svelte";
-    import Settings from "$lib/components/Settings.svelte";
 
     // export let data;
     // $croute = data.currentRoute;
@@ -110,12 +100,6 @@
 
 <div
     class="top"
-    style:--barTcolor="{$barcolor}"
-    style:--barBorderColor="{$barbordercolor}"
-    style:--barTDelay="{$toptransdelay}ms"
-    style:--barTDur="{$toptransduration}ms"
-    style:--defaultTransitionDuration="{DEFAULT_COLOR_TRANSITION_DURATION}ms"
-    style:--scrolly="{$wscrollY}px"
     style:--sidebarwidth="{$sidebarwidth}px"
     style:--topbarheight="{$topbarheight}px"
 >
@@ -131,7 +115,13 @@
     {/if}
 
     <div class="menus">
-        <div class="topbar" bind:clientHeight="{$topbarheight}">
+        <div 
+        class="topbar" 
+        class:transpar="{$barColorState == 'transparent'}"
+        class:solidbar="{$barColorState == 'solid'}"
+        class:quick-transition="{$topBarTransitionQuick}"
+        class:delayed-transition="{$topBarTransitionDelayed}"
+        bind:clientHeight="{$topbarheight}">
             <TopBarIcon
                 push="{() => {
                     toggleSidebar();
@@ -291,13 +281,30 @@
         grid-template-rows: auto;
         grid-auto-flow: column;
         place-items: center;
-        background-color: var(--barTcolor);
-        border: 2px solid var(--barBorderColor);
+        border: 2px solid;
         border-radius: 6px;
-        box-shadow: 2px 2px 1px 0px var(--barBorderColor);
-        transition: background-color var(--barTDur) ease-in-out var(--barTDelay),
-            border-color var(--barTDur) ease-in-out var(--barTDelay),
-            box-shadow var(--barTDur) ease-in-out var(--barTDelay);
+        transition: background-color 500ms ease-in-out 0ms,
+            border-color 500ms ease-in-out 0ms,
+            box-shadow 500ms ease-in-out 0ms;
+    }
+    .quick-transition{
+            transition-duration: 0ms;    
+    }
+    /* :global(.quick-transition){
+            transition-duration: 0ms;    
+    } */
+    .delayed-transition {
+        transition-delay: 400ms;
+    }
+    .solidbar{
+        background-color: var(--colorsecondary);
+        border: 2px solid var(--colorshadow);
+        box-shadow: 2px 2px 1px 0px var(--colorshadow);
+    }
+    .transpar{
+        background-color: transparent;
+        border-color: transparent;
+        box-shadow: transparent;
     }
 
     .barp {
@@ -467,12 +474,12 @@
         /* font-size:0.1rem; */
     }
     :global(div, button, p, a, h1, path, hr) {
-        transition: background-color var(--defaultTransitionDuration)
+        transition: background-color 400ms
                 ease-in-out,
-            border-color var(--defaultTransitionDuration) ease-in-out,
-            color var(--defaultTransitionDuration),
-            stroke var(--defaultTransitionDuration),
-            box-shadow var(--defaultTransitionDuration) ease-in-out;
+            border-color 400ms ease-in-out,
+            color 400ms,
+            stroke 400ms,
+            box-shadow 400ms ease-in-out;
 
     }
     :global(body) {

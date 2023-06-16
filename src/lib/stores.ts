@@ -34,8 +34,9 @@ type Theme = typeof themes[keyof typeof themes]
 
 export const themeMode = writable<Theme>(themes.light)
 export const burgopen = writable(false)
-export const toptransdelay = writable(0)
-export const toptransduration = writable(0)
+export const topBarTransitionDelayed = writable(false)
+export const topBarTransitionQuick = writable(false)
+
 export const showJsButtons = writable(false)
 export const topNavOutDuration = writable(DEFAULT_MENU_SLIDE_DURATION)
 
@@ -47,13 +48,6 @@ export const barcolor = derived(barColorState,($s =>{
     return 'transparent'
   }else{
     return 'var(--colorsecondary)'
-  }
-}))
-export const barbordercolor = derived(barColorState,($s =>{
-  if($s == "transparent"){
-    return 'transparent'
-  }else{
-    return 'var(--colorshadow)'
   }
 }))
 
@@ -86,13 +80,13 @@ wscrollY.subscribe((value) => {
   }else if(!get(atTop) || get(navSelect) != 'none' || get(burgopen)){
     barColorState.set('solid')
   }
-  toptransduration.set(DEFAULT_COLOR_TRANSITION_DURATION)
-  toptransdelay.set(0)
+  topBarTransitionQuick.set(false)
+  topBarTransitionDelayed.set(false)
 })
 
 export const toggleTheme = () =>{
-  toptransduration.set(DEFAULT_COLOR_TRANSITION_DURATION);
-  toptransdelay.set(0);
+  topBarTransitionQuick.set(false)
+  topBarTransitionDelayed.set(false);
   if (get(themeMode) == themes.light) {
       themeMode.set(themes.dark);
   } else {
@@ -119,27 +113,24 @@ export const toggleSidebar = () => {
     topbarcolorstatenext = 'transparent'
   }
 
-  let toptrandurNext = get(toptransduration)
   if(!get(burgopen)){
-    toptrandurNext = 0
+    topBarTransitionQuick.set(true)
   }else{
-    toptrandurNext = DEFAULT_COLOR_TRANSITION_DURATION
+    topBarTransitionQuick.set(false)
   }
 
-  let topTransDelayNext = get(toptransdelay)
+  let topTransDelayNext = get(topBarTransitionDelayed)
   if(get(burgopen)){
-    topTransDelayNext = WAIT_FOR_MENU_SLIDE
+    topTransDelayNext = true
   }else{
-    topTransDelayNext = 0
+    topTransDelayNext = false
   }
 
   burgopen.set(burgnext)
   navSelect.set(navnext)
-  // barcolor.set(toptransparentnext)
-  // barbordercolor.set(barbordcolnext)
   barColorState.set(topbarcolorstatenext)
-  toptransduration.set(toptrandurNext)
-  toptransdelay.set(topTransDelayNext)
+  // toptransduration.set(toptrandurNext)
+  topBarTransitionDelayed.set(topTransDelayNext)
 }
 export const toggleSettings = () => {
   let navNext = get(navSelect)
@@ -158,40 +149,30 @@ export const toggleSettings = () => {
     burgnext = false
   }
   
-  // let toptransparentnext = get(barcolor)
-  // let barbordcolnext = get(barbordercolor)
   let barcolorstatenext = get(barColorState)
   if (get(navSelect) == 'none') {
     barcolorstatenext = 'solid'
-    // toptransparentnext = DEFAULT_BAR_COLOR
-    // barbordcolnext = DEFAULT_BAR_BORDER_COLOR
   } else if (get(navSelect) != 'none' && !get(atTop)) {
     barcolorstatenext = 'solid'
-    // toptransparentnext = DEFAULT_BAR_COLOR
-    // barbordcolnext = DEFAULT_BAR_BORDER_COLOR
   } else if (get(navSelect) != 'none' && !get(burgopen) && get(atTop)) {
     barcolorstatenext = 'transparent'
-    // toptransparentnext = 'transparent'
-    // barbordcolnext = 'transparent'
   }
 
-  let ttdelaynext = get(toptransdelay)
-  let ttdurnext = get(toptransduration)
+  let ttdelaynext = get(topBarTransitionDelayed)
+  let ttdurnext = get(topBarTransitionQuick)
   if(get(navSelect) != 'settings'){
-    ttdurnext = 0
-    ttdelaynext = 0
+    ttdurnext = true
+    ttdelaynext = false
   }else{
-    ttdurnext = DEFAULT_COLOR_TRANSITION_DURATION
-    ttdelaynext = WAIT_FOR_MENU_SLIDE
+    ttdurnext = false
+    ttdelaynext = true
   }
  
   burgopen.set(burgnext)
   navSelect.set(navNext)
   barColorState.set(barcolorstatenext)
-  // barcolor.set(toptransparentnext)
-  // barbordercolor.set(barbordcolnext)
-  toptransdelay.set(ttdelaynext)
-  toptransduration.set(ttdurnext)
+  topBarTransitionDelayed.set(ttdelaynext)
+  topBarTransitionQuick.set(ttdurnext)
 }
 
 export const toggleContact = () => {
@@ -212,38 +193,28 @@ export const toggleContact = () => {
     burgnext = false
   }
   
-  // let toptransparentnext = get(barcolor)
-  // let barbordcolnext = get(barbordercolor)
   let barcolorstatenext = get(barColorState)
   if (get(navSelect) == 'none') {
     barcolorstatenext = 'solid'
-    // toptransparentnext = DEFAULT_BAR_COLOR
-    // barbordcolnext = DEFAULT_BAR_BORDER_COLOR
   } else if (get(navSelect) != 'none' && !get(atTop)) {
     barcolorstatenext = 'solid'
-    // toptransparentnext = DEFAULT_BAR_COLOR
-    // barbordcolnext = DEFAULT_BAR_BORDER_COLOR
   } else if (get(navSelect) != 'none' && !get(burgopen) && get(atTop)) {
     barcolorstatenext = 'transparent'
-    // toptransparentnext = 'transparent'
-    // barbordcolnext = 'transparent'
   }
 
-  let ttdelaynext = get(toptransdelay)
-  let ttdurnext = get(toptransduration)
+  let ttdelaynext = get(topBarTransitionDelayed)
+  let ttdurnext = get(topBarTransitionQuick)
   if(get(navSelect) == 'none'){
-    ttdurnext = 0
-    ttdelaynext = 0
+    ttdurnext = true
+    ttdelaynext = false
   }else{
-    ttdurnext = DEFAULT_COLOR_TRANSITION_DURATION
-    ttdelaynext = WAIT_FOR_MENU_SLIDE
+    ttdurnext = false
+    ttdelaynext = true
   }
  
   burgopen.set(burgnext)
   navSelect.set(navNext)
   barColorState.set(barcolorstatenext)
-  // barcolor.set(toptransparentnext)
-  // barbordercolor.set(barbordcolnext)
-  toptransdelay.set(ttdelaynext)
-  toptransduration.set(ttdurnext)
+  topBarTransitionDelayed.set(ttdelaynext)
+  topBarTransitionQuick.set(ttdurnext)
 }
