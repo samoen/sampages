@@ -9,7 +9,7 @@ export const screenWidth = writable(0)
 export const mobileMode = derived(
   screenWidth,
   $w => {
-    if ($w > 400) {
+    if ($w > 500) {
       return false
     } else {
       return true
@@ -150,11 +150,9 @@ export const toggleSettings = () => {
   }
   
   let barcolorstatenext = get(barColorState)
-  if (get(navSelect) == 'none') {
+  if (get(navSelect) != 'settings') {
     barcolorstatenext = 'solid'
-  } else if (get(navSelect) != 'none' && !get(atTop)) {
-    barcolorstatenext = 'solid'
-  } else if (get(navSelect) != 'none' && !get(burgopen) && get(atTop)) {
+  } else if (get(navSelect) == 'settings' && !get(burgopen) && get(atTop)) {
     barcolorstatenext = 'transparent'
   }
 
@@ -194,13 +192,18 @@ export const toggleContact = () => {
   }
   
   let barcolorstatenext = get(barColorState)
-  if (get(navSelect) == 'none') {
+  if (get(navSelect) != 'contact') {
     barcolorstatenext = 'solid'
-  } else if (get(navSelect) != 'none' && !get(atTop)) {
-    barcolorstatenext = 'solid'
-  } else if (get(navSelect) != 'none' && !get(burgopen) && get(atTop)) {
+  } else if (get(navSelect) == 'contact' && !get(burgopen) && get(atTop)) {
     barcolorstatenext = 'transparent'
   }
+  // if (get(navSelect) == 'none') {
+  //   barcolorstatenext = 'solid'
+  // } else if (get(navSelect) != 'none' && !get(atTop)) {
+  //   barcolorstatenext = 'solid'
+  // } else if (get(navSelect) != 'none' && !get(burgopen) && get(atTop)) {
+  //   barcolorstatenext = 'transparent'
+  // }
 
   let ttdelaynext = get(topBarTransitionDelayed)
   let ttdurnext = get(topBarTransitionQuick)

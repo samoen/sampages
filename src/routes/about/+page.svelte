@@ -9,7 +9,7 @@
 <div class="cont">
     <h1>About</h1>
     <p>Made with &hearts; by Sam Oen</p>
-    <div class="imgwithtext">
+    <div class="imgwithtext brutal-border">
         <div class="myimgcont">
             <img
                 class="myimg"
@@ -70,7 +70,6 @@
     .cont {
         padding-left: 10px;
         margin:0;
-        /* padding-left: calc(var(--sidebarwidth) + 20px); */
         padding-right: 1rem;
         padding-top:5rem;
         /* background-image: linear-gradient(to right,red, yellow); */
@@ -79,7 +78,6 @@
         --maximagewidth: 600px;
         container: conty / inline-size;
     }
-
     .imgwithtext {
         margin-top: 2rem;
         margin-bottom: 2rem;
