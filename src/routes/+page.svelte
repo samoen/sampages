@@ -22,7 +22,7 @@
         for (let i = 0; i < 3; i++) {
             setTimeout(() => {
                 msg++;
-            }, 2000 * i);
+            }, 2500 * i);
         }
     }
 </script>
@@ -52,31 +52,44 @@
                         </span>
                     </p>
                 </div>
-                <p class="grid1" class:trans="{msg != 1}">Oops!</p>
-                <p class="grid1" class:trans="{msg != 2}">
+                <p class="grid1 nofade" class:trans="{msg != 1}">
+                    Oops!
+                </p>
+                <p
+                    class="grid1"
+                    class:longfade="{msg == 2}"
+                    class:nofade="{msg == 3}"
+                    class:trans="{msg != 2}"
+                >
                     That button is.. experiencing transformational..
                     maintenance.
                 </p>
-                <p class="grid1" class:trans="{msg != 3}">
-                    Just explore the site like normal - digitally
-                    experience it.
+                <p class="grid1 longfade" class:trans="{msg != 3}">
+                    Please continue to digitally experience the
+                    website.
                 </p>
             </div>
+            <!-- class:brutal-border="{!doneFalling}" -->
             <button
                 class:glowing-border="{!falling}"
-                class:brutal-border="{!doneFalling}"
                 class:falling="{falling}"
                 class:trans="{doneFalling}"
                 on:click="{() => {
-                    clickGag();
+                    // clickGag();
                     falling = true;
                     clickedCall = true;
+                    for (let i = 0; i < 3; i++) {
+                        setTimeout(() => {
+                            msg++;
+                        }, 2500 * i);
+                    }
                 }}"
                 on:animationend="{() => {
                     doneFalling = true;
                 }}"
             >
-                Heed the Call</button
+                <span class="gag-but-text">Heed the Call</span
+                ></button
             >
         </div>
     </div>
@@ -99,7 +112,7 @@
         platform is meticulously engineered to harmonize seamless
         scalability with disruptive hyper-convergence.
     </p>
-
+    <br />
     <p>
         Oh, and did we mention the cloud? Yes, we have harnessed the
         boundless power of cloud computing to transcend the limits of
@@ -126,7 +139,7 @@
         padding-bottom: 10px;
         margin-right: 25px;
         margin-left: 20px;
-        margin-top: 0px;
+        margin-top: 3px;
         background-repeat: no-repeat;
         background-size: cover;
         background-attachment: local;
@@ -135,12 +148,16 @@
     .nofade {
         transition: color 0s;
     }
+    .longfade {
+        transition: color 1500ms;
+    }
     button:hover {
         /* background-color: white; */
     }
 
     .gag {
         display: flex;
+        flex-wrap: wrap;
         /* grid-template-columns: 1fr 1fr; */
         /* grid-template-rows: 1fr; */
         align-items: center;
@@ -152,20 +169,10 @@
         /* min-width: 0px; */
         /* text-align: right; */
     }
-    .gag > div {
-        flex-shrink: 1;
-    }
 
     .grid1 {
         grid-row: 1 / 1;
         grid-column: 1 / 1;
-    }
-    .secondact {
-        grid-row: 1 / 1;
-        grid-column: 1 / 1;
-    }
-    .secondafter {
-        transition-delay: var(--talk-delay);
     }
 
     .trans {
@@ -181,20 +188,21 @@
     }
 
     .action {
+        flex-shrink: 1;
+        flex-basis: 50%;
         display: grid;
         align-items: center;
         justify-items: center;
         /* max-width: calc(var(--main-width-px) * 0.4); */
     }
     .action p {
-        display: block;
+        /* display: block; */
         font-weight: bold;
     }
 
     .gag button {
         /* display: inline-block; */
         /* vertical-align: middle;    */
-
         flex-basis: auto;
         font-weight: bold;
         justify-self: center;
@@ -209,11 +217,6 @@
         /* animation-direction: alternate-reverse; */
         animation-timing-function: linear;
     }
-    .glowing-border {
-        animation: glowing-border 500ms infinite;
-        /* animation-direction:alternate-reverse; */
-        animation-timing-function: linear;
-    }
 
     .falling {
         animation-name: fall;
@@ -222,22 +225,69 @@
         animation-timing-function: linear;
         position: relative;
     }
+    .glowing-border {
+        animation: glowing-border 1600ms infinite;
+        /* animation-direction:alternate-reverse; */
+        /* animation-timing-function:ease-in-out; */
+        /* animation-fill-mode:both; */
+
+        border-radius: 8px;
+        /* border-color: black; */
+        /* transition: box-shadow 500ms linear; */
+        /* transition-duration: 0s; */
+    }
+    .gag-but-text {
+        display: inline-block;
+        animation: gagbutscale 1600ms infinite;
+    }
+    @keyframes gagbutscale {
+        25% {
+            transform: scale(1);
+        }
+        40% {
+            transform: scale(0.9);
+        }
+        50% {
+            transform: scale(1);
+        }
+    }
     @keyframes glowing-border {
         0% {
-            border-color: var(--colorprimary);
+            /* box-shadow: none; */
+            box-shadow: 2px 2px 0px 0px var(--colorshadow);
+            /* border-color: var(--colorprimary); */
+            /* border-color: transparent; */
+            /* box-shadow: none; */
         }
-        25% {
-            border-color: var(--colorsecondary);
+        28% {
+            box-shadow: 2px 2px 0px 0px var(--colorshadow);
+            /* box-shadow: none; */
         }
-        75% {
-            border-color: green;
-            color: green;
+        30% {
             box-shadow: none;
+            /* border-color: var(--colorsecondary); */
+            /* border-color: transparent; */
+            /* box-shadow: inset 3px 3px 4px 1px var(--colorshadow); */
+        }
+        43% {
+            box-shadow: inset 3px 3px 4px 1px var(--colorshadow);
+            /* font-size:none; */
+        }
+        50% {
+            /* border-color: transparent; */
+            box-shadow: none;
+            /* color: green; */
+            /* box-shadow: 3px 3px 0px 1px var(--colorshadow); */
+            /* font-size: x-small; */
+        }
+        53% {
+            box-shadow: 2px 2px 0px 0px var(--colorshadow);
+            /* border-color: transparent; */
+            /* font-size: x-small; */
+            /* color: darkgreen; */
         }
         100% {
-            border-color: darkgreen;
-            color: darkgreen;
-            box-shadow: none;
+            box-shadow: 2px 2px 0px 0px var(--colorshadow);
         }
     }
     @keyframes glowing {
@@ -257,9 +307,7 @@
     }
     @keyframes fall {
         0% {
-            /* transform: translateY(3px); */
             transform-origin: bottom left;
-            /* rotate: 0deg; */
             top: 0px;
         }
         10% {
@@ -296,24 +344,23 @@
         }
     }
 
+    .container > p {
+        display: block;
+        max-width: clamp(0px, 80%, 700px);
+        margin-inline: auto;
+    }
+
     .splash > p {
         font-weight: bold;
-        display: inline-block;
-        /* margin-inline:auto; */
-        max-width: clamp(0px, 80vw, 700px);
-        margin-top: 1em;
-        margin-inline: auto;
     }
 
     p,
     h1 {
+        margin-top: 1em;
         /* text-align: center; */
     }
     h1 {
-        margin-top: 50px;
         font-size: clamp(1rem, 4vw + 1rem, 3rem);
-        /* margin-inline: clamp(0.1rem, 4vw, 3rem); */
-        /* font-size: 4rem; */
     }
 
     .normalimg {

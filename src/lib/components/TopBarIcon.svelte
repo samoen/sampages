@@ -9,7 +9,7 @@
 {#if $showJsButtons}
 <button
     class="baricon"
-    class:brutal="{$barIconColorState == 'brutal'}"
+    class:brutal-border="{$barIconColorState == 'brutal'}"
     class:transparent="{$barIconColorState == 'transparent'}"
     class:quick-transition="{$topBarTransitionQuick}"
     class:delayed-transition="{$topBarTransitionDelayed}"
@@ -36,14 +36,10 @@
         border-width: 0;
         border-radius: 6px;
         border: 2px solid transparent;
+        background-color: var(--colorsecondary);
         /* transition: background-color var(--barTDur) ease-in-out
                 var(--barTDelay),
             border-color var(--barTDur) ease-in-out var(--barTDelay); */
-    }
-    .brutal{
-        background-color: var(--colorsecondary);
-        border: 2px solid var(--colorshadow);
-        box-shadow: 2px 2px 2px 1px var(--colorshadow);
     }
 
     .transparent{

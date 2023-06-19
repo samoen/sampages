@@ -37,7 +37,7 @@
     // $croute = data.currentRoute;
 
     let preloadableRoutes = ["/", "/about"];
-    let mounted = false;
+    // let mounted = false;
 
     onMount(() => {
         for (let r of preloadableRoutes) {
@@ -46,7 +46,7 @@
             }
         }
         showJsButtons.set(true);
-        mounted = true;
+        // mounted = true;
     });
     // afterNavigate(() => {
     // window.scrollTo(0, 0);
@@ -93,24 +93,28 @@
     {/each} -->
 </svelte:head>
 
+<!-- bind:innerWidth="{$screenWidth}" -->
 <svelte:window
-    bind:innerWidth="{$screenWidth}"
     bind:scrollY="{$wscrollY}"
 />
 
 <div
     class="top"
+    bind:clientWidth="{$screenWidth}"
     style:--sidebar-width="{$sidebarwidth}"
     style:--topbarheight="{$topbarheight}px"
 >
     {#if $mobileMode && $burgopen}
         <div
             class="shadow"
+            transition:fade
+        ></div>
+        <div
+            class="shadowclick"
             on:click="{() => {
                 toggleSidebar();
             }}"
             on:keyup
-            transition:fade
         ></div>
     {/if}
 
@@ -130,6 +134,7 @@
             <Hamburger />
         </TopBarIcon>
         <span class="barp">SAM OEN</span>
+        <!-- {$mobileMode} -->
         <TopBarIcon
             push="{() => {
                 toggleContact();
@@ -147,7 +152,7 @@
     </div>
     {#if $burgopen}
         <div
-            class="sidebar"
+            class="sidebar brutal-border"
             bind:offsetWidth="{$sidebarwidth}"
             transition:slide="{{
                 delay: 0,
@@ -220,16 +225,6 @@
             <Contact />
         </div>
     {/if}
-
-    {#if $mobileMode && $burgopen}
-        <div
-            class="shadowclick"
-            on:click="{() => {
-                toggleSidebar();
-            }}"
-            on:keyup
-        ></div>
-    {/if}
     {#key $page.url.pathname}
         <div
             class="slotandfoot"
@@ -247,9 +242,6 @@
 <style>
     .top {
         --sidebar-width-px: calc(var(--sidebar-width) * 1px);
-        /* --topbarheight: 4rem; */
-        /* overflow-y: scroll; */
-        /* width: 100vw; */
     }
 
     .slotandfoot {
@@ -283,20 +275,6 @@
             box-shadow 500ms ease-in-out 0ms;
     }
 
-    .top :global(.quick-transition) {
-        transition-duration: 0ms;
-    }
-
-    .top :global(.delayed-transition) {
-        transition-delay: 300ms;
-    }
-
-    .top :global(.brutal-border) {
-        background-color: var(--colorsecondary);
-        border: 2px solid var(--colorshadow);
-        box-shadow: 3px 3px 1px 0px var(--colorshadow);
-        border-radius: 6px;
-    }
     .solidbar {
         background-color: var(--colorsecondary);
         border: 2px solid var(--colorshadow);
@@ -307,7 +285,7 @@
         border-color: transparent;
         box-shadow: transparent;
     }
-
+    
     .barp {
         display: block;
         white-space: nowrap;
@@ -329,7 +307,7 @@
         /* vertical-align: top; */
         /* margin-top: 5px; */
         /* margin-left: 25px; */
-        max-width: calc(var(--main-width) - 10px);
+        max-width: calc(var(--main-width-px) - 10px);
         z-index: 3;
         padding-inline: 1rem;
         padding-block: 0.5rem;
@@ -338,30 +316,16 @@
         box-shadow: 2px 2px 1px 0px var(--colorshadow);
         background-color: var(--colorsecondary);
     }
-
+    
     .sidebar {
-        /* position: relative; */
         position: fixed;
         top: calc(var(--topbarheight) + 8px);
         left: 5px;
         z-index: 2;
-        display: inline-block;
-        /* margin-top: 5px; */
-        /* margin-left: 3px; */
         background-color: var(--colorprimary);
-        border: 2px solid var(--colorshadow);
-        border-radius: 9px;
-        box-shadow: 2px 2px 2px 1px var(--colorshadow);
-        /* z-index: 4; */
         overflow-x: hidden;
         overflow-y: hidden;
-        height: 
-        /* min( */ calc(
-            100dvh - var(--topbarheight) - 20px
-        );
-        /* 100% */
-        /* ); */
-        /* width: 15rem; */
+        height: calc(100dvh - var(--topbarheight) - 10px);
     }
 
     .sidenav {
@@ -407,7 +371,7 @@
         white-space: nowrap;
         font-size: 1.3rem;
     }
-
+    
     hr {
         margin-top: 15px;
         margin-bottom: 20px;
@@ -420,51 +384,44 @@
         margin-left: auto;
         margin-right: auto;
     }
-
-    .shadow {
-        /* grid-column: 1 / span 2; */
-        /* grid-row: 1 / span 3; */
-        /* place-self: stretch; */
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        /* height: 400px; */
-        /* width: 400px; */
-        background-color: black;
-        opacity: 0.5;
-        z-index: 1;
-    }
+    
     .shadowclick {
         position: fixed;
-        left: var(--sidebar-width-px);
         top: var(--topbarheight);
+        left: var(--sidebar-width-px);
         z-index: 3;
         height: calc(100vh - var(--topbarheight));
-        width: calc(var(--main-width));
-        background-color: transparent;
+        width: calc(var(--main-width-px));
+        /* background-color: blue; */
     }
     footer {
         padding-left: 10px;
     }
-
+    
     @media (hover: hover) and (pointer: fine) {
         a:hover {
             background-color: var(--coloritem);
             transition: background-color 0s;
         }
     }
-
+    
     @media only screen and (max-width: 500px) {
         .top{
             --main-width-px: 100vw;
+            position:relative;
         }
         .slotandfoot {
             padding-left: 0px;
         }
         .shadow {
-            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: black;
+            opacity: 0.5;
+            z-index: 1;
         }
     }
     @media only screen and (min-width: 500px) {
@@ -478,15 +435,29 @@
             display: none;
         }
     }
+    .top :global(.quick-transition) {
+        transition-duration: 0ms;
+    }
+
+    .top :global(.delayed-transition) {
+        transition-delay: 300ms;
+    }
+
+    .top :global(.brutal-border) {
+        border: 2px solid var(--colorshadow);
+        box-shadow: 3px 3px 0px 0px var(--colorshadow);
+        border-radius: 8px;
+    }
     :global(p, span, h1, a) {
         color: var(--colortext);
         /* transition: color 1s; */
         font-family: "Lucida Sans Regular";
     }
-    :global(div, button, p, a, h1, path, hr) {
+    :global(div, button, a, h1, path, hr) {
         transition: background-color 400ms ease-in-out,
-            border-color 400ms ease-in-out, color 400ms, stroke 400ms,
-            box-shadow 400ms ease-in-out;
+        border-color 400ms ease-in-out, color 400ms, stroke 400ms,
+        box-shadow 400ms ease-in-out,
+        height 100ms ease-in-out;
     }
     :global(body) {
         transition: background-color 1s ease-in-out;
@@ -494,7 +465,7 @@
     :global(html) {
         transition: background-color 1s ease-in-out;
     }
-
+    
     :global(*) {
         padding: 0;
         margin: 0;
