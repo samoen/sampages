@@ -22,7 +22,7 @@ export const sidebarwidth = writable(0)
 export const topbarheight = writable(0)
 export const wscrollY = writable(0)
 export const atTop = derived(wscrollY,($s)=>{
-  return $s < 60
+  return $s < 35
 })
 
 export const themes = {
@@ -43,18 +43,10 @@ export const topNavOutDuration = writable(DEFAULT_MENU_SLIDE_DURATION)
 type TBarColorState = 'transparent' | 'solid'
 export const barColorState = writable<TBarColorState>('transparent')
 
-export const barcolor = derived(barColorState,($s =>{
+// type TbarIconState = 'brutal' | 'transparent'
+export const barIconColorState = derived<typeof barColorState, TBarColorState>(barColorState,$s=>{
   if($s == "transparent"){
-    return 'transparent'
-  }else{
-    return 'var(--colorsecondary)'
-  }
-}))
-
-type TbarIconState = 'brutal' | 'transparent'
-export const barIconColorState = derived(barColorState,$s=>{
-  if($s == "transparent"){
-    return 'brutal'
+    return 'solid'
   }else{
     return 'transparent'
   }

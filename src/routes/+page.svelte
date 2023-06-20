@@ -43,15 +43,13 @@
             Innovating transformative digital experiences to delight
             and confuse.
         </p>
-    </div>
-    <div class="gag brutal-border">
         {#if !clickedCall}
             <div class="gagstart" bind:this="{gagEl}">
                 <p>
                     Now you hunger. You crave. You request, nay -
                     demand! The <span class="glowing">
                         CALL TO ACTION
-                    </span>
+                    </span>:
                 </p>
                 <button
                     bind:this="{gagbut}"
@@ -61,21 +59,21 @@
                         let r = gagbut.getBoundingClientRect();
                         butx = r.left;
                         buty = r.top + scrollY;
-
+    
                         gagHeight = gagEl.clientHeight;
                         falling = true;
                         clickedCall = true;
                         for (let i = 0; i < 3; i++) {
                             setTimeout(() => {
                                 msg++;
-                            }, 2500 * i);
+                            }, 1900 * i);
                         }
                         setTimeout(() => {
                             doneFalling = true
                         }, 700);
                     }}"
                 >
-                    <span class="gag-but-text">Heed the Call</span
+                    <span class="gag-but-text">Heed the Call!</span
                     ></button
                 >
             </div>
@@ -109,11 +107,12 @@
                         falling = false;
                     }}"
                 >
-                    Heed the Fall</button
+                    Heed the Call!</button
                 >
             {/if}
         {/if}
     </div>
+
     <img
         class="normalimg brutal-border"
         width="400"
@@ -155,15 +154,20 @@
         padding-inline: 3vw;
     }
     .splash {
-        padding-left: 3vw;
-        padding-top: 30px;
+        padding-inline: 3vw;
+        padding-top: 60px;
         padding-bottom: 10px;
         /* margin-right: 3vw; */
         /* margin-left: 3vw; */
         margin-top: 3px;
+        margin-bottom: 20px;
         background-repeat: no-repeat;
         background-size: cover;
         background-attachment: local;
+    }
+
+    .splash > p {
+
     }
 
     .nofade {
@@ -172,21 +176,20 @@
     .longfade {
         transition: color 2500ms;
     }
-    button:hover {
+    /* button:hover { */
         /* background-color: white; */
-    }
+    /* } */
 
     .gag {
-        margin-top: 10px;
+        /* margin-top: 10px; */
         /* background-color: aquamarine; */
         /* margin-inline: 20px; */
         margin-block: 20px;
         padding-block: 10px;
-        padding-inline: 3vw;
+        /* padding-inline: 3vw; */
         /* min-width: 0px; */
         /* text-align: right; */
         background-color: var(--colorprimary);
-        box-sizing: border-box;
     }
 
     .gagstart {
@@ -207,29 +210,23 @@
         text-align: center;
     }
 
-    .gag > p {
-        /* margin-inline: auto; */
-        flex: 1 1 150px;
-        /* align-self: stretch; */
-        /* justify-self: flex-start; */
-        /* flex-basis: ma; */
-        /* min-width: 150px; */
-        max-width: max-content;
-        text-align: center;
-    }
     .gagstart > button {
-        /* display: inline-block; */
-        /* vertical-align: middle;    */
-        /* flex-basis: 50%; */
         flex: 0 0 auto;
-        /* max-width:; */
         font-weight: bold;
         margin-inline: auto;
         padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
         padding-block: clamp(0.1rem, 1rem, 2rem);
         background-color: var(--colorsecondary);
-        /* font-size:1.5rem; */
-        /* flex-grow: 1; */
+        border-color: var(--colorshadow);
+    }
+    @media (hover: hover) and (pointer: fine) {
+        .gagstart > button:hover {
+            background-color: var(--coloritem);
+            transition: background-color 0s;
+        }
+        .gagstart > button {
+            cursor: pointer;
+        }
     }
 
     .grid1 {
@@ -254,11 +251,13 @@
         top: var(--but-y);
         left: var(--but-x);
         background-color: var(--colorsecondary);
+        border-color: var(--colorshadow);
         box-shadow: 3px 3px 0px 0px var(--colorshadow);
         border-radius:8px;
         padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
         padding-block: clamp(0.1rem, 1rem, 2rem);
         transition: background-color 700ms, color 700ms, box-shadow 700ms;
+        color: var(--colortext);
     }
     .trans {
         color: transparent;
@@ -389,15 +388,18 @@
         margin-top: 1em;
     }
 
-    .splash > p,
-    h1 {
-        font-weight: bold;
+    .splash p {
+        /* font-weight: bold; */
+        text-size-adjust: none;
+        -webkit-text-size-adjust: none;
+        /* font-size: 1rem; */
         margin-top: 1em;
     }
 
-    p,
+    
     h1 {
         /* text-align: center; */
+
     }
     h1 {
         font-size: clamp(1rem, 4vw + 1rem, 3rem);

@@ -9,7 +9,7 @@
 {#if $showJsButtons}
 <button
     class="baricon"
-    class:brutal-border="{$barIconColorState == 'brutal'}"
+    class:brutal-border="{$barIconColorState == 'solid'}"
     class:transparent="{$barIconColorState == 'transparent'}"
     class:quick-transition="{$topBarTransitionQuick}"
     class:delayed-transition="{$topBarTransitionDelayed}"
@@ -46,7 +46,7 @@
         background-color: transparent;
     }
     @media (hover: hover) and (pointer: fine) {
-        .baricon.brutal:not(.delayed-transition):hover {
+        .baricon.brutal-border:not(.delayed-transition):hover {
             background-color: var(--coloritem);
             transition: background-color 0s;
         }

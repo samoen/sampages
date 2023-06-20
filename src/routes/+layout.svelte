@@ -260,7 +260,7 @@
         /* margin-right: 5px; */
         /* margin-left:2px; */
         padding-block: 10px;
-        padding-left: 2vw;
+        padding-left: 1vw;
         padding-right: 3vw;
         display: grid;
         column-gap: clamp(4px, 3vw, 8rem);
@@ -471,7 +471,7 @@
         margin: 0;
         /* font-size:1rem; */
         overscroll-behavior: contain;
-        box-sizing: border-box;
+        /* box-sizing: border-box; */
         /* border-radius: 4px; */
     }
 
