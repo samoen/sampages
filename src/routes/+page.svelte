@@ -14,20 +14,23 @@
     let doneFalling = false;
     let clickedCall = false;
     let mounted = false;
+    let gagbut: HTMLButtonElement;
+    let butx = 815;
+    let buty = 200;
+    let gagEl: HTMLDivElement;
+    let gagHeight = 0;
     onMount(() => {
         mounted = true;
     });
     let msg = 0;
-    function clickGag() {
-        for (let i = 0; i < 3; i++) {
-            setTimeout(() => {
-                msg++;
-            }, 2500 * i);
-        }
-    }
 </script>
 
-<div class="container">
+<div
+    class="container"
+    style:--but-x="{butx}px"
+    style:--but-y="{buty}px"
+    style:--gag-height="{gagHeight}px"
+>
     <div
         class="splash brutal-border"
         style="background-image:url({splashimg});"
@@ -40,26 +43,52 @@
             Innovating transformative digital experiences to delight
             and confuse.
         </p>
-        <br />
-        <br />
-        <div class="gag">
-            <div class="action">
-                <div class="grid1 nofade" class:trans="{msg != 0}">
-                    <p>
-                        Now you hunger. You crave. You request, nay -
-                        demand! The <span class="glowing">
-                            CALL TO ACTION
-                        </span>
-                    </p>
-                </div>
+    </div>
+    <div class="gag brutal-border">
+        {#if !clickedCall}
+            <div class="gagstart" bind:this="{gagEl}">
+                <p>
+                    Now you hunger. You crave. You request, nay -
+                    demand! The <span class="glowing">
+                        CALL TO ACTION
+                    </span>
+                </p>
+                <button
+                    bind:this="{gagbut}"
+                    class:glowing-border="{true}"
+                    on:click="{() => {
+                        // clickGag();
+                        let r = gagbut.getBoundingClientRect();
+                        butx = r.left;
+                        buty = r.top + scrollY;
+
+                        gagHeight = gagEl.clientHeight;
+                        falling = true;
+                        clickedCall = true;
+                        for (let i = 0; i < 3; i++) {
+                            setTimeout(() => {
+                                msg++;
+                            }, 2500 * i);
+                        }
+                        setTimeout(() => {
+                            doneFalling = true
+                        }, 700);
+                    }}"
+                >
+                    <span class="gag-but-text">Heed the Call</span
+                    ></button
+                >
+            </div>
+        {:else}
+            <div class="gagmsgs">
                 <p class="grid1 nofade" class:trans="{msg != 1}">
                     Oops!
                 </p>
                 <p
                     class="grid1"
+                    class:trans="{msg != 2}"
                     class:longfade="{msg == 2}"
                     class:nofade="{msg == 3}"
-                    class:trans="{msg != 2}"
                 >
                     That button is.. experiencing transformational..
                     maintenance.
@@ -69,33 +98,22 @@
                     website.
                 </p>
             </div>
-            <!-- class:brutal-border="{!doneFalling}" -->
+            {#if falling}
             <button
-                class:glowing-border="{!falling}"
-                class:falling="{falling}"
-                class:trans="{doneFalling}"
-                on:click="{() => {
-                    // clickGag();
-                    falling = true;
-                    clickedCall = true;
-                    for (let i = 0; i < 3; i++) {
-                        setTimeout(() => {
-                            msg++;
-                        }, 2500 * i);
-                    }
-                }}"
-                on:animationend="{() => {
-                    doneFalling = true;
-                }}"
-            >
-                <span class="gag-but-text">Heed the Call</span
-                ></button
-            >
-        </div>
+                    class="fallingbutton"
+                    class:falling="{falling}"
+                    class:trans="{doneFalling}"
+                    on:animationend="{(e) => {
+                        // e.animationName
+                        // doneFalling = true;
+                        falling = false;
+                    }}"
+                >
+                    Heed the Fall</button
+                >
+            {/if}
+        {/if}
     </div>
-    <br />
-    <br />
-    <br />
     <img
         class="normalimg brutal-border"
         width="400"
@@ -133,12 +151,15 @@
     /* text-align: center; */
     /* margin-inline: auto; */
     /* } */
+    .container {
+        padding-inline: 3vw;
+    }
     .splash {
         padding-left: 3vw;
         padding-top: 30px;
         padding-bottom: 10px;
-        margin-right: 25px;
-        margin-left: 20px;
+        /* margin-right: 3vw; */
+        /* margin-left: 3vw; */
         margin-top: 3px;
         background-repeat: no-repeat;
         background-size: cover;
@@ -149,25 +170,66 @@
         transition: color 0s;
     }
     .longfade {
-        transition: color 1500ms;
+        transition: color 2500ms;
     }
     button:hover {
         /* background-color: white; */
     }
 
     .gag {
-        display: flex;
-        flex-wrap: wrap;
-        /* grid-template-columns: 1fr 1fr; */
-        /* grid-template-rows: 1fr; */
-        align-items: center;
-        justify-content: center;
+        margin-top: 10px;
         /* background-color: aquamarine; */
-        margin-right: 10px;
-        gap: clamp(0.01rem, 4vw, 4rem);
-        /* overflow-x: hidden; */
+        /* margin-inline: 20px; */
+        margin-block: 20px;
+        padding-block: 10px;
+        padding-inline: 3vw;
         /* min-width: 0px; */
         /* text-align: right; */
+        background-color: var(--colorprimary);
+        box-sizing: border-box;
+    }
+
+    .gagstart {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        row-gap: 10px;
+        column-gap: 10px;
+        justify-content: start;
+        /* justify-items: center; */
+    }
+
+    .gagmsgs {
+        display: grid;
+        align-items: center;
+        justify-items: center;
+        height: var(--gag-height);
+        text-align: center;
+    }
+
+    .gag > p {
+        /* margin-inline: auto; */
+        flex: 1 1 150px;
+        /* align-self: stretch; */
+        /* justify-self: flex-start; */
+        /* flex-basis: ma; */
+        /* min-width: 150px; */
+        max-width: max-content;
+        text-align: center;
+    }
+    .gagstart > button {
+        /* display: inline-block; */
+        /* vertical-align: middle;    */
+        /* flex-basis: 50%; */
+        flex: 0 0 auto;
+        /* max-width:; */
+        font-weight: bold;
+        margin-inline: auto;
+        padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
+        padding-block: clamp(0.1rem, 1rem, 2rem);
+        background-color: var(--colorsecondary);
+        /* font-size:1.5rem; */
+        /* flex-grow: 1; */
     }
 
     .grid1 {
@@ -175,55 +237,42 @@
         grid-column: 1 / 1;
     }
 
-    .trans {
-        color: transparent;
-        animation: none;
-        border-color: transparent;
-        background-color: transparent;
-    }
     .trans p,
     .trans span {
         color: transparent;
         animation: none;
     }
 
-    .action {
-        flex-shrink: 1;
-        flex-basis: 50%;
-        display: grid;
-        align-items: center;
-        justify-items: center;
-        /* max-width: calc(var(--main-width-px) * 0.4); */
-    }
-    .action p {
-        /* display: block; */
-        font-weight: bold;
-    }
-
-    .gag button {
-        /* display: inline-block; */
-        /* vertical-align: middle;    */
-        flex-basis: auto;
-        font-weight: bold;
-        justify-self: center;
-        padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
-        padding-block: clamp(0.1rem, 1rem, 2rem);
-        /* font-size:1.5rem; */
-        /* flex-grow: 1; */
-    }
     .glowing {
         animation: glowing 500ms infinite;
         animation-timing-function: ease-in-out;
         /* animation-direction: alternate-reverse; */
         animation-timing-function: linear;
     }
-
+    .fallingbutton {
+        position: absolute;
+        top: var(--but-y);
+        left: var(--but-x);
+        background-color: var(--colorsecondary);
+        box-shadow: 3px 3px 0px 0px var(--colorshadow);
+        border-radius:8px;
+        padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
+        padding-block: clamp(0.1rem, 1rem, 2rem);
+        transition: background-color 700ms, color 700ms, box-shadow 700ms;
+    }
+    .trans {
+        color: transparent;
+        animation: none;
+        border-color: transparent;
+        box-shadow: 3px 3px 0px 0px transparent;
+        background-color: transparent;
+    }
     .falling {
         animation-name: fall;
         animation-duration: 1s;
-        animation-fill-mode: both;
+        animation-fill-mode:forwards;
         animation-timing-function: linear;
-        position: relative;
+        /* position: relative; */
     }
     .glowing-border {
         animation: glowing-border 1600ms infinite;
@@ -308,39 +357,28 @@
     @keyframes fall {
         0% {
             transform-origin: bottom left;
-            top: 0px;
-        }
-        10% {
-            top: 0px;
-            /* transform: translateY(4); */
-            /* top:35px; */
-            /* rotate: 100deg; */
-            /* transform: translateY(30px); */
         }
         20% {
-            top: 0px;
-            rotate: 120deg;
+            transform: rotate(120deg);
         }
         30% {
-            rotate: 80deg;
-            top: 0px;
+            /* rotate: 80deg; */
+            transform: translateY(0px) rotate(80deg);
+            /* top: 0px; */
         }
         50% {
-            rotate: 30deg;
-            /* top:0px; */
-            top: 100px;
-            /* left: 5px; */
-            /* transform: translateY(100px); */
+            /* rotate: 30deg; */
+            /* translate: 100px; */
+            transform: translateY(100px) rotate(30deg);
             /* animation-timing-function: ease-in; */
         }
         /* 60%{
             top:100px;
         } */
         100% {
-            top: 500px;
-            left: 0px;
-            rotate: -120deg;
-            /* transform: translateY(500px); */
+            /* translate: 500px; */
+            /* rotate: -120deg; */
+            transform: translateY(500px) rotate(-120deg);
         }
     }
 
@@ -348,15 +386,17 @@
         display: block;
         max-width: clamp(0px, 80%, 700px);
         margin-inline: auto;
+        margin-top: 1em;
     }
 
-    .splash > p {
+    .splash > p,
+    h1 {
         font-weight: bold;
+        margin-top: 1em;
     }
 
     p,
     h1 {
-        margin-top: 1em;
         /* text-align: center; */
     }
     h1 {

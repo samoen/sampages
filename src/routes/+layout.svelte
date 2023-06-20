@@ -260,8 +260,8 @@
         /* margin-right: 5px; */
         /* margin-left:2px; */
         padding-block: 10px;
-        padding-right: 10px;
-        padding-left: 10px;
+        padding-left: 2vw;
+        padding-right: 3vw;
         display: grid;
         column-gap: clamp(4px, 3vw, 8rem);
         grid-template-columns: 3rem 1fr 3rem 3rem;
