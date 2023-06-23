@@ -74,6 +74,7 @@
                 --colortext: black;
                 --coloritem: limegreen;
                 --colorshadow: black;
+                --colorlight: white;
             }
         </style>
     {:else}
@@ -84,6 +85,7 @@
                 --coloritem: teal;
                 --colortext: white;
                 --colorshadow: black;
+                --colorlight: gray;
             }
         </style>
     {/if}
@@ -332,13 +334,13 @@
 
     .sidebar {
         position: fixed;
-        top: calc(var(--topbarheight) + 8px);
+        top: calc(var(--topbarheight) + 9px);
         left: 5px;
         z-index: 2;
         background-color: var(--colorprimary);
         overflow-x: hidden;
         overflow-y: hidden;
-        height: calc(100dvh - var(--topbarheight) - 10px);
+        height: calc(100dvh - var(--topbarheight) - 17px);
         transition: height 100ms ease-in-out;
     }
 
@@ -465,7 +467,7 @@
     :global(p, span, h1, a) {
         color: var(--colortext);
         /* transition: color 1s; */
-        font-family: "Lucida Sans Regular";
+        font-family:monospace;
     }
     /* :global(div, button, a, h1, path, hr) {
         transition: background-color 400ms ease-in-out,

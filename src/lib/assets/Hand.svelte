@@ -26,6 +26,6 @@
         
     }
     .lil-shrink{
-        /* scale:0.9; */
+        scale:0.9;
     }
 </style>

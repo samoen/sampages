@@ -5,9 +5,10 @@
     import xbig from "$lib/assets/xbig.png";
     import gamesprites from "$lib/assets/gamesprites.png";
     import Footer from "$lib/components/Footer.svelte";
-    import { themeMode, themes } from "$lib/stores";
+    import { barColorState, burgopen, mobileMode, navSelect, splashTopMargin, themeMode, themes } from "$lib/stores";
     import { fade } from "svelte/transition";
     import { onMount } from "svelte";
+    import { derived } from "svelte/store";
 
     $: splashimg = $themeMode == themes.dark ? wavydark : wavy;
     let falling = false;
@@ -21,8 +22,10 @@
     let gagHeight = 0;
     onMount(() => {
         mounted = true;
+
     });
     let msg = 0;
+
 </script>
 
 <div
@@ -34,8 +37,9 @@
     <div
         class="splash brutal-border"
         style="background-image:url({splashimg});"
+        class:lower-border="{$splashTopMargin}"
     >
-        <h1>
+        <h1 class="glowing">
             <!-- <img width=70 height=40 src="{pachnor}" alt="peachy" /> -->
             A Software Engineer
         </h1>
@@ -45,11 +49,10 @@
         </p>
         {#if !clickedCall}
             <div class="gagstart" bind:this="{gagEl}">
-                <p>
-                    Now you hunger. You crave. You request, nay -
-                    demand! The <span class="glowing">
-                        CALL TO ACTION
-                    </span>:
+                <p class="gag-start-text">
+                    Now you hunger.. you crave. Request - nay,
+                    demand it! I give you, the
+                    <span class=""> CALL TO ACTION </span>
                 </p>
                 <button
                     bind:this="{gagbut}"
@@ -59,17 +62,20 @@
                         let r = gagbut.getBoundingClientRect();
                         butx = r.left;
                         buty = r.top + scrollY;
-    
+
                         gagHeight = gagEl.clientHeight;
                         falling = true;
                         clickedCall = true;
-                        for (let i = 0; i < 3; i++) {
-                            setTimeout(() => {
-                                msg++;
-                            }, 1900 * i);
-                        }
+                        msg++;
+                        // for (let i = 0; i < 5; i++) {
+                        // setTimeout(() => {
+                        // msg++;
+                        // },
+                        // 1900);
+                        // 1900 * i);
+                        // }
                         setTimeout(() => {
-                            doneFalling = true
+                            doneFalling = true;
                         }, 700);
                     }}"
                 >
@@ -79,25 +85,44 @@
             </div>
         {:else}
             <div class="gagmsgs">
-                <p class="grid1 nofade" class:trans="{msg != 1}">
-                    Oops!
-                </p>
-                <p
-                    class="grid1"
-                    class:trans="{msg != 2}"
-                    class:longfade="{msg == 2}"
-                    class:nofade="{msg == 3}"
-                >
-                    That button is.. experiencing transformational..
-                    maintenance.
-                </p>
-                <p class="grid1 longfade" class:trans="{msg != 3}">
-                    Please continue to digitally experience the
-                    website.
-                </p>
+                {#if msg == 1}
+                    <p
+                        class="grid1"
+                        in:fade="{{ duration: 100 }}"
+                        on:introend="{() => msg++}"
+                        out:fade="{{ duration: 500, delay: 1000 }}"
+                    >
+                        <!-- on:outroend="{()=>msg++}" -->
+                        Oops!
+                    </p>
+                {:else if msg == 2}
+                    <p
+                        class="grid1"
+                        in:fade="{{ duration: 2000, delay: 1500 }}"
+                        on:introend="{() => {
+                            msg++;
+                        }}"
+                        out:fade="{{ duration: 500, delay: 1000 }}"
+                    >
+                        <!-- on:outroend="{()=>msg++}" -->
+                        <!-- class:trans="{msg != 2}" -->
+                        <!-- class:longfade="{msg == 2 || msg == 3}" -->
+                        <!-- class:nofade="{msg == 3}" -->
+                        That button is.. experiencing transformational..
+                        maintenance.
+                    </p>
+                {:else if msg == 3}
+                    <p
+                        class="grid1"
+                        in:fade="{{ duration: 2000, delay: 1500 }}"
+                    >
+                        Please continue to digitally experience the
+                        website.
+                    </p>
+                {/if}
             </div>
             {#if falling}
-            <button
+                <button
                     class="fallingbutton"
                     class:falling="{falling}"
                     class:trans="{doneFalling}"
@@ -142,82 +167,57 @@
 </div>
 
 <style>
-    /* .container > p, h1 { */
-    /* margin-top: 0em; */
-    /* background-color: blueviolet; */
-    /* border: none; */
-    /* box-sizing: content-box; */
-    /* text-align: center; */
-    /* margin-inline: auto; */
-    /* } */
+
     .container {
         padding-inline: 3vw;
     }
     .splash {
         padding-inline: 3vw;
-        padding-top: 60px;
         padding-bottom: 10px;
-        /* margin-right: 3vw; */
-        /* margin-left: 3vw; */
+        padding-top: 65px;
         margin-top: 3px;
         margin-bottom: 20px;
         background-repeat: no-repeat;
         background-size: cover;
         background-attachment: local;
+        transition: margin-top 500ms ease-in-out, padding-top 500ms ease-in-out;
     }
-
-    .splash > p {
-
-    }
-
-    .nofade {
-        transition: color 0s;
-    }
-    .longfade {
-        transition: color 2500ms;
-    }
-    /* button:hover { */
-        /* background-color: white; */
-    /* } */
-
-    .gag {
-        /* margin-top: 10px; */
-        /* background-color: aquamarine; */
-        /* margin-inline: 20px; */
-        margin-block: 20px;
-        padding-block: 10px;
-        /* padding-inline: 3vw; */
-        /* min-width: 0px; */
-        /* text-align: right; */
-        background-color: var(--colorprimary);
+    .lower-border{
+        padding-top:15px;
+        margin-top:73px;
     }
 
     .gagstart {
-        display: flex;
+        display: inline-flex;
         flex-wrap: wrap;
         align-items: center;
-        row-gap: 10px;
-        column-gap: 10px;
-        justify-content: start;
-        /* justify-items: center; */
+        row-gap: 20px;
+        column-gap: calc(10vw - 15px);
     }
-
-    .gagmsgs {
-        display: grid;
-        align-items: center;
-        justify-items: center;
-        height: var(--gag-height);
-        text-align: center;
+    .gag-start-text {
+        justify-self: start;
+        flex-basis: 30ch;
+        flex-grow: 1;
+        max-width: 90ch;
     }
 
     .gagstart > button {
         flex: 0 0 auto;
         font-weight: bold;
         margin-inline: auto;
+        /* justify-self: center; */
         padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
         padding-block: clamp(0.1rem, 1rem, 2rem);
         background-color: var(--colorsecondary);
         border-color: var(--colorshadow);
+    }
+    .gagmsgs {
+        /* box-sizing: border-box; */
+        display: grid;
+        align-items: center;
+        justify-items: center;
+        height: var(--gag-height);
+        text-align: center;
     }
     @media (hover: hover) and (pointer: fine) {
         .gagstart > button:hover {
@@ -241,10 +241,36 @@
     }
 
     .glowing {
-        animation: glowing 500ms infinite;
-        animation-timing-function: ease-in-out;
-        /* animation-direction: alternate-reverse; */
-        animation-timing-function: linear;
+        animation: move-bg 4s infinite;
+        animation-timing-function: ease-out;
+        /* animation-direction:reverse; */
+        /* animation-timing-function: linear; */
+        background-image: linear-gradient(
+            90deg,
+            /* var(--colortext), */ /* var(--colortext), */
+                /* var(--colortext), */ var(--colortext),
+            var(--colortext),
+            var(--colorlight),
+            /* transparent, */ /* var(--colorlight), */
+                var(--colortext),
+            var(--colortext),
+            var(--colortext),
+            var(--colortext),
+            var(--colortext)
+        );
+        background-size: 800% 100%;
+        /* background-clip: 400%; */
+        background-position: 100% 0px;
+        background-repeat: no-repeat;
+        background-clip: text;
+        -webkit-background-clip: text;
+        text-fill-color: transparent;
+        -webkit-text-fill-color: transparent;
+    }
+    @keyframes move-bg {
+        to {
+            background-position: 0px 0px;
+        }
     }
     .fallingbutton {
         position: absolute;
@@ -253,10 +279,11 @@
         background-color: var(--colorsecondary);
         border-color: var(--colorshadow);
         box-shadow: 3px 3px 0px 0px var(--colorshadow);
-        border-radius:8px;
+        border-radius: 8px;
         padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
         padding-block: clamp(0.1rem, 1rem, 2rem);
-        transition: background-color 700ms, color 700ms, box-shadow 700ms;
+        transition: background-color 700ms, color 700ms,
+            box-shadow 700ms;
         color: var(--colortext);
     }
     .trans {
@@ -269,7 +296,7 @@
     .falling {
         animation-name: fall;
         animation-duration: 1s;
-        animation-fill-mode:forwards;
+        animation-fill-mode: forwards;
         animation-timing-function: linear;
         /* position: relative; */
     }
@@ -281,7 +308,7 @@
 
         border-radius: 8px;
         /* border-color: black; */
-        border:1px solid var(--colorshadow);
+        border: 1px solid var(--colorshadow);
         /* transition: box-shadow 500ms linear; */
         /* transition-duration: 0s; */
     }
@@ -391,21 +418,20 @@
         margin-top: 1em;
     }
 
-    .splash p {
+    .splash > p {
         /* font-weight: bold; */
         text-size-adjust: none;
         -webkit-text-size-adjust: none;
         /* font-size: 1rem; */
         margin-top: 1em;
+        margin-bottom: 1em;
     }
 
-    
-    h1 {
+    .splash > h1 {
         /* text-align: center; */
-
-    }
-    h1 {
         font-size: clamp(1rem, 4vw + 1rem, 3rem);
+        margin-bottom: 0.6em;
+        /* margin-top: 1em; */
     }
 
     .normalimg {

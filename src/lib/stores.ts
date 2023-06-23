@@ -43,7 +43,7 @@ type UiEventKey = 'fresh' | 'burgclick' | 'contactClick' | 'settingsClick' | 're
 type UiEvent = { e: UiEventKey }
 export const lastEvent = writable<UiEvent>({ e: 'fresh' })
 
-type TopBarColorState = { color: 'transparent' | 'solid' | 'blur', speed: 'instant' | 'slow' }
+export type TopBarColorState = { color: 'transparent' | 'solid' | 'blur', speed: 'instant' | 'slow' }
 
 export const barColorState: Readable<TopBarColorState> = derived([lastEvent], ([$le]) => {
 
@@ -194,6 +194,14 @@ export const settingsIconState: Readable<TopBarIconState> = derived([lastEvent, 
 type Lang = 'EN' | 'ES'
 export const selectedLang = writable<Lang>('EN')
 
+export const splashTopMargin = derived([navSelect, burgopen, mobileMode],([$ns, $bo, $mm])=>{
+  if($bo || $ns.sel != 'none'){
+      if(!$mm){
+          return true
+      }
+  }
+  return false
+})
 
 mobileMode.subscribe((val) => {
   lastEvent.set({ e: 'wentMobile' })
