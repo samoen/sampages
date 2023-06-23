@@ -164,7 +164,6 @@
             on:outroend="{() => {
                 $sidebarwidth = 0;
                 lastEvent.set({ e: 'menuOut' });
-                // menuSlideComplete()
             }}"
         >
             <nav class="sidenav">
@@ -173,7 +172,9 @@
                         <a
                             on:click="{() => {
                                 if ($mobileMode && $burgopen) {
-                                    toggleSidebar();
+                                    setTimeout(()=>{
+                                        toggleSidebar();
+                                    },50)
                                 }
                             }}"
                             href="{base}/"
@@ -197,7 +198,9 @@
                         class:brutal-border="{$page.url.pathname != `${base}/about`}"
                             on:click="{() => {
                                 if ($mobileMode && $burgopen) {
-                                    toggleSidebar();
+                                    setTimeout(()=>{
+                                        toggleSidebar();
+                                    },50)
                                 }
                             }}"
                             href="{base}/about"
@@ -267,8 +270,6 @@
         min-height: 100dvh;
         display: grid;
         grid-template-rows: 1fr auto;
-        /* z-index: 1; */
-        /* overflow-y: scroll; */
     }
     .topbar {
         position: fixed;
@@ -276,8 +277,6 @@
         left: 3px;
         right: 4px;
         z-index: 2;
-        /* margin-right: 5px; */
-        /* margin-left:2px; */
         padding-block: 5px;
         padding-left: 3vw;
         padding-right: 3vw;
@@ -286,17 +285,12 @@
         align-items: center;
         justify-content: start;
         gap:8px;
-        /* display: grid; */
-        /* column-gap: clamp(4px, 3vw, 8rem); */
-        /* grid-template-columns: 3rem 1fr 3rem 3rem; */
-        /* grid-template-rows: auto; */
-        /* grid-auto-flow: column; */
-        /* place-items: center; */
         border: 2px solid;
         border-radius: 6px;
         transition: background-color 500ms ease-in-out 0ms,
             border-color 500ms ease-in-out 0ms,
             box-shadow 500ms ease-in-out 0ms;
+        /* user-select: none; */
     }
     .blurbar {
         background-color: transparent;
@@ -320,12 +314,9 @@
         display: block;
         white-space: nowrap;
         user-select: none;
-        /* overflow-x: hidden; */
         font-size: 1.4rem;
         font-family: "Impact";
-        /* font-weight: 700; */
         color: var(--colortext);
-        /* grid-column: 1fr; */
         flex-grow: 1;
         text-align: center;
     }
@@ -392,6 +383,7 @@
         background-color: var(--colorsecondary);
         text-decoration: none;
         font-size: 1.5rem;
+        -webkit-tap-highlight-color: transparent;
         /* border: 2px solid var(--colorshadow); */
         /* border-radius: 5px; */
         /* box-shadow: 2px 2px 1px 0px var(--colorshadow); */

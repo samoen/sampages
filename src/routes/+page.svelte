@@ -61,9 +61,10 @@
             {#if !clickedCall}
                 <div class="gagstart">
                     <p class="gag-start-text">
-                        Now you hunger.. you crave. I sense that you
-                        request - nay, demand the
-                        <span class=""> CALL TO ACTION! </span>
+                        But you hunger. You crave. You long for
+                        something to click. Languish no longer, dear
+                        visitor. Behold! A glorious
+                        <span class="">CALL TO ACTION:</span>
                     </p>
                     <button
                         bind:this="{gagbut}"
@@ -121,8 +122,8 @@
                             <!-- class:trans="{msg != 2}" -->
                             <!-- class:longfade="{msg == 2 || msg == 3}" -->
                             <!-- class:nofade="{msg == 3}" -->
-                            That button is.. experiencing transformational..
-                            maintenance.
+                            That button is experiencing transformational..
+                            ah.. maintenance.
                         </p>
                     {:else if msg == 3}
                         <p
@@ -133,7 +134,8 @@
                             }}"
                         >
                             Please continue to digitally experience
-                            the website.
+                            the website. Gaze upon the menu buttons and the
+                            satisfying animations they usher forth. But beware, dear visitor. You may find your paradigms have shifted during the journey.
                         </p>
                     {/if}
                 </div>

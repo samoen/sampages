@@ -37,21 +37,10 @@ class:gone="{!$showJsButtons}"
 
 <style>
     .baricon {
-        /* width: 100%; */
-        /* height: 100%; */
-        /* padding:5px; */
         touch-action: none;
-        /* border-width: 0; */
-        /* border-radius: 6px; */
         background-color: var(--colorsecondary);
-        /* background-color: blue; */
         flex-grow: 0;
-        /* transition: none; */
-        /* box-sizing: border-box; */
-        /* transition: background-color var(--barTDur) ease-in-out
-        var(--barTDelay),
-        border-color var(--barTDur) ease-in-out var(--barTDelay); */
-        /* display: none; */
+        -webkit-tap-highlight-color: transparent;
     }
 
     .fadey {
