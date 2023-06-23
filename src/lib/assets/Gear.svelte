@@ -1,9 +1,12 @@
 <script>
-    export let scale = false;
+    export let scale = false
+    export let gone = true
+    $: fillColor = gone ? 'transparent' : 'var(--colortext)'
 </script>
 
 <svg
     class:lil-shrink="{scale}"
+    style:--fill-color="{fillColor}"
     viewBox="0 0 24 24"
     width="512"
     height="512"
@@ -15,13 +18,17 @@
 <style>
     path {
         /* stroke: var(--colortext); */
-        fill: var(--colortext);
+        fill: var(--fill-color);
+        transition: fill 1s ease-in;
     }
     svg {
         /* background-color: blue; */
-        padding-top: 2px;
-        height: auto;
-        width: 24px;
+        /* padding-top: 2px; */
+        padding:5px;
+        margin-top:4px;
+        height: 41px;
+        width: 48px;
+        /* background-color: yellow; */
     }
     .lil-shrink{
         scale: 0.9;

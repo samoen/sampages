@@ -1,9 +1,7 @@
 <script lang="ts">
     import {
-        showJsButtons,
-     
-        topBarTransitionQuick,
-        type TopBarIconState,
+    showJsButtons,
+        type TopBarIconState
     } from "$lib/stores";
     import { fade } from "svelte/transition";
 
@@ -11,7 +9,7 @@
     export let state : TopBarIconState;
 </script>
 
-{#if $showJsButtons}
+<!-- {#if $showJsButtons} -->
 <!-- class:quick-transition="{$topBarTransitionQuick}" -->
 <!-- class:delayed-transition="{$topBarTransitionDelayed}" -->
 <button
@@ -20,6 +18,7 @@ class="baricon"
 class:transparent="{state.color == 'transparent'}"
 class:brutal-border="{state.color == 'solid'}"
 class:fadey="{state.transition == "slow"}"
+class:gone="{!$showJsButtons}"
         on:transitionend="{() => {
             // $topBarTransitionDelayed = false;
         }}"
@@ -32,23 +31,27 @@ class:fadey="{state.transition == "slow"}"
     >
         <slot />
     </button>
-{:else}
-    <div></div>
-{/if}
+<!-- {:else} -->
+    <!-- <div></div> -->
+<!-- {/if} -->
 
 <style>
     .baricon {
-        width: 100%;
-        height: 100%;
+        /* width: 100%; */
+        /* height: 100%; */
+        /* padding:5px; */
         touch-action: none;
         /* border-width: 0; */
         /* border-radius: 6px; */
         background-color: var(--colorsecondary);
+        /* background-color: blue; */
+        flex-grow: 0;
         /* transition: none; */
         /* box-sizing: border-box; */
         /* transition: background-color var(--barTDur) ease-in-out
         var(--barTDelay),
         border-color var(--barTDur) ease-in-out var(--barTDelay); */
+        /* display: none; */
     }
 
     .fadey {
@@ -68,6 +71,9 @@ class:fadey="{state.transition == "slow"}"
         border: 2px solid transparent;
         border-radius: 9px;
         /* padding:3px; */
+    }
+    .gone{
+        color:transparent
     }
     @media (hover: hover) and (pointer: fine) {
         .baricon.brutal-border:not(.delayed-transition):hover {

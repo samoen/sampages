@@ -129,7 +129,7 @@
             }}"
             state="{$burgIconState}"
         >
-            <Hamburger scale="{$burgopen}" />
+            <Hamburger scale="{$burgopen}" gone="{!$showJsButtons}" />
         </TopBarIcon>
         <span class="barp">SAM OEN</span>
         <!-- {$mobileMode} -->
@@ -140,7 +140,7 @@
             }}"
             state="{$contactIconState}"
         >
-            <Hand scale="{$navSelect.sel == 'contact'}" />
+            <Hand scale="{$navSelect.sel == 'contact'}" gone="{!$showJsButtons}" />
         </TopBarIcon>
         <TopBarIcon
             push="{() => {
@@ -149,7 +149,7 @@
             }}"
             state="{$settingsIconState}"
         >
-            <Gear scale="{$navSelect.sel == 'settings'}" />
+            <Gear scale="{$navSelect.sel == 'settings'}" gone="{!$showJsButtons}" />
         </TopBarIcon>
     </div>
     {#if $burgopen}
@@ -177,15 +177,24 @@
                                 }
                             }}"
                             href="{base}/"
+                            class:inset-brutal="{$page.url.pathname == `${base}/`}"
+                            class:brutal-border="{$page.url.pathname != `${base}/`}"
                         >
-                            <div class="sideicon">
-                                <Palette />
+                        <!-- style="background-image:url({Hand})" -->
+                            <div 
+                            class="sideicon"
+                            >
+                                <Hand size="{0.8}"/>
                             </div>
-                            <span> Home Page </span>
+                            <span> 
+                                Home Page 
+                            </span>
                         </a>
                     </li>
                     <li>
                         <a
+                        class:inset-brutal="{$page.url.pathname == `${base}/about`}"
+                        class:brutal-border="{$page.url.pathname != `${base}/about`}"
                             on:click="{() => {
                                 if ($mobileMode && $burgopen) {
                                     toggleSidebar();
@@ -194,7 +203,7 @@
                             href="{base}/about"
                         >
                             <div class="sideicon">
-                                <Hamburger />
+                                <Hand size="{0.8}"/>
                             </div>
                             <span> About </span>
                         </a>
@@ -269,15 +278,20 @@
         z-index: 2;
         /* margin-right: 5px; */
         /* margin-left:2px; */
-        padding-block: 10px;
+        padding-block: 5px;
         padding-left: 3vw;
         padding-right: 3vw;
-        display: grid;
-        column-gap: clamp(4px, 3vw, 8rem);
-        grid-template-columns: 3rem 1fr 3rem 3rem;
-        grid-template-rows: auto;
-        grid-auto-flow: column;
-        place-items: center;
+        min-height: 66px;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        gap:8px;
+        /* display: grid; */
+        /* column-gap: clamp(4px, 3vw, 8rem); */
+        /* grid-template-columns: 3rem 1fr 3rem 3rem; */
+        /* grid-template-rows: auto; */
+        /* grid-auto-flow: column; */
+        /* place-items: center; */
         border: 2px solid;
         border-radius: 6px;
         transition: background-color 500ms ease-in-out 0ms,
@@ -287,6 +301,7 @@
     .blurbar {
         background-color: transparent;
         backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
         border: 2px solid var(--colorshadow);
         box-shadow: 2px 2px 1px 0px var(--colorshadow);
     }
@@ -310,7 +325,9 @@
         font-family: "Impact";
         /* font-weight: 700; */
         color: var(--colortext);
-        grid-column: 1fr;
+        /* grid-column: 1fr; */
+        flex-grow: 1;
+        text-align: center;
     }
 
     .topnav {
@@ -367,19 +384,26 @@
     .sidenav li {
     }
     .sidenav a {
-        display: grid;
-        column-gap: 0rem;
-        grid-template-columns: auto auto;
+
+        display: flex;
+        column-gap: 0.1rem;
+        /* grid-template-columns: auto auto; */
         align-items: center;
         background-color: var(--colorsecondary);
         text-decoration: none;
-        border: 2px solid var(--colorshadow);
-        border-radius: 6px;
-        box-shadow: 2px 2px 1px 0px var(--colorshadow);
+        font-size: 1.5rem;
+        /* border: 2px solid var(--colorshadow); */
+        /* border-radius: 5px; */
+        /* box-shadow: 2px 2px 1px 0px var(--colorshadow); */
     }
     .sideicon {
-        height: 2rem;
-        width: 2rem;
+        /* margin-top:4px; */
+        /* position: relative; */
+        /* padding:5px; */
+        /* height: 30px; */
+        /* width: 30px; */
+        /* background-color: aqua; */
+        /* flex-grow: 0; */
     }
     .sidenav span {
         padding-right: 1rem;
@@ -387,7 +411,7 @@
         white-space: nowrap;
         font-size: 1.3rem;
     }
-
+    
     hr {
         margin-top: 15px;
         margin-bottom: 20px;
@@ -413,14 +437,14 @@
     footer {
         padding-left: 10px;
     }
-
+    
     @media (hover: hover) and (pointer: fine) {
         a:hover {
             background-color: var(--coloritem);
             transition: background-color 0s;
         }
     }
-
+    
     @media only screen and (max-width: 500px) {
         .top {
             --main-width-px: 100vw;
@@ -454,16 +478,28 @@
     .top :global(.quick-transition) {
         transition-duration: 0ms;
     }
-
+    
     .top :global(.delayed-transition) {
         transition-delay: 300ms;
     }
-
+    
     .top :global(.brutal-border) {
         border: 2px solid var(--colorshadow);
         box-shadow: 2px 2px 0px 0px var(--colorshadow);
         border-radius: 8px;
     }
+    .top :global(.inset-brutal){
+        border: 1px solid transparent;
+        border-radius: 8px;
+        box-shadow: inset 2px 2px 1px 1px var(--colorshadow);
+
+        box-shadow: inset 2px 2px 3px 1px var(--colorshadow);
+        border: 2px solid var(--colorprimary);
+        border-radius: 9px;
+    }
+    a:focus, a:active{
+  outline: none;
+}
     :global(p, span, h1, a) {
         color: var(--colortext);
         /* transition: color 1s; */
@@ -480,14 +516,15 @@
     }
     :global(html) {
         transition: background-color 1s ease-in-out;
+        box-sizing: border-box;
     }
 
-    :global(*) {
+    :global(*, *:before, *:after) {
         padding: 0;
         margin: 0;
         /* font-size:1rem; */
         overscroll-behavior: contain;
-        /* box-sizing: border-box; */
+        box-sizing: border-box;
         /* border-radius: 4px; */
     }
 

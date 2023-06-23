@@ -5,7 +5,15 @@
     import xbig from "$lib/assets/xbig.png";
     import gamesprites from "$lib/assets/gamesprites.png";
     import Footer from "$lib/components/Footer.svelte";
-    import { barColorState, burgopen, mobileMode, navSelect, splashTopMargin, themeMode, themes } from "$lib/stores";
+    import {
+        barColorState,
+        burgopen,
+        mobileMode,
+        navSelect,
+        splashTopMargin,
+        themeMode,
+        themes,
+    } from "$lib/stores";
     import { fade } from "svelte/transition";
     import { onMount } from "svelte";
     import { derived } from "svelte/store";
@@ -22,10 +30,8 @@
     let gagHeight = 0;
     onMount(() => {
         mounted = true;
-
     });
     let msg = 0;
-
 </script>
 
 <div
@@ -47,95 +53,106 @@
             Innovating transformative digital experiences to delight
             and confuse.
         </p>
-        {#if !clickedCall}
-            <div class="gagstart" bind:this="{gagEl}">
-                <p class="gag-start-text">
-                    Now you hunger.. you crave. Request - nay,
-                    demand it! I give you, the
-                    <span class=""> CALL TO ACTION </span>
-                </p>
-                <button
-                    bind:this="{gagbut}"
-                    class:glowing-border="{true}"
-                    on:click="{() => {
-                        // clickGag();
-                        let r = gagbut.getBoundingClientRect();
-                        butx = r.left;
-                        buty = r.top + scrollY;
+        <div
+            class="gag"
+            bind:this="{gagEl}"
+            class:gag-height="{gagHeight != 0}"
+        >
+            {#if !clickedCall}
+                <div class="gagstart">
+                    <p class="gag-start-text">
+                        Now you hunger.. you crave. I sense that you
+                        request - nay, demand the
+                        <span class=""> CALL TO ACTION! </span>
+                    </p>
+                    <button
+                        bind:this="{gagbut}"
+                        class:glowing-border="{true}"
+                        on:click="{() => {
+                            let r = gagbut.getBoundingClientRect();
+                            butx = r.left;
+                            buty = r.top + scrollY;
 
-                        gagHeight = gagEl.clientHeight;
-                        falling = true;
-                        clickedCall = true;
-                        msg++;
-                        // for (let i = 0; i < 5; i++) {
-                        // setTimeout(() => {
-                        // msg++;
-                        // },
-                        // 1900);
-                        // 1900 * i);
-                        // }
-                        setTimeout(() => {
-                            doneFalling = true;
-                        }, 700);
-                    }}"
-                >
-                    <span class="gag-but-text">Heed the Call!</span
-                    ></button
-                >
-            </div>
-        {:else}
-            <div class="gagmsgs">
-                {#if msg == 1}
-                    <p
-                        class="grid1"
-                        in:fade="{{ duration: 100 }}"
-                        on:introend="{() => msg++}"
-                        out:fade="{{ duration: 500, delay: 1000 }}"
-                    >
-                        <!-- on:outroend="{()=>msg++}" -->
-                        Oops!
-                    </p>
-                {:else if msg == 2}
-                    <p
-                        class="grid1"
-                        in:fade="{{ duration: 2000, delay: 1500 }}"
-                        on:introend="{() => {
+                            gagHeight = gagEl.clientHeight;
+                            falling = true;
+                            clickedCall = true;
                             msg++;
+                            setTimeout(() => {
+                                doneFalling = true;
+                            }, 700);
                         }}"
-                        out:fade="{{ duration: 500, delay: 1000 }}"
                     >
-                        <!-- on:outroend="{()=>msg++}" -->
-                        <!-- class:trans="{msg != 2}" -->
-                        <!-- class:longfade="{msg == 2 || msg == 3}" -->
-                        <!-- class:nofade="{msg == 3}" -->
-                        That button is.. experiencing transformational..
-                        maintenance.
-                    </p>
-                {:else if msg == 3}
-                    <p
-                        class="grid1"
-                        in:fade="{{ duration: 2000, delay: 1500 }}"
+                        <span class="gag-but-text"
+                            >Heed the Call!</span
+                        ></button
                     >
-                        Please continue to digitally experience the
-                        website.
-                    </p>
+                </div>
+            {:else}
+                <div class="gagmsgs">
+                    {#if msg == 1}
+                        <p
+                            class="grid1"
+                            in:fade="{{ duration: 100 }}"
+                            on:introend="{() => msg++}"
+                            out:fade="{{
+                                duration: 500,
+                                delay: 1000,
+                            }}"
+                        >
+                            <!-- on:outroend="{()=>msg++}" -->
+                            Oops!
+                        </p>
+                    {:else if msg == 2}
+                        <p
+                            class="grid1"
+                            in:fade="{{
+                                duration: 2000,
+                                delay: 1500,
+                            }}"
+                            on:introend="{() => {
+                                msg++;
+                            }}"
+                            out:fade="{{
+                                duration: 500,
+                                delay: 1000,
+                            }}"
+                        >
+                            <!-- on:outroend="{()=>msg++}" -->
+                            <!-- class:trans="{msg != 2}" -->
+                            <!-- class:longfade="{msg == 2 || msg == 3}" -->
+                            <!-- class:nofade="{msg == 3}" -->
+                            That button is.. experiencing transformational..
+                            maintenance.
+                        </p>
+                    {:else if msg == 3}
+                        <p
+                            class="grid1"
+                            in:fade="{{
+                                duration: 2000,
+                                delay: 1500,
+                            }}"
+                        >
+                            Please continue to digitally experience
+                            the website.
+                        </p>
+                    {/if}
+                </div>
+                {#if falling}
+                    <button
+                        class="fallingbutton"
+                        class:falling="{falling}"
+                        class:trans="{doneFalling}"
+                        on:animationend="{(e) => {
+                            // e.animationName
+                            // doneFalling = true;
+                            falling = false;
+                        }}"
+                    >
+                        Heed the Call!</button
+                    >
                 {/if}
-            </div>
-            {#if falling}
-                <button
-                    class="fallingbutton"
-                    class:falling="{falling}"
-                    class:trans="{doneFalling}"
-                    on:animationend="{(e) => {
-                        // e.animationName
-                        // doneFalling = true;
-                        falling = false;
-                    }}"
-                >
-                    Heed the Call!</button
-                >
             {/if}
-        {/if}
+        </div>
     </div>
 
     <img
@@ -167,7 +184,6 @@
 </div>
 
 <style>
-
     .container {
         padding-inline: 3vw;
     }
@@ -180,13 +196,15 @@
         background-repeat: no-repeat;
         background-size: cover;
         background-attachment: local;
-        transition: margin-top 500ms ease-in-out, padding-top 500ms ease-in-out;
+        transition: margin-top 500ms ease-in-out,
+            padding-top 500ms ease-in-out;
     }
-    .lower-border{
-        padding-top:15px;
-        margin-top:73px;
+    .lower-border {
+        padding-top: 15px;
+        margin-top: 73px;
     }
-
+    .gag {
+    }
     .gagstart {
         display: inline-flex;
         flex-wrap: wrap;
@@ -205,19 +223,20 @@
         flex: 0 0 auto;
         font-weight: bold;
         margin-inline: auto;
-        /* justify-self: center; */
         padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
         padding-block: clamp(0.1rem, 1rem, 2rem);
         background-color: var(--colorsecondary);
         border-color: var(--colorshadow);
     }
     .gagmsgs {
-        /* box-sizing: border-box; */
         display: grid;
         align-items: center;
         justify-items: center;
-        height: var(--gag-height);
         text-align: center;
+        height: 100%;
+    }
+    .gag-height {
+        height: var(--gag-height);
     }
     @media (hover: hover) and (pointer: fine) {
         .gagstart > button:hover {
@@ -429,7 +448,7 @@
 
     .splash > h1 {
         /* text-align: center; */
-        font-size: clamp(1rem, 4vw + 1rem, 3rem);
+        font-size: clamp(1rem, 4vw + 0.6rem, 3rem);
         margin-bottom: 0.6em;
         /* margin-top: 1em; */
     }
