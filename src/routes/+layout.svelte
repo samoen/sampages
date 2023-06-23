@@ -517,6 +517,8 @@
         /* font-size:1rem; */
         overscroll-behavior: contain;
         box-sizing: border-box;
+        text-size-adjust: none;
+        -webkit-text-size-adjust: none;
         /* border-radius: 4px; */
     }
 

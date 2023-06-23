@@ -134,8 +134,7 @@
                             }}"
                         >
                             Please continue to digitally experience
-                            the website. Gaze upon the menu buttons and the
-                            satisfying animations they usher forth. But beware, dear visitor. You may find your paradigms have shifted during the journey.
+                            the website. But beware, dear visitor. You may find your paradigms have shifted on the journey.
                         </p>
                     {/if}
                 </div>
@@ -234,7 +233,7 @@
         display: grid;
         align-items: center;
         justify-items: center;
-        text-align: center;
+        /* text-align: center; */
         height: 100%;
     }
     .gag-height {
@@ -253,6 +252,7 @@
     .grid1 {
         grid-row: 1 / 1;
         grid-column: 1 / 1;
+        /* text-wrap:balance; */
     }
 
     .trans p,
@@ -441,8 +441,6 @@
 
     .splash > p {
         /* font-weight: bold; */
-        text-size-adjust: none;
-        -webkit-text-size-adjust: none;
         /* font-size: 1rem; */
         margin-top: 1em;
         margin-bottom: 1em;
