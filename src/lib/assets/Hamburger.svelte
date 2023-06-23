@@ -1,6 +1,10 @@
-<div>
+<script>
+    export let scale = false
+</script>
 
+<div>
     <svg 
+    class:lil-shrink="{scale}"
     viewBox='0 0 24 24'><rect width='24' height='24' stroke='none' fill='#003020' opacity='0'/>
     <g transform="matrix(0.83 0 0 0.83 12 12)" >
         <g style="" >
@@ -19,6 +23,9 @@
 </div>
 
 <style>
+        .lil-shrink{
+        scale: 0.8;
+    }
         path {
         stroke: var(--colortext);
         fill: var(--colortext);

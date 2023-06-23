@@ -1,7 +1,9 @@
+<script>
+    export let scale = false;
+</script>
+
 <svg
-    xmlns="http://www.w3.org/2000/svg"
-    id="Layer_1"
-    data-name="Layer 1"
+    class:lil-shrink="{scale}"
     viewBox="0 0 24 24"
     width="512"
     height="512"
@@ -11,14 +13,17 @@
 >
 
 <style>
-            path {
+    path {
         /* stroke: var(--colortext); */
         fill: var(--colortext);
     }
-    svg{
+    svg {
         /* background-color: blue; */
-        padding-top:2px;
-        height:auto;
-        width: 29px;
+        padding-top: 2px;
+        height: auto;
+        width: 24px;
+    }
+    .lil-shrink{
+        scale: 0.9;
     }
 </style>

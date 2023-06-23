@@ -10,24 +10,23 @@
     import Settings from "$lib/components/Settings.svelte";
     import TopBarIcon from "$lib/components/TopBarIcon.svelte";
     import {
-        DEFAULT_COLOR_TRANSITION_DURATION,
         DEFAULT_MENU_SLIDE_DURATION,
         barColorState,
+        burgIconState,
         burgopen,
+        contactIconState,
+        lastEvent,
         mobileMode,
         navSelect,
         screenWidth,
+        settingsIconState,
         showJsButtons,
         sidebarwidth,
         themeMode,
         themes,
-        toggleContact,
-        toggleSettings,
         toggleSidebar,
-        topBarTransitionQuick,
         topNavOutDuration,
         topbarheight,
-        topBarTransitionDelayed,
         wscrollY,
     } from "$lib/stores";
     import { onMount } from "svelte";
@@ -94,9 +93,7 @@
 </svelte:head>
 
 <!-- bind:innerWidth="{$screenWidth}" -->
-<svelte:window
-    bind:scrollY="{$wscrollY}"
-/>
+<svelte:window bind:scrollY="{$wscrollY}" />
 
 <div
     class="top"
@@ -105,10 +102,7 @@
     style:--topbarheight="{$topbarheight}px"
 >
     {#if $mobileMode && $burgopen}
-        <div
-            class="shadow"
-            transition:fade
-        ></div>
+        <div class="shadow" transition:fade></div>
         <div
             class="shadowclick"
             on:click="{() => {
@@ -120,34 +114,40 @@
 
     <div
         class="topbar"
-        class:transpar="{$barColorState == 'transparent'}"
-        class:solidbar="{$barColorState == 'solid'}"
-        class:quick-transition="{$topBarTransitionQuick}"
-        class:delayed-transition="{$topBarTransitionDelayed}"
+        class:transpar="{$barColorState.color == 'transparent'}"
+        class:solidbar="{$barColorState.color == 'solid'}"
+        class:blurbar="{$barColorState.color == 'blur'}"
+        class:quick-transition="{$barColorState.speed == 'instant'}"
         bind:clientHeight="{$topbarheight}"
     >
+        <!-- class:delayed-transition="{$topBarTransitionDelayed}" -->
         <TopBarIcon
             push="{() => {
                 toggleSidebar();
             }}"
+            state="{$burgIconState}"
         >
-            <Hamburger />
+            <Hamburger scale="{$burgopen}" />
         </TopBarIcon>
         <span class="barp">SAM OEN</span>
         <!-- {$mobileMode} -->
         <TopBarIcon
             push="{() => {
-                toggleContact();
+                // toggleContact();
+                lastEvent.set({ e: 'contactClick' });
             }}"
+            state="{$contactIconState}"
         >
-            <Hand />
+            <Hand scale="{$navSelect.sel == 'contact'}" />
         </TopBarIcon>
         <TopBarIcon
             push="{() => {
-                toggleSettings();
+                // toggleSettings();
+                lastEvent.set({ e: 'settingsClick' });
             }}"
+            state="{$settingsIconState}"
         >
-            <Gear />
+            <Gear scale="{$navSelect.sel == 'settings'}" />
         </TopBarIcon>
     </div>
     {#if $burgopen}
@@ -161,6 +161,8 @@
             }}"
             on:outroend="{() => {
                 $sidebarwidth = 0;
+                lastEvent.set({ e: 'menuOut' });
+                // menuSlideComplete()
             }}"
         >
             <nav class="sidenav">
@@ -200,26 +202,32 @@
         </div>
     {/if}
 
-    {#if $navSelect == "settings"}
+    {#if $navSelect.sel == "settings"}
         <div
             class="topnav"
             in:slide|local="{{
                 duration: DEFAULT_MENU_SLIDE_DURATION,
             }}"
             out:slide|local="{{
-                duration: $topNavOutDuration,
+                duration: $navSelect.outSpeed,
+            }}"
+            on:outroend="{() => {
+                lastEvent.set({ e: 'menuOut' });
             }}"
         >
             <Settings />
         </div>
-    {:else if $navSelect == "contact"}
+    {:else if $navSelect.sel == "contact"}
         <div
             class="topnav"
             in:slide|local="{{
                 duration: DEFAULT_MENU_SLIDE_DURATION,
             }}"
             out:slide|local="{{
-                duration: $topNavOutDuration,
+                duration: $navSelect.outSpeed,
+            }}"
+            on:outroend="{() => {
+                lastEvent.set({ e: 'menuOut' });
             }}"
         >
             <Contact />
@@ -260,7 +268,7 @@
         /* margin-right: 5px; */
         /* margin-left:2px; */
         padding-block: 10px;
-        padding-left: 1vw;
+        padding-left: 3vw;
         padding-right: 3vw;
         display: grid;
         column-gap: clamp(4px, 3vw, 8rem);
@@ -274,7 +282,12 @@
             border-color 500ms ease-in-out 0ms,
             box-shadow 500ms ease-in-out 0ms;
     }
-
+    .blurbar {
+        background-color: transparent;
+        backdrop-filter: blur(5px);
+        border: 2px solid var(--colorshadow);
+        box-shadow: 2px 2px 1px 0px var(--colorshadow);
+    }
     .solidbar {
         background-color: var(--colorsecondary);
         border: 2px solid var(--colorshadow);
@@ -285,14 +298,14 @@
         border-color: transparent;
         box-shadow: transparent;
     }
-    
+
     .barp {
         display: block;
         white-space: nowrap;
         user-select: none;
         /* overflow-x: hidden; */
         font-size: 1.4rem;
-        font-family: 'Impact';
+        font-family: "Impact";
         /* font-weight: 700; */
         color: var(--colortext);
         grid-column: 1fr;
@@ -316,7 +329,7 @@
         box-shadow: 2px 2px 1px 0px var(--colorshadow);
         background-color: var(--colorsecondary);
     }
-    
+
     .sidebar {
         position: fixed;
         top: calc(var(--topbarheight) + 8px);
@@ -326,6 +339,7 @@
         overflow-x: hidden;
         overflow-y: hidden;
         height: calc(100dvh - var(--topbarheight) - 10px);
+        transition: height 100ms ease-in-out;
     }
 
     .sidenav {
@@ -371,7 +385,7 @@
         white-space: nowrap;
         font-size: 1.3rem;
     }
-    
+
     hr {
         margin-top: 15px;
         margin-bottom: 20px;
@@ -384,7 +398,7 @@
         margin-left: auto;
         margin-right: auto;
     }
-    
+
     .shadowclick {
         position: fixed;
         top: var(--topbarheight);
@@ -397,18 +411,18 @@
     footer {
         padding-left: 10px;
     }
-    
+
     @media (hover: hover) and (pointer: fine) {
         a:hover {
             background-color: var(--coloritem);
             transition: background-color 0s;
         }
     }
-    
+
     @media only screen and (max-width: 500px) {
-        .top{
+        .top {
             --main-width-px: 100vw;
-            position:relative;
+            position: relative;
         }
         .slotandfoot {
             padding-left: 0px;
@@ -425,7 +439,7 @@
         }
     }
     @media only screen and (min-width: 500px) {
-        .top{
+        .top {
             --main-width-px: calc(100vw - var(--sidebar-width-px));
         }
         .slotandfoot {
@@ -445,7 +459,7 @@
 
     .top :global(.brutal-border) {
         border: 2px solid var(--colorshadow);
-        box-shadow: 3px 3px 0px 0px var(--colorshadow);
+        box-shadow: 2px 2px 0px 0px var(--colorshadow);
         border-radius: 8px;
     }
     :global(p, span, h1, a) {
@@ -453,19 +467,19 @@
         /* transition: color 1s; */
         font-family: "Lucida Sans Regular";
     }
-    :global(div, button, a, h1, path, hr) {
+    /* :global(div, button, a, h1, path, hr) {
         transition: background-color 400ms ease-in-out,
         border-color 400ms ease-in-out, color 400ms, stroke 400ms,
         box-shadow 400ms ease-in-out,
         height 100ms ease-in-out;
-    }
+    } */
     :global(body) {
         transition: background-color 1s ease-in-out;
     }
     :global(html) {
         transition: background-color 1s ease-in-out;
     }
-    
+
     :global(*) {
         padding: 0;
         margin: 0;

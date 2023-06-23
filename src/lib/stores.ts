@@ -1,6 +1,6 @@
-import { derived, get, writable } from "svelte/store"
+import { derived, get, writable, type Readable } from "svelte/store"
 
-export const DEFAULT_MENU_SLIDE_DURATION = 500;
+export const DEFAULT_MENU_SLIDE_DURATION = 800;
 export const WAIT_FOR_MENU_SLIDE = DEFAULT_MENU_SLIDE_DURATION - 200;
 
 export const DEFAULT_COLOR_TRANSITION_DURATION = 600
@@ -21,195 +21,200 @@ export const mobileMode = derived(
 export const sidebarwidth = writable(0)
 export const topbarheight = writable(0)
 export const wscrollY = writable(0)
-export const atTop = derived(wscrollY,($s)=>{
+export const atTop = derived(wscrollY, ($s) => {
   return $s < 35
 })
 
 export const themes = {
-  light:'light',
-  dark:'dark',  
+  light: 'light',
+  dark: 'dark',
 } as const;
 type Theme = typeof themes[keyof typeof themes]
 
 
 export const themeMode = writable<Theme>(themes.light)
-export const burgopen = writable(false)
-export const topBarTransitionDelayed = writable(false)
+// export const topBarTransitionDelayed = writable(false)
 export const topBarTransitionQuick = writable(false)
 
 export const showJsButtons = writable(false)
 export const topNavOutDuration = writable(DEFAULT_MENU_SLIDE_DURATION)
 
-type TBarColorState = 'transparent' | 'solid'
-export const barColorState = writable<TBarColorState>('transparent')
+type UiEventKey = 'fresh' | 'burgclick' | 'contactClick' | 'settingsClick' | 'reachedTop' | 'menuOut' | 'scrolled' | 'wentMobile'
+type UiEvent = { e: UiEventKey }
+export const lastEvent = writable<UiEvent>({ e: 'fresh' })
 
-// type TbarIconState = 'brutal' | 'transparent'
-export const barIconColorState = derived<typeof barColorState, TBarColorState>(barColorState,$s=>{
-  if($s == "transparent"){
-    return 'solid'
-  }else{
-    return 'transparent'
+type TopBarColorState = { color: 'transparent' | 'solid' | 'blur', speed: 'instant' | 'slow' }
+
+export const barColorState: Readable<TopBarColorState> = derived([lastEvent], ([$le]) => {
+
+  if (get(atTop) && noMenusOpen() && $le.e == 'scrolled') {
+    return { color: 'transparent', speed: 'slow' } satisfies TopBarColorState
   }
+  if (get(atTop) && noMenusOpen() && $le.e == 'menuOut') {
+    return { color: 'transparent', speed: 'slow' } satisfies TopBarColorState
+  }
+  if (!get(atTop) && noMenusOpen() && $le.e == 'menuOut') {
+    return { color: 'blur', speed: 'slow' } satisfies TopBarColorState
+  }
+  if ($le.e == 'burgclick' || $le.e == 'settingsClick' || $le.e == 'contactClick') {
+    return { color: 'solid', speed: 'instant' } satisfies TopBarColorState
+  }
+
+  if (!get(atTop) && noMenusOpen() && $le.e == 'scrolled') {
+    return { color: 'blur', speed: 'slow' } satisfies TopBarColorState
+  }
+  if (!noMenusOpen()) {
+    return { color: 'solid', speed: 'instant' } satisfies TopBarColorState
+  }
+  return get(barColorState)
 })
 
-type Topnavselect = 'settings' | 'contact' | 'none'
-export const navSelect = writable<Topnavselect>('none')
+
+export const burgopen: Readable<boolean> = derived<typeof lastEvent, boolean>(lastEvent, ($le) => {
+  if ($le.e == 'burgclick' && !get(burgopen)) {
+    return true
+  }
+  if ($le.e == 'burgclick' && get(burgopen)) {
+    return false
+  }
+  if (get(mobileMode)) {
+    if ($le.e == 'contactClick' || $le.e == 'settingsClick') {
+      return false
+    }
+  }
+  return get(burgopen)
+})
+
+function noMenusOpen() {
+  return !get(burgopen) && get(navSelect).sel == 'none'
+}
+
+export type TopBarIconColor = 'solid' | 'transparent' | 'inset'
+export type TransitionSpeed = 'instant' | 'slow'
+export type TopBarIconState = { color: TopBarIconColor, transition: TransitionSpeed }
+
+type Topnavselect = { sel: 'settings' | 'contact' | 'none', outSpeed: number }
+export const navSelect: Readable<Topnavselect> = derived([lastEvent, mobileMode, burgopen], ([$le, $mm, $bo]) => {
+  if ($mm && $bo) {
+    return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION } as Topnavselect
+  }
+
+  if ($le.e == 'settingsClick') {
+    if (get(navSelect).sel == 'none') {
+      return { sel: 'settings', outSpeed: 0 } as Topnavselect
+    } else if (get(navSelect).sel == 'contact') {
+      return { sel: 'settings', outSpeed: 0 } as Topnavselect
+    } else if (get(navSelect).sel == 'settings') {
+      return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION } as Topnavselect
+    }
+  }
+
+  if ($le.e == 'contactClick') {
+    if (get(navSelect).sel == 'none') {
+      return { sel: 'contact', outSpeed: DEFAULT_MENU_SLIDE_DURATION } as Topnavselect
+    } else if (get(navSelect).sel == 'settings') {
+      return { sel: 'contact', outSpeed: 0 } as Topnavselect
+    } else if (get(navSelect).sel == 'contact') {
+      return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION } as Topnavselect
+    }
+  }
+
+  if (get(navSelect)) {
+    return get(navSelect)
+  } else {
+    return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION } as Topnavselect
+  }
+})
+function computeTopBarIconState(ev: UiEventKey) {
+  if (ev == 'scrolled') {
+    if (!get(atTop) && noMenusOpen()) {
+      return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
+    }
+    if (get(atTop) && noMenusOpen()) {
+      return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
+    }
+  }
+  if (ev == 'menuOut') {
+    if (!get(atTop) && noMenusOpen()) {
+      return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
+    }
+    if (get(atTop) && noMenusOpen()) {
+      return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
+    }
+  }
+  return null
+}
+
+export const burgIconState: Readable<TopBarIconState> = derived([lastEvent, burgopen, barColorState], ([$le, $bo, $bcs]) => {
+  let next = computeTopBarIconState($le.e);
+  if (next) {
+    return next
+  }
+  if ($bo) {
+    return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
+  }
+  if ($le.e == 'burgclick') {
+    if (!$bo) {
+      return { color: 'transparent', transition: 'instant' } satisfies TopBarIconState
+    }
+  }
+  if ($bcs.color == 'solid') {
+    return { color: 'transparent', transition: 'instant' } satisfies TopBarIconState
+  }
+  return get(burgIconState)
+})
+export const contactIconState: Readable<TopBarIconState> = derived([lastEvent, navSelect, barColorState], ([$le, $ns, $bcs]) => {
+  let next = computeTopBarIconState($le.e);
+  if (next) {
+    return next
+  }
+  if ($ns.sel == 'contact') {
+    return { color: 'inset', transition: 'instant' } as TopBarIconState
+  }
+  if ($bcs.color == 'solid') {
+    return { color: 'transparent', transition: 'instant' } as TopBarIconState
+  }
+  return get(contactIconState)
+})
+export const settingsIconState: Readable<TopBarIconState> = derived([lastEvent, navSelect, barColorState], ([$le, $ns, $bcs]) => {
+  let next = computeTopBarIconState($le.e);
+  if (next) {
+    return next
+  }
+  if ($ns.sel == 'settings') {
+    return { color: 'inset', transition: 'instant' } as TopBarIconState
+  }
+  if ($bcs.color == 'solid') {
+    return { color: 'transparent', transition: 'instant' } as TopBarIconState
+  }
+  return get(settingsIconState)
+})
+
 
 type Lang = 'EN' | 'ES'
 export const selectedLang = writable<Lang>('EN')
 
 
 mobileMode.subscribe((val) => {
-    if (get(mobileMode) && get(burgopen) && get(navSelect) != 'none') {
-      navSelect.set('none')
-    }
+  lastEvent.set({ e: 'wentMobile' })
 })
 
 wscrollY.subscribe((value) => {
-  console.log('scrolled!')
-   if(get(atTop) && get(navSelect) == 'none' && !get(burgopen)) {
-    barColorState.set('transparent')
-  }else if(!get(atTop) || get(navSelect) != 'none' || get(burgopen)){
-    barColorState.set('solid')
-  }
-  topBarTransitionQuick.set(false)
-  topBarTransitionDelayed.set(false)
+  lastEvent.set({ e: 'scrolled' })
 })
 
-export const toggleTheme = () =>{
+export const toggleTheme = () => {
   topBarTransitionQuick.set(false)
-  topBarTransitionDelayed.set(false);
+  // topBarTransitionDelayed.set(false);
   if (get(themeMode) == themes.light) {
-      themeMode.set(themes.dark);
+    themeMode.set(themes.dark);
   } else {
-      themeMode.set(themes.light);
+    themeMode.set(themes.light);
   }
 }
 
 export const toggleSidebar = () => {
   console.log('toggling sidebar')
-  let burgnext = !get(burgopen)
 
-  let navnext = get(navSelect)
-  if (!get(burgopen) && get(mobileMode) && get(navSelect) != 'none') {
-    navnext = 'none'
-    topNavOutDuration.set(DEFAULT_MENU_SLIDE_DURATION)
-  }
-
-  let topbarcolorstatenext = get(barColorState)
-  if (!get(burgopen)) {
-    topbarcolorstatenext = 'solid'
-  } else if (get(burgopen) && !get(atTop)) {
-    topbarcolorstatenext = 'solid'
-  } else if (get(burgopen) && get(navSelect) == 'none' && get(atTop)) {
-    topbarcolorstatenext = 'transparent'
-  }
-
-  if(!get(burgopen)){
-    topBarTransitionQuick.set(true)
-  }else{
-    topBarTransitionQuick.set(false)
-  }
-
-  let topTransDelayNext = get(topBarTransitionDelayed)
-  if(get(burgopen)){
-    topTransDelayNext = true
-  }else{
-    topTransDelayNext = false
-  }
-
-  burgopen.set(burgnext)
-  navSelect.set(navnext)
-  barColorState.set(topbarcolorstatenext)
-  // toptransduration.set(toptrandurNext)
-  topBarTransitionDelayed.set(topTransDelayNext)
-}
-export const toggleSettings = () => {
-  let navNext = get(navSelect)
-  if(get(navSelect) == 'settings'){
-    navNext = 'none'
-    topNavOutDuration.set(DEFAULT_MENU_SLIDE_DURATION)
-  }else if(get(navSelect) == 'contact'){
-    navNext = 'settings'
-    topNavOutDuration.set(0)
-  }else if(get(navSelect) == 'none'){
-    navNext = 'settings'
-  }
-
-  let burgnext = get(burgopen)
-  if (get(navSelect) == 'none' && get(mobileMode) && get(burgopen)) {
-    burgnext = false
-  }
-  
-  let barcolorstatenext = get(barColorState)
-  if (get(navSelect) != 'settings') {
-    barcolorstatenext = 'solid'
-  } else if (get(navSelect) == 'settings' && !get(burgopen) && get(atTop)) {
-    barcolorstatenext = 'transparent'
-  }
-
-  let ttdelaynext = get(topBarTransitionDelayed)
-  let ttdurnext = get(topBarTransitionQuick)
-  if(get(navSelect) != 'settings'){
-    ttdurnext = true
-    ttdelaynext = false
-  }else{
-    ttdurnext = false
-    ttdelaynext = true
-  }
- 
-  burgopen.set(burgnext)
-  navSelect.set(navNext)
-  barColorState.set(barcolorstatenext)
-  topBarTransitionDelayed.set(ttdelaynext)
-  topBarTransitionQuick.set(ttdurnext)
-}
-
-export const toggleContact = () => {
-  let navNext = get(navSelect)
-  if(get(navSelect) == 'contact'){
-    navNext = 'none'
-    topNavOutDuration.set(DEFAULT_MENU_SLIDE_DURATION)
-  }else if(get(navSelect) == 'settings'){
-    navNext = 'contact'
-    topNavOutDuration.set(0)
-  }else if(get(navSelect) == 'none'){
-    navNext = 'contact'
-  }
-
-
-  let burgnext = get(burgopen)
-  if (get(navSelect) == 'none' && get(mobileMode) && get(burgopen)) {
-    burgnext = false
-  }
-  
-  let barcolorstatenext = get(barColorState)
-  if (get(navSelect) != 'contact') {
-    barcolorstatenext = 'solid'
-  } else if (get(navSelect) == 'contact' && !get(burgopen) && get(atTop)) {
-    barcolorstatenext = 'transparent'
-  }
-  // if (get(navSelect) == 'none') {
-  //   barcolorstatenext = 'solid'
-  // } else if (get(navSelect) != 'none' && !get(atTop)) {
-  //   barcolorstatenext = 'solid'
-  // } else if (get(navSelect) != 'none' && !get(burgopen) && get(atTop)) {
-  //   barcolorstatenext = 'transparent'
-  // }
-
-  let ttdelaynext = get(topBarTransitionDelayed)
-  let ttdurnext = get(topBarTransitionQuick)
-  if(get(navSelect) == 'none'){
-    ttdurnext = true
-    ttdelaynext = false
-  }else{
-    ttdurnext = false
-    ttdelaynext = true
-  }
- 
-  burgopen.set(burgnext)
-  navSelect.set(navNext)
-  barColorState.set(barcolorstatenext)
-  topBarTransitionDelayed.set(ttdelaynext)
-  topBarTransitionQuick.set(ttdurnext)
+  lastEvent.set({ e: 'burgclick' })
 }
