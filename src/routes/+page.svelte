@@ -67,9 +67,9 @@
         class="gagstart"
                 >
                     <p class="gag-start-text">
-                        But you hunger. You crave. You long for
+                        But you hunger.. you crave. You long for
                         something to click. Languish no longer, dear
-                        visitor. Behold! A glorious
+                        visitor. Behold the glorious
                         <span class="">CALL TO ACTION:</span>
                     </p>
                     <button
@@ -195,17 +195,15 @@
     <p>
         Are you tired of humdrum, run-of-the-mill websites that lack
         the cognitive surplus to leverage synergistic optimization?
-        Fear not, for we have the ultimate solution for your
-        technologically inclined desires. Our state-of-the-art
+        Fear not, for we have the ultimate solution to these pseudointellectual cravings. Our state-of-the-art
         platform is meticulously engineered to harmonize seamless
         scalability with disruptive hyper-convergence.
     </p>
-    <br />
     <p>
         Oh, and did we mention the cloud? Yes, we have harnessed the
         boundless power of cloud computing to transcend the limits of
         terrestrial computing. Our servers float high above,
-        majestically showering you with the mystical rain of data
+        majestically showering you with a mystical rain of data
         packets, granting you an ethereal connection that defies the
         boundaries of physicality.
     </p>
@@ -218,7 +216,7 @@
     }
     .splash {
         padding-inline: 3vw;
-        padding-bottom: 10px;
+        padding-bottom: 20px;
         padding-top: 65px;
         margin-top: 3px;
         margin-bottom: 20px;
@@ -482,6 +480,7 @@
         /* font-size: 1rem; */
         margin-top: 1em;
         margin-bottom: 1em;
+        /* max-width: 50rch; */
     }
 
     .splash > h1 {

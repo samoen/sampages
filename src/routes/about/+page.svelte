@@ -15,76 +15,68 @@
                 class="myimg"
                 height="500"
                 width="500"
-                src={biggy}
+                src="{biggy}"
                 alt="bigish"
             />
         </div>
         <div class="cardtxt">
             <p class="cardp">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel,
-                vitae facere. Magni repudiandae consequuntur rem autem eaque
-                asperiores amet odit distinctio alias delectus nam
-                reprehenderit, eos inventore corporis suscipit molestias.
+                Sam Oen is a software engineer based in Perth, Western
+                Australia. When he's not immersed in lines of code,
+                you can find him on the the sports field or wandering in
+                nature with his partner Ashleigh.
             </p>
         </div>
     </div>
     <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.
+        Living in the vibrant city of Perth, Sam draws inspiration
+        from its dynamic atmosphere and the beauty of Western
+        Australia's surroundings.
     </p>
-    <br/>
+    <br />
     <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
-        suscipit molestias.        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, vitae
-        facere. Magni repudiandae consequuntur rem autem eaque asperiores amet
-        odit distinctio alias delectus nam reprehenderit, eos inventore corporis
+        With a solid foundation in software engineering principles and
+        a genuine passion for his work, Sam continues to push
+        boundaries and explore new horizons in the ever-evolving world
+        of technology. Sam's energy and enthusiasm are contagious,
+        making him an exceptional software engineer with a zest for
+        life.
     </p>
-    <!-- <div class="foothold">
-        <Footer></Footer>
-    </div> -->
 </div>
 
-<!-- {:else} -->
-<!-- <div class="hi"> -->
-<!-- <Heartbeat /> -->
-<!-- </div> -->
-<!-- </div> -->
-
 <style>
-    p{
+    .cont {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 5rem;
+        /* background-color: aqua; */
+        --textwidth: 300px;
+        --maximagewidth: 600px;
+        container: conty / inline-size;
+    }
+    .cont > p {
         display: block;
-        margin-inline:auto;
-        max-width: 120ch;
+        margin-inline: auto;
+        max-width: 120rch;
+    }
+    .cont > h1 {
+        display: block;
+        /* background-color: blue; */
+        max-width: 120rch;
+        /* width: clamp(0px,100%,600px); */
+
+        margin-inline: auto;
     }
     /* .cont > * + * {
         margin-top: 1rem;
     } */
 
-    .cont {
-        padding-left: 10px;
-        margin:0;
-        padding-right: 1rem;
-        padding-top:5rem;
-        /* background-image: linear-gradient(to right,red, yellow); */
-        /* min-height: 100vh; */
-        --textwidth: 300px;
-        --maximagewidth: 600px;
-        container: conty / inline-size;
-    }
     .imgwithtext {
         margin-top: 2rem;
         margin-bottom: 2rem;
         padding: 1rem;
         background-color: var(--colorsecondary);
     }
-
 
     @container conty (min-width: 600px) {
         .imgwithtext {
@@ -118,16 +110,16 @@
             /* text-align: center; */
         }
         .myimg {
-            display:block;
+            display: block;
             /* max-width: 300px; */
-            max-height:100px;
-            width: clamp(0px,100%,600px);
-            margin-inline:auto;
-            object-fit:cover;
+            max-height: 100px;
+            width: clamp(0px, 100%, 600px);
+            margin-inline: auto;
+            object-fit: cover;
         }
 
         .cardtxt {
-            margin-top:1em;
+            margin-top: 1em;
             margin-inline: auto;
             text-align: center;
         }

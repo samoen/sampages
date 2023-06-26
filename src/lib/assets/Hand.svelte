@@ -1,17 +1,19 @@
 <script>
     export let size = 1.0
-    export let scale = false
+    export let lilShrink = false
     export let gone = false
+    export let padding = 0
     $: fillColor = gone ? 'transparent' : 'var(--colortext)'
     $: adjWidth = 48 * size
     $: adjHeight = 42 * size
 </script>
 
 <svg
-    class:lil-shrink="{scale}"
+    class:lil-shrink="{lilShrink}"
     style:--fill-color="{fillColor}"
     style:--adj-width="{adjWidth}px"
     style:--adj-height="{adjHeight}px"
+    style:--pad="{padding}px"
     viewBox="0 0 24 24"
     width="512"
     height="512"
@@ -28,8 +30,9 @@
     svg {
         height: var(--adj-height);
         width: var(--adj-width);
-        padding:5px;
-        margin-top:3px;
+        padding:var(--pad);
+        /* margin-top:3px; */
+        /* background-color: blue; */
     }
     .lil-shrink{
         scale:0.9;

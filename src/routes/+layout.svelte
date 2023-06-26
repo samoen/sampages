@@ -45,6 +45,7 @@
             }
         }
         showJsButtons.set(true);
+        lastEvent.set({e: 'layoutMounted'})
         // mounted = true;
     });
     // afterNavigate(() => {
@@ -61,6 +62,7 @@
     //         };
     //     }
     // }
+    let topNavHeight = 0;
 </script>
 
 <svelte:head>
@@ -102,6 +104,7 @@
     bind:clientWidth="{$screenWidth}"
     style:--sidebar-width="{$sidebarwidth}"
     style:--topbarheight="{$topbarheight}px"
+    style:--top-nav-height="{topNavHeight}px"
 >
     {#if $mobileMode && $burgopen}
         <div class="shadow" transition:fade></div>
@@ -129,7 +132,7 @@
             }}"
             state="{$burgIconState}"
         >
-            <Hamburger scale="{$burgopen}" gone="{!$showJsButtons}" />
+            <Hamburger size="{1}" padding={5} lilShrink="{$burgopen}" gone="{!$showJsButtons}" />
         </TopBarIcon>
         <span class="barp">SAM OEN</span>
         <!-- {$mobileMode} -->
@@ -140,7 +143,11 @@
             }}"
             state="{$contactIconState}"
         >
-            <Hand scale="{$navSelect.sel == 'contact'}" gone="{!$showJsButtons}" />
+        <Hand
+                padding={5}
+                lilShrink="{$navSelect.sel == 'contact'}"
+                gone="{!$showJsButtons}"
+            />
         </TopBarIcon>
         <TopBarIcon
             push="{() => {
@@ -149,7 +156,11 @@
             }}"
             state="{$settingsIconState}"
         >
-            <Gear scale="{$navSelect.sel == 'settings'}" gone="{!$showJsButtons}" />
+            <Gear
+                lilShrink="{$navSelect.sel == 'settings'}"
+                padding="{5}"
+                gone="{!$showJsButtons}"
+            />
         </TopBarIcon>
     </div>
     {#if $burgopen}
@@ -172,43 +183,51 @@
                         <a
                             on:click="{() => {
                                 if ($mobileMode && $burgopen) {
-                                    setTimeout(()=>{
+                                    setTimeout(() => {
                                         toggleSidebar();
-                                    },50)
+                                    }, 50);
                                 }
                             }}"
                             href="{base}/"
-                            class:inset-brutal="{$page.url.pathname == `${base}/`}"
-                            class:brutal-border="{$page.url.pathname != `${base}/`}"
+                            class:inset-brutal="{$page.url.pathname ==
+                                `${base}/`}"
+                            class:brutal-border="{$page.url
+                                .pathname != `${base}/`}"
                         >
-                        <!-- style="background-image:url({Hand})" -->
-                            <div 
-                            class="sideicon"
+                        
+                            <div
+                                class="sideitem"
+                                class:lil-shrinky="{$page.url.pathname == `${base}/`}"
                             >
-                                <Hand size="{0.8}"/>
+                                <Hand 
+                                size="{0.5}" 
+                                />
+                                <span>Home Page</span>
                             </div>
-                            <span> 
-                                Home Page 
-                            </span>
                         </a>
                     </li>
                     <li>
                         <a
-                        class:inset-brutal="{$page.url.pathname == `${base}/about`}"
-                        class:brutal-border="{$page.url.pathname != `${base}/about`}"
+                            class:inset-brutal="{$page.url.pathname ==
+                                `${base}/about`}"
+                            class:brutal-border="{$page.url
+                                .pathname != `${base}/about`}"
                             on:click="{() => {
                                 if ($mobileMode && $burgopen) {
-                                    setTimeout(()=>{
+                                    setTimeout(() => {
                                         toggleSidebar();
-                                    },50)
+                                    }, 50);
                                 }
                             }}"
                             href="{base}/about"
                         >
-                            <div class="sideicon">
-                                <Hand size="{0.8}"/>
+                            <div 
+                            class="sideitem"
+                            class:lil-shrinky="{$page.url.pathname == `${base}/about`}"
+                            >
+                                <Hand size="{0.5}" />
+                                <span>About</span>
                             </div>
-                            <span> About </span>
                         </a>
                     </li>
                 </ul>
@@ -219,6 +238,7 @@
     {#if $navSelect.sel == "settings"}
         <div
             class="topnav"
+            bind:clientHeight="{topNavHeight}"
             in:slide|local="{{
                 duration: DEFAULT_MENU_SLIDE_DURATION,
             }}"
@@ -268,6 +288,7 @@
 
     .slotandfoot {
         min-height: 100dvh;
+        padding-top: var(--top-nav-height);
         display: grid;
         grid-template-rows: 1fr auto;
     }
@@ -284,7 +305,7 @@
         display: flex;
         align-items: center;
         justify-content: start;
-        gap:8px;
+        gap: 8px;
         border: 2px solid;
         border-radius: 6px;
         transition: background-color 500ms ease-in-out 0ms,
@@ -323,9 +344,10 @@
 
     .topnav {
         position: fixed;
-        top: calc(var(--topbarheight) + 12px);
-        /* left: calc(var(--sidebarwidth) + 10px); */
+        top: calc(var(--topbarheight) + 10px);
+        left: calc(var(--sidebar-width-px) + 10px);
         right: 5px;
+        overflow: hidden;
         /* display: inline-block; */
         /* vertical-align: top; */
         /* margin-top: 5px; */
@@ -375,20 +397,23 @@
     .sidenav li {
     }
     .sidenav a {
-
-        display: flex;
-        column-gap: 0.1rem;
         /* grid-template-columns: auto auto; */
-        align-items: center;
         background-color: var(--colorsecondary);
+        /* background-color: aqua; */
         text-decoration: none;
-        font-size: 1.5rem;
         -webkit-tap-highlight-color: transparent;
-        /* border: 2px solid var(--colorshadow); */
-        /* border-radius: 5px; */
-        /* box-shadow: 2px 2px 1px 0px var(--colorshadow); */
+        display: block;
     }
-    .sideicon {
+    .lil-shrinky {
+        transform: scale(0.9);
+    }
+    .sideitem {
+        display: flex;
+        align-items:first center;
+        column-gap: 5px;
+        padding-inline:5px;
+        padding-block: 5px;
+        /* transform: scale(0.5); */
         /* margin-top:4px; */
         /* position: relative; */
         /* padding:5px; */
@@ -397,13 +422,14 @@
         /* background-color: aqua; */
         /* flex-grow: 0; */
     }
-    .sidenav span {
-        padding-right: 1rem;
+
+    .sideitem span {
+        /* padding-right: 1rem; */
         width: max-content;
         white-space: nowrap;
         font-size: 1.3rem;
     }
-    
+
     hr {
         margin-top: 15px;
         margin-bottom: 20px;
@@ -429,14 +455,14 @@
     footer {
         padding-left: 10px;
     }
-    
+
     @media (hover: hover) and (pointer: fine) {
         a:hover {
             background-color: var(--coloritem);
             transition: background-color 0s;
         }
     }
-    
+
     @media only screen and (max-width: 500px) {
         .top {
             --main-width-px: 100vw;
@@ -470,32 +496,33 @@
     .top :global(.quick-transition) {
         transition-duration: 0ms;
     }
-    
+
     .top :global(.delayed-transition) {
         transition-delay: 300ms;
     }
-    
+
     .top :global(.brutal-border) {
         border: 2px solid var(--colorshadow);
         box-shadow: 2px 2px 0px 0px var(--colorshadow);
         border-radius: 8px;
     }
-    .top :global(.inset-brutal){
-        border: 1px solid transparent;
-        border-radius: 8px;
-        box-shadow: inset 2px 2px 1px 1px var(--colorshadow);
+    .top :global(.inset-brutal) {
+        /* border: 1px solid transparent; */
+        /* border-radius: 8px; */
+        /* box-shadow: inset 2px 2px 1px 1px var(--colorshadow); */
 
         box-shadow: inset 2px 2px 3px 1px var(--colorshadow);
         border: 2px solid var(--colorprimary);
         border-radius: 9px;
     }
-    a:focus, a:active{
-  outline: none;
-}
+    a:focus,
+    a:active {
+        outline: none;
+    }
     :global(p, span, h1, a) {
         color: var(--colortext);
         /* transition: color 1s; */
-        font-family:monospace;
+        font-family: monospace;
     }
     /* :global(div, button, a, h1, path, hr) {
         transition: background-color 400ms ease-in-out,

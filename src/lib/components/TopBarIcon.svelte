@@ -39,7 +39,9 @@ class:gone="{!$showJsButtons}"
     .baricon {
         touch-action: none;
         background-color: var(--colorsecondary);
-        flex-grow: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         -webkit-tap-highlight-color: transparent;
     }
 

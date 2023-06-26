@@ -39,7 +39,7 @@ export const topBarTransitionQuick = writable(false)
 export const showJsButtons = writable(false)
 export const topNavOutDuration = writable(DEFAULT_MENU_SLIDE_DURATION)
 
-type UiEventKey = 'fresh' | 'burgclick' | 'contactClick' | 'settingsClick' | 'reachedTop' | 'menuOut' | 'scrolled' | 'wentMobile'
+type UiEventKey = 'fresh' | 'layoutMounted' | 'burgclick' | 'contactClick' | 'settingsClick' | 'reachedTop' | 'menuOut' | 'scrolled' | 'wentMobile'
 type UiEvent = { e: UiEventKey }
 export const lastEvent = writable<UiEvent>({ e: 'fresh' })
 
@@ -71,6 +71,9 @@ export const barColorState: Readable<TopBarColorState> = derived([lastEvent], ([
 
 
 export const burgopen: Readable<boolean> = derived<typeof lastEvent, boolean>(lastEvent, ($le) => {
+  if ($le.e == 'layoutMounted') {
+    return false
+  }
   if ($le.e == 'burgclick' && !get(burgopen)) {
     return true
   }
@@ -204,7 +207,9 @@ export const splashTopMargin = derived([navSelect, burgopen, mobileMode],([$ns, 
 })
 
 mobileMode.subscribe((val) => {
-  lastEvent.set({ e: 'wentMobile' })
+  if(val){
+    lastEvent.set({ e: 'wentMobile' })
+  }
 })
 
 wscrollY.subscribe((value) => {
