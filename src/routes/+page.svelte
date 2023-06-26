@@ -21,12 +21,13 @@
     $: splashimg = $themeMode == themes.dark ? wavydark : wavy;
     let falling = false;
     let doneFalling = false;
-    let clickedCall = false;
     let mounted = false;
     let gagbut: HTMLButtonElement;
-    let butx = 815;
-    let buty = 200;
-    let gagEl: HTMLDivElement;
+    let butx = 0;
+    let buty = 0;
+    let clickedCall = false;
+    let gagFinished = false;
+    let gagMsgsHeight = 0;
     let gagHeight = 0;
     onMount(() => {
         mounted = true;
@@ -39,6 +40,7 @@
     style:--but-x="{butx}px"
     style:--but-y="{buty}px"
     style:--gag-height="{gagHeight}px"
+    style:--gag-msgs-height="{gagMsgsHeight}px"
 >
     <div
         class="splash brutal-border"
@@ -53,13 +55,17 @@
             Innovating transformative digital experiences to delight
             and confuse.
         </p>
+        <!-- bind:this="{gagEl}" -->
         <div
-            class="gag"
-            bind:this="{gagEl}"
-            class:gag-height="{gagHeight != 0}"
+        class="gag"
+        bind:clientHeight="{gagHeight}"
+        class:fixed-min-height="{clickedCall && !gagFinished}"
+        class:min-height-transition="{gagFinished}"
         >
-            {#if !clickedCall}
-                <div class="gagstart">
+        {#if !clickedCall}
+        <div 
+        class="gagstart"
+                >
                     <p class="gag-start-text">
                         But you hunger. You crave. You long for
                         something to click. Languish no longer, dear
@@ -74,7 +80,8 @@
                             butx = r.left;
                             buty = r.top + scrollY;
 
-                            gagHeight = gagEl.clientHeight;
+                            // gagHeight = gagEl.clientHeight;
+                            gagMsgsHeight = gagHeight
                             falling = true;
                             clickedCall = true;
                             msg++;
@@ -89,33 +96,55 @@
                     >
                 </div>
             {:else}
-                <div class="gagmsgs">
+            <!-- class:gag-height="{msg > 2}" -->
+            <!-- class:gag-height="{gagMsgsHeight != 0}" -->
+                <div 
+                class="gagmsgs"
+                class:text-align-left="{gagFinished}"
+                >
                     {#if msg == 1}
                         <p
                             class="grid1"
                             in:fade="{{ duration: 100 }}"
-                            on:introend="{() => msg++}"
+                            on:introend="{() => {
+                                setTimeout(() => {
+                                    msg++;
+                                }, 1000);
+                            }}"
                             out:fade="{{
                                 duration: 500,
-                                delay: 1000,
+                                // delay: 1000,
+                            }}"
+                            on:outroend="{() => {
+                                // setTimeout(() => {
+                                    msg++;
+                                // }, 1000);
                             }}"
                         >
                             <!-- on:outroend="{()=>msg++}" -->
                             Oops!
                         </p>
-                    {:else if msg == 2}
+                    {:else if msg == 3}
                         <p
                             class="grid1"
                             in:fade="{{
                                 duration: 2000,
-                                delay: 1500,
+                                // delay: 1500,
                             }}"
                             on:introend="{() => {
-                                msg++;
+                                setTimeout(() => {
+                                    msg++;
+                                }, 1000);
                             }}"
                             out:fade="{{
                                 duration: 500,
-                                delay: 1000,
+                                // delay: 1000,
+                            }}"
+                            on:outroend="{() => {
+                                // setTimeout(() => {
+                                    msg++;
+                                    gagFinished = true
+                                // }, 1000);
                             }}"
                         >
                             <!-- on:outroend="{()=>msg++}" -->
@@ -125,36 +154,35 @@
                             That button is experiencing transformational..
                             ah.. maintenance.
                         </p>
-                    {:else if msg == 3}
+                    {:else if msg == 5}
                         <p
                             class="grid1"
                             in:fade="{{
                                 duration: 2000,
-                                delay: 1500,
                             }}"
                         >
                             Please continue to digitally experience
-                            the website. But beware, dear visitor. You may find your paradigms have shifted on the journey.
+                            the website. But beware, dear visitor. You
+                            may find your paradigms have shifted on
+                            the journey.
                         </p>
                     {/if}
                 </div>
-                {#if falling}
-                    <button
-                        class="fallingbutton"
-                        class:falling="{falling}"
-                        class:trans="{doneFalling}"
-                        on:animationend="{(e) => {
-                            // e.animationName
-                            // doneFalling = true;
-                            falling = false;
-                        }}"
-                    >
-                        Heed the Call!</button
-                    >
                 {/if}
-            {/if}
+            </div>
         </div>
-    </div>
+        {#if falling}
+            <button
+                class="fallingbutton"
+                class:falling="{falling}"
+                class:trans="{doneFalling}"
+                on:animationend="{(e) => {
+                    falling = false;
+                }}"
+            >
+                Heed the Call!</button
+            >
+        {/if}
 
     <img
         class="normalimg brutal-border"
@@ -205,6 +233,10 @@
         margin-top: 73px;
     }
     .gag {
+        min-height: 0px;
+    }
+    .min-height-transition{
+        transition: min-height 1s ease-in-out;
     }
     .gagstart {
         display: inline-flex;
@@ -231,13 +263,19 @@
     }
     .gagmsgs {
         display: grid;
-        align-items: center;
+        align-items:center;
         justify-items: center;
-        /* text-align: center; */
+        text-align: center;
         height: 100%;
     }
-    .gag-height {
-        height: var(--gag-height);
+    .text-align-left{
+        text-align: left;
+        align-items:flex-start;
+        justify-items: left;
+    }
+    .fixed-min-height {
+        min-height: var(--gag-msgs-height);
+        height: var(--gag-msgs-height);
     }
     @media (hover: hover) and (pointer: fine) {
         .gagstart > button:hover {
