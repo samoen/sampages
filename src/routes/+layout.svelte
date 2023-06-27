@@ -207,7 +207,7 @@
                             <div
                                 class="sideitem"
                                 class:lil-shrinky="{$page.url
-                                    .pathname == `${base}`}"
+                                    .pathname == `${modBase}`}"
                             >
                                 <Hand size="{0.5}" />
                                 <span>Home Page</span>
