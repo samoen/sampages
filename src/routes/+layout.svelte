@@ -18,6 +18,7 @@
         lastEvent,
         mainPadding,
         mobileMode,
+        modBase,
         navSelect,
         screenWidth,
         settingsIconState,
@@ -197,11 +198,11 @@
                                     }, 50);
                                 }
                             }}"
-                            href="{base}"
+                            href="{modBase}"
                             class:inset-brutal="{$page.url.pathname ==
-                                `${base}`}"
+                                `${modBase}`}"
                             class:brutal-border="{$page.url
-                                .pathname != `${base}`}"
+                                .pathname != `${modBase}`}"
                         >
                             <div
                                 class="sideitem"

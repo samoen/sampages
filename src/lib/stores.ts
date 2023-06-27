@@ -1,3 +1,4 @@
+import { base } from "$app/paths";
 import { derived, get, writable, type Readable } from "svelte/store"
 
 export const DEFAULT_MENU_SLIDE_DURATION = 800;
@@ -216,6 +217,8 @@ export const mainPadding = derived([topNavHeight, navSelect],([$tnh, $ns])=>{
   // }
   return 0
 })
+
+export const modBase = base == "" ? "/" : base
 
 mobileMode.subscribe((val) => {
   if(val){
