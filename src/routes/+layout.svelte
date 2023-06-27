@@ -50,6 +50,9 @@
         lastEvent.set({ e: "layoutMounted" });
         // mounted = true;
     });
+    $: {
+        console.log($page.url.pathname)
+    }
     // afterNavigate(() => {
     // window.scrollTo(0, 0);
     // });
