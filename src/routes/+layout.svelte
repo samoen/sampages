@@ -38,13 +38,14 @@
     // export let data;
     // $croute = data.currentRoute;
 
-    let preloadableRoutes = ["/", "/about"];
+    let preloadableRoutes = [modBase, `${base}/about`];
     // let mounted = false;
 
     onMount(() => {
         for (let r of preloadableRoutes) {
             if ($page.url.pathname != r) {
-                preloadData(`${base}${r}`);
+                console.log(`preloading ${r}`);
+                preloadData(`${r}`);
             }
         }
         showJsButtons.set(true);
@@ -52,7 +53,7 @@
         // mounted = true;
     });
     $: {
-        console.log($page.url.pathname)
+        console.log($page.url.pathname);
     }
     // afterNavigate(() => {
     // window.scrollTo(0, 0);
@@ -569,6 +570,6 @@
     }
 
     :global(html) {
-        background-color: purple;
+        background-color: var(--colorprimary);
     }
 </style>
