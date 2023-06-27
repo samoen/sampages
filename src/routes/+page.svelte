@@ -139,19 +139,12 @@
                             }}"
                             out:fade="{{
                                 duration: 500,
-                                // delay: 1000,
                             }}"
                             on:outroend="{() => {
-                                // setTimeout(() => {
                                     msg++;
                                     gagFinished = true
-                                // }, 1000);
                             }}"
                         >
-                            <!-- on:outroend="{()=>msg++}" -->
-                            <!-- class:trans="{msg != 2}" -->
-                            <!-- class:longfade="{msg == 2 || msg == 3}" -->
-                            <!-- class:nofade="{msg == 3}" -->
                             That button is experiencing transformational..
                             ah.. maintenance.
                         </p>

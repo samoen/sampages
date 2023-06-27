@@ -1,38 +1,34 @@
 <script lang="ts">
-    import {
-    showJsButtons,
-        type TopBarIconState
-    } from "$lib/stores";
+    import { showJsButtons, type TopBarIconState } from "$lib/stores";
     import { fade } from "svelte/transition";
 
     export let push = () => {};
-    export let state : TopBarIconState;
+    export let state: TopBarIconState;
 </script>
 
 <!-- {#if $showJsButtons} -->
 <!-- class:quick-transition="{$topBarTransitionQuick}" -->
 <!-- class:delayed-transition="{$topBarTransitionDelayed}" -->
 <button
-class:inset-shadow="{state.color == 'inset'}"
-class="baricon"
-class:transparent="{state.color == 'transparent'}"
-class:brutal-border="{state.color == 'solid'}"
-class:fadey="{state.transition == "slow"}"
-class:gone="{!$showJsButtons}"
-        on:transitionend="{() => {
-            // $topBarTransitionDelayed = false;
-        }}"
-        
-        on:click="{() => {
-            push();
-        }}"
-        on:keydown
-        in:fade
-    >
-        <slot />
-    </button>
+    class:inset-shadow="{state.color == 'inset'}"
+    class="baricon"
+    class:transparent="{state.color == 'transparent'}"
+    class:brutal-border="{state.color == 'solid'}"
+    class:fadey="{state.transition == 'slow'}"
+    class:gone="{!$showJsButtons}"
+    on:transitionend="{() => {
+        // $topBarTransitionDelayed = false;
+    }}"
+    on:click="{() => {
+        push();
+    }}"
+    on:keydown
+>
+    <slot />
+</button>
+
 <!-- {:else} -->
-    <!-- <div></div> -->
+<!-- <div></div> -->
 <!-- {/if} -->
 
 <style>
@@ -63,8 +59,8 @@ class:gone="{!$showJsButtons}"
         border-radius: 9px;
         /* padding:3px; */
     }
-    .gone{
-        color:transparent
+    .gone {
+        color: transparent;
     }
     @media (hover: hover) and (pointer: fine) {
         .baricon.brutal-border:not(.delayed-transition):hover {
