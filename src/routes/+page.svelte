@@ -106,7 +106,7 @@
                     {#if msg == 1}
                         <p
                             class="grid1"
-                            in:fade="{{ duration: 100 }}"
+                            in:fade|global="{{ duration: 100 }}"
                             on:introend="{() => {
                                 setTimeout(() => {
                                     msg++;

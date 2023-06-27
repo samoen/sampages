@@ -22,7 +22,7 @@
             <Esflag />
         </button>
     </div>
-    <span> Color Theme</span>
+    <span>Color Theme</span>
     <div class="langs">
         <button
             class="baricon"
@@ -40,25 +40,35 @@
         min-height: 40px;
         min-width: 40px;
     } */
+    
     .wrapper{
-        /* overflow:hidden; */
+        overflow:hidden;
+        padding:10px;
+        /* background-color: aqua; */
+        display: flex;
+        flex-direction: column;
+        /* align-items: stretch; */
+        /* justify-content: space-around; */
+    }
+    .wrapper span{
+        overflow: hidden;
+        white-space: nowrap;
     }
     .baricon {
-        width: 40px;
-        height: 40px;
+        /* width: 40px; */
+        /* height: 40px; */
         touch-action: none;
         border-width: 0;
-        background-color: var(--colorsecondary);
+        background-color: transparent;
         cursor: pointer;
-        border: 2px solid var(--colorshadow);
-        border-radius: 6px;
-        box-shadow: 2px 2px 2px 1px var(--colorshadow);
     }
     .langs {
+        display: flex;
         /* grid-template-columns: repeat(auto-fit, 2rem); */
         /* grid-template-rows: 3rem; */
         /* grid-auto-flow: column; */
-        /* gap: 1rem; */
+        gap: 10px;
+        /* background-color: brown; */
     }
     /* .flag {
         width: 2rem;
@@ -67,8 +77,6 @@
         border-width: 0;
         background-color: transparent;
         cursor: pointer;
-        border: 1px solid var(--colorshadow);
-        border-radius: 3px;
-        box-shadow: 1px 1px 3px 1px var(--colorshadow);
+
     } */
 </style>

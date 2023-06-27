@@ -10,7 +10,7 @@
 <!-- class:quick-transition="{$topBarTransitionQuick}" -->
 <!-- class:delayed-transition="{$topBarTransitionDelayed}" -->
 <button
-    class:inset-shadow="{state.color == 'inset'}"
+    class:inset-brutal="{state.color == 'inset'}"
     class="baricon"
     class:transparent="{state.color == 'transparent'}"
     class:brutal-border="{state.color == 'solid'}"
@@ -52,13 +52,7 @@
         border: 2px solid transparent;
         border-radius: 9px;
     }
-
-    .inset-shadow {
-        box-shadow: inset 2px 2px 3px 1px var(--colorshadow);
-        border: 2px solid transparent;
-        border-radius: 9px;
-        /* padding:3px; */
-    }
+    
     .gone {
         color: transparent;
     }

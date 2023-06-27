@@ -52,9 +52,9 @@
         lastEvent.set({ e: "layoutMounted" });
         // mounted = true;
     });
-    $: {
-        console.log($page.url.pathname);
-    }
+    // $: {
+    //     console.log($page.url.pathname);
+    // }
     // afterNavigate(() => {
     // window.scrollTo(0, 0);
     // });
@@ -109,8 +109,9 @@
     class="top"
     bind:clientWidth="{$screenWidth}"
     style:--sidebar-width="{$sidebarwidth}"
+    style:--sidebar-width-px="{$sidebarwidth}px"
     style:--topbarheight="{$topbarheight}px"
-    style:--top-nav-height="{topNavHeight}px"
+    style:--top-nav-height="{$topNavHeight}px"
 >
     {#if $mobileMode && $burgopen}
         <div class="shadow" transition:fade></div>
@@ -127,6 +128,7 @@
         class="topbar"
         class:transpar="{$barColorState.color == 'transparent'}"
         class:solidbar="{$barColorState.color == 'solid'}"
+        class:brutal-border="{$barColorState.color == 'solid' || $barColorState.color == 'blur'}"
         class:blurbar="{$barColorState.color == 'blur'}"
         class:quick-transition="{$barColorState.speed == 'instant'}"
         bind:clientHeight="{$topbarheight}"
@@ -184,7 +186,9 @@
                 axis: 'x',
             }}"
             on:outroend="{() => {
-                $sidebarwidth = 0;
+                if(!$burgopen){
+                    $sidebarwidth = 0;
+                }
                 lastEvent.set({ e: 'menuOut' });
             }}"
         >
@@ -247,7 +251,7 @@
     {#key $navSelect.sel}
         {#if $navSelect.sel != "none"}
             <div
-                class="topnav"
+                class="topnav brutal-border no-top-border"
                 bind:clientHeight="{$topNavHeight}"
                 in:slide|global="{{
                     duration: DEFAULT_MENU_SLIDE_DURATION,
@@ -291,7 +295,7 @@
 
 <style>
     .top {
-        --sidebar-width-px: calc(var(--sidebar-width) * 1px);
+        
     }
 
     .slotandfoot {
@@ -314,29 +318,31 @@
         align-items: center;
         justify-content: start;
         gap: 8px;
-        border: 2px solid;
+        /* border: 2px solid; */
         border-radius: 6px;
         transition: background-color 500ms ease-in-out 0ms,
             border-color 500ms ease-in-out 0ms,
             box-shadow 500ms ease-in-out 0ms;
         /* user-select: none; */
+        /* box-sizing: content-box; */
     }
     .blurbar {
         background-color: transparent;
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(5px);
-        border: 2px solid var(--colorshadow);
-        box-shadow: 2px 2px 1px 0px var(--colorshadow);
+        /* border: 2px solid var(--colorshadow); */
+        /* box-shadow: 2px 2px 1px 0px var(--colorshadow); */
     }
     .solidbar {
         background-color: var(--colorsecondary);
-        border: 2px solid var(--colorshadow);
-        box-shadow: 2px 2px 1px 0px var(--colorshadow);
+        /* border: 2px solid var(--colorshadow); */
+        /* box-shadow: 2px 2px 1px 0px var(--colorshadow); */
     }
     .transpar {
         background-color: transparent;
         border-color: transparent;
-        box-shadow: transparent;
+        box-shadow: 2px 2px 1px 0px transparent;
+        border: 2px solid transparent;
     }
 
     .barp {
@@ -352,52 +358,36 @@
 
     .topnav {
         position: fixed;
-        top: calc(var(--topbarheight) + 10px);
-        left: calc(var(--sidebar-width-px) + 10px);
-        right: 5px;
-        /* overflow: hidden; */
+        top: calc(var(--topbarheight) + 5px);
+        left: calc(var(--sidebar-width-px) + 3px);
+        right: 4px;
         display: grid;
-        /* grid-template-rows: auto; */
-        /* grid-template-columns: auto; */
-        /* display: inline-block; */
-        /* vertical-align: top; */
-        /* margin-top: 5px; */
-        /* margin-left: 25px; */
-        max-width: calc(var(--main-width-px) - 10px);
+        overflow: hidden;
         z-index: 3;
-        /* padding-inline: 1rem; */
-        /* padding-block: 0.5rem; */
-        border: 2px solid var(--colorshadow);
-        border-radius: 7px;
-        box-shadow: 2px 2px 1px 0px var(--colorshadow);
         background-color: var(--colorsecondary);
     }
     .top-nav-selection {
         /* position: absolute; */
-        grid-row: 1 / 1;
-        grid-column: 1 / 1;
+        /* grid-row: 1 / 1; */
+        /* grid-column: 1 / 1; */
     }
 
     .sidebar {
         position: fixed;
-        top: calc(var(--topbarheight) + 9px);
-        left: 5px;
+        top: calc(var(--topbarheight) + 2px);
+        left: 4px;
         z-index: 2;
-        background-color: var(--colorprimary);
+        background-color: var(--colorsecondary);
         overflow-x: hidden;
         overflow-y: hidden;
-        height: calc(100dvh - var(--topbarheight) - 17px);
+        height: calc(100dvh - var(--topbarheight) - 5px);
         transition: height 100ms ease-in-out;
     }
 
     .sidenav {
         height: 100%;
-        /* padding-inline: 1rem; */
-        /* width: auto; */
         overflow-x: hidden;
         overflow-y: auto;
-        /* background-color: brown; */
-        /* height:auto; */
     }
     .sidenav ul {
         /* overflow-x: hidden; */
@@ -414,11 +404,11 @@
     }
     .sidenav a {
         /* grid-template-columns: auto auto; */
-        background-color: var(--colorsecondary);
-        /* background-color: aqua; */
+        background-color: var(--colorprimary);
         text-decoration: none;
         -webkit-tap-highlight-color: transparent;
         display: block;
+        
     }
     .lil-shrinky {
         transform: scale(0.9);
@@ -429,14 +419,7 @@
         column-gap: 5px;
         padding-inline: 5px;
         padding-block: 5px;
-        /* transform: scale(0.5); */
-        /* margin-top:4px; */
-        /* position: relative; */
-        /* padding:5px; */
-        /* height: 30px; */
-        /* width: 30px; */
-        /* background-color: aqua; */
-        /* flex-grow: 0; */
+        /* background-color: var(--colorsecondary); */
     }
 
     .sideitem span {
@@ -522,13 +505,13 @@
         box-shadow: 2px 2px 0px 0px var(--colorshadow);
         border-radius: 8px;
     }
-    .top :global(.inset-brutal) {
-        /* border: 1px solid transparent; */
-        /* border-radius: 8px; */
-        /* box-shadow: inset 2px 2px 1px 1px var(--colorshadow); */
+    .top :global(.no-top-border){
+        border-top: 0px solid var(--colorshadow);
 
+    }
+    .top :global(.inset-brutal) {
         box-shadow: inset 2px 2px 3px 1px var(--colorshadow);
-        border: 2px solid var(--colorprimary);
+        border: 2px solid var(--colorsecondary);
         border-radius: 9px;
     }
     a:focus,

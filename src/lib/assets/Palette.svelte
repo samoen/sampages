@@ -109,7 +109,7 @@
     svg{
         /* display: grid; */
         /* place-items: center; */
-        position:absolute;
+        /* position:absolute; */
         /* top:50%; */
         /* left:50%; */
         /* top: 0;
@@ -118,10 +118,10 @@
         bottom: 0; */
             /* min-width: 24px;
             min-height: 24px; */
-            max-width: 100%;
-            max-height:100%;
-            width: auto;
-            height:auto;
+            /* max-width: 100%; */
+            /* max-height:100%; */
+            width: 24px;
+            height:24px;
             /* transform: translate(-50%, -50%); */
             padding:var(--pad, 0);
             /* height:4rem; */
