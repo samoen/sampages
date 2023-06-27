@@ -10,7 +10,7 @@
         burgopen,
         mobileMode,
         navSelect,
-        splashTopMargin,
+        lowerSplashTopMargin,
         themeMode,
         themes,
     } from "$lib/stores";
@@ -33,6 +33,7 @@
         mounted = true;
     });
     let msg = 0;
+
 </script>
 
 <div
@@ -45,7 +46,7 @@
     <div
         class="splash brutal-border"
         style="background-image:url({splashimg});"
-        class:lower-border="{$splashTopMargin}"
+        class:lower-border="{$lowerSplashTopMargin}"
     >
         <h1 class="glowing">
             <!-- <img width=70 height=40 src="{pachnor}" alt="peachy" /> -->

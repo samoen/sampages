@@ -197,13 +197,24 @@ export const settingsIconState: Readable<TopBarIconState> = derived([lastEvent, 
 type Lang = 'EN' | 'ES'
 export const selectedLang = writable<Lang>('EN')
 
-export const splashTopMargin = derived([navSelect, burgopen, mobileMode],([$ns, $bo, $mm])=>{
-  if($bo || $ns.sel != 'none'){
-      if(!$mm){
-          return true
-      }
+export const lowerSplashTopMargin = derived([navSelect, burgopen, mobileMode],([$ns, $bo, $mm])=>{
+  if($bo && !$mm){
+    return true
+  }
+  if($ns.sel != 'none'){
+    return true
   }
   return false
+  // return {pad:65, marg:3}
+})
+export const topNavHeight = writable<number>();
+export const mainPadding = derived([topNavHeight, navSelect],([$tnh, $ns])=>{
+  if($tnh > 0){
+    return $tnh + Math.min($tnh,10)
+  }
+  // if($ns.sel != "none"){
+  // }
+  return 0
 })
 
 mobileMode.subscribe((val) => {

@@ -16,6 +16,7 @@
         burgopen,
         contactIconState,
         lastEvent,
+        mainPadding,
         mobileMode,
         navSelect,
         screenWidth,
@@ -25,6 +26,7 @@
         themeMode,
         themes,
         toggleSidebar,
+        topNavHeight,
         topNavOutDuration,
         topbarheight,
         wscrollY,
@@ -45,7 +47,7 @@
             }
         }
         showJsButtons.set(true);
-        lastEvent.set({e: 'layoutMounted'})
+        lastEvent.set({ e: "layoutMounted" });
         // mounted = true;
     });
     // afterNavigate(() => {
@@ -62,7 +64,6 @@
     //         };
     //     }
     // }
-    let topNavHeight = 0;
 </script>
 
 <svelte:head>
@@ -132,7 +133,12 @@
             }}"
             state="{$burgIconState}"
         >
-            <Hamburger size="{1}" padding={5} lilShrink="{$burgopen}" gone="{!$showJsButtons}" />
+            <Hamburger
+                size="{1}"
+                padding="{5}"
+                lilShrink="{$burgopen}"
+                gone="{!$showJsButtons}"
+            />
         </TopBarIcon>
         <span class="barp">SAM OEN</span>
         <!-- {$mobileMode} -->
@@ -143,8 +149,8 @@
             }}"
             state="{$contactIconState}"
         >
-        <Hand
-                padding={5}
+            <Hand
+                padding="{5}"
                 lilShrink="{$navSelect.sel == 'contact'}"
                 gone="{!$showJsButtons}"
             />
@@ -194,14 +200,12 @@
                             class:brutal-border="{$page.url
                                 .pathname != `${base}/`}"
                         >
-                        
                             <div
                                 class="sideitem"
-                                class:lil-shrinky="{$page.url.pathname == `${base}/`}"
+                                class:lil-shrinky="{$page.url
+                                    .pathname == `${base}/`}"
                             >
-                                <Hand 
-                                size="{0.5}" 
-                                />
+                                <Hand size="{0.5}" />
                                 <span>Home Page</span>
                             </div>
                         </a>
@@ -221,9 +225,10 @@
                             }}"
                             href="{base}/about"
                         >
-                            <div 
-                            class="sideitem"
-                            class:lil-shrinky="{$page.url.pathname == `${base}/about`}"
+                            <div
+                                class="sideitem"
+                                class:lil-shrinky="{$page.url
+                                    .pathname == `${base}/about`}"
                             >
                                 <Hand size="{0.5}" />
                                 <span>About</span>
@@ -234,43 +239,41 @@
             </nav>
         </div>
     {/if}
-
-    {#if $navSelect.sel == "settings"}
-        <div
-            class="topnav"
-            bind:clientHeight="{topNavHeight}"
-            in:slide|local="{{
-                duration: DEFAULT_MENU_SLIDE_DURATION,
-            }}"
-            out:slide|local="{{
-                duration: $navSelect.outSpeed,
-            }}"
-            on:outroend="{() => {
-                lastEvent.set({ e: 'menuOut' });
-            }}"
-        >
-            <Settings />
-        </div>
-    {:else if $navSelect.sel == "contact"}
-        <div
-            class="topnav"
-            in:slide|local="{{
-                duration: DEFAULT_MENU_SLIDE_DURATION,
-            }}"
-            out:slide|local="{{
-                duration: $navSelect.outSpeed,
-            }}"
-            on:outroend="{() => {
-                lastEvent.set({ e: 'menuOut' });
-            }}"
-        >
-            <Contact />
-        </div>
-    {/if}
+    {#key $navSelect.sel}
+        {#if $navSelect.sel != "none"}
+            <div
+                class="topnav"
+                bind:clientHeight="{$topNavHeight}"
+                in:slide|global="{{
+                    duration: DEFAULT_MENU_SLIDE_DURATION,
+                }}"
+                out:slide|global="{{
+                    duration: $navSelect.outSpeed,
+                }}"
+                on:outroend="{() => {
+                    lastEvent.set({ e: 'menuOut' });
+                    if ($navSelect.sel == 'none') {
+                        $topNavHeight = 0;
+                    }
+                }}"
+            >
+                {#if $navSelect.sel == "settings"}
+                    <div class="top-nav-selection">
+                        <Settings />
+                    </div>
+                {:else if $navSelect.sel == "contact"}
+                    <div class="top-nav-selection">
+                        <Contact />
+                    </div>
+                {/if}
+            </div>
+        {/if}
+    {/key}
     {#key $page.url.pathname}
         <div
             class="slotandfoot"
             in:fade="{{ duration: 500, delay: 0 }}"
+            style="padding-top:{$mainPadding}px"
         >
             <slot />
             <footer>
@@ -288,7 +291,7 @@
 
     .slotandfoot {
         min-height: 100dvh;
-        padding-top: var(--top-nav-height);
+        /* padding-top: calc(var(--top-nav-height)); */
         display: grid;
         grid-template-rows: 1fr auto;
     }
@@ -347,19 +350,27 @@
         top: calc(var(--topbarheight) + 10px);
         left: calc(var(--sidebar-width-px) + 10px);
         right: 5px;
-        overflow: hidden;
+        /* overflow: hidden; */
+        display: grid;
+        /* grid-template-rows: auto; */
+        /* grid-template-columns: auto; */
         /* display: inline-block; */
         /* vertical-align: top; */
         /* margin-top: 5px; */
         /* margin-left: 25px; */
         max-width: calc(var(--main-width-px) - 10px);
         z-index: 3;
-        padding-inline: 1rem;
-        padding-block: 0.5rem;
+        /* padding-inline: 1rem; */
+        /* padding-block: 0.5rem; */
         border: 2px solid var(--colorshadow);
         border-radius: 7px;
         box-shadow: 2px 2px 1px 0px var(--colorshadow);
         background-color: var(--colorsecondary);
+    }
+    .top-nav-selection {
+        /* position: absolute; */
+        grid-row: 1 / 1;
+        grid-column: 1 / 1;
     }
 
     .sidebar {
@@ -409,9 +420,9 @@
     }
     .sideitem {
         display: flex;
-        align-items:first center;
+        align-items: center;
         column-gap: 5px;
-        padding-inline:5px;
+        padding-inline: 5px;
         padding-block: 5px;
         /* transform: scale(0.5); */
         /* margin-top:4px; */
