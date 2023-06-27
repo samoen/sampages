@@ -197,16 +197,16 @@
                                     }, 50);
                                 }
                             }}"
-                            href="{base}/"
+                            href="{base}"
                             class:inset-brutal="{$page.url.pathname ==
-                                `${base}/`}"
+                                `${base}`}"
                             class:brutal-border="{$page.url
-                                .pathname != `${base}/`}"
+                                .pathname != `${base}`}"
                         >
                             <div
                                 class="sideitem"
                                 class:lil-shrinky="{$page.url
-                                    .pathname == `${base}/`}"
+                                    .pathname == `${base}`}"
                             >
                                 <Hand size="{0.5}" />
                                 <span>Home Page</span>

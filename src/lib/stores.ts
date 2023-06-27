@@ -238,7 +238,5 @@ export const toggleTheme = () => {
 }
 
 export const toggleSidebar = () => {
-  console.log('toggling sidebar')
-
   lastEvent.set({ e: 'burgclick' })
 }
