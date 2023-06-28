@@ -1,7 +1,7 @@
 import { base } from "$app/paths";
-import { derived, get, writable, type Readable } from "svelte/store"
+import { derived, get, writable, type Readable, type Stores } from "svelte/store"
 
-export const DEFAULT_MENU_SLIDE_DURATION = 800;
+export const DEFAULT_MENU_SLIDE_DURATION: number = 800;
 export const WAIT_FOR_MENU_SLIDE = DEFAULT_MENU_SLIDE_DURATION - 200;
 
 export const DEFAULT_COLOR_TRANSITION_DURATION = 600
@@ -10,7 +10,7 @@ export const screenWidth = writable(0)
 export const mobileMode = derived(
   screenWidth,
   $w => {
-    if ($w > 500) {
+    if ($w >= 500) {
       return false
     } else {
       return true
@@ -45,54 +45,60 @@ type UiEvent = { e: UiEventKey }
 export const lastEvent = writable<UiEvent>({ e: 'fresh' })
 
 
-export const burgopen: Readable<boolean> = derived<typeof lastEvent, boolean>(lastEvent, ($le, set, update) => {
-  if ($le.e == 'burgclick') {
-    update((x) => { return !x })
-    return () => { }
-  }
+export const burgopen: Readable<boolean> = derived<Stores, boolean>(
+  [lastEvent],
+  ([$lastEvent], set, update) => {
+    if ($lastEvent.e == 'burgclick') {
+      update((x) => { return !x })
+      return () => { }
+    }
 
-  if ($le.e == 'contactClick' || $le.e == 'settingsClick') {
-    if (get(mobileMode)) {
+    if (($lastEvent.e == 'contactClick' || $lastEvent.e == 'settingsClick') && get(mobileMode)) {
       set(false)
       return () => { }
     }
-  }
-  return () => { }
-}, false)
+    return () => { }
+  },
+  false
+)
 
 
-type Topnavselect = { sel: 'settings' | 'contact' | 'none', outSpeed: number }
-export const navSelect: Readable<Topnavselect> = derived([lastEvent, mobileMode, burgopen], ([$le, $mm, $bo]) => {
-  if ($mm && $bo) {
-    return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION } as Topnavselect
-  }
+type Topnavselect = { sel: 'settings' | 'contact' | 'none', outSpeed?: number }
+export var navSelect: Readable<Topnavselect> =
+  derived<Stores, Topnavselect>([lastEvent, mobileMode, burgopen],
+    ([$lastEvent, $mobileMode, $burgopen], set, update) => {
+      if ($lastEvent.e == 'settingsClick') {
+        update((x) => {
+          if (x.sel == 'none') {
+            return { sel: 'settings', outSpeed: 0 }
+          }
+          if (x.sel == 'contact') {
+            return { sel: 'settings', outSpeed: 0 }
+          }
+          return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION }
+        })
+        return () => { }
+      }
 
-  if ($le.e == 'settingsClick') {
-    if (get(navSelect).sel == 'none') {
-      return { sel: 'settings', outSpeed: 0 } as Topnavselect
-    } else if (get(navSelect).sel == 'contact') {
-      return { sel: 'settings', outSpeed: 0 } as Topnavselect
-    } else if (get(navSelect).sel == 'settings') {
-      return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION } as Topnavselect
-    }
-  }
+      if ($lastEvent.e == 'contactClick') {
+        update((x) => {
+          if (x.sel == 'none') {
+            return { sel: 'contact', outSpeed: 0 }
+          }
+          if (x.sel == 'settings') {
+            return { sel: 'contact', outSpeed: 0 }
+          }
+          return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION }
+        })
+        return () => { }
+      }
 
-  if ($le.e == 'contactClick') {
-    if (get(navSelect).sel == 'none') {
-      return { sel: 'contact', outSpeed: DEFAULT_MENU_SLIDE_DURATION } as Topnavselect
-    } else if (get(navSelect).sel == 'settings') {
-      return { sel: 'contact', outSpeed: 0 } as Topnavselect
-    } else if (get(navSelect).sel == 'contact') {
-      return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION } as Topnavselect
-    }
-  }
-
-  if (get(navSelect)) {
-    return get(navSelect)
-  } else {
-    return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION } as Topnavselect
-  }
-})
+      if ($mobileMode && $burgopen) {
+        set({ sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION })
+        return () => { }
+      }
+      return () => { }
+    }, { sel: 'none', outSpeed: 0 })
 
 export type TopBarColorState = { color: 'transparent' | 'solid' | 'blur', speed: 'instant' | 'slow' }
 export const barColorState: Readable<TopBarColorState> = derived([atTop, burgopen, navSelect], ([$atTop, $burgopen, $navSelect]) => {
@@ -140,24 +146,25 @@ export const settingsIconState: Readable<TopBarIconState> = derived([navSelect, 
 type Lang = 'EN' | 'ES'
 export const selectedLang = writable<Lang>('EN')
 
-export const lowerSplashTopMargin = derived([navSelect, burgopen, mobileMode], ([$ns, $bo, $mm]) => {
+export const lowerSplashTopMargin = derived([navSelect, burgopen, mobileMode], ([$navSelect, $bo, $mm]) => {
   if ($bo && !$mm) {
     return true
   }
-  if ($ns.sel != 'none') {
+  if ($navSelect.sel != 'none') {
     return true
   }
   return false
   // return {pad:65, marg:3}
 })
 export const topNavHeight = writable<number>();
-export const mainPadding = derived([topNavHeight, navSelect], ([$tnh, $ns]) => {
-  if ($tnh > 0) {
-    return $tnh + Math.min($tnh, 10)
-  }
+export const mainPadding = derived([topNavHeight, navSelect], ([$topNavHeight, $ns]) => {
+  // if ($tnh > 0) {
+    // return $tnh + Math.min($tnh, 10)
+  // }
   // if($ns.sel != "none"){
   // }
-  return 0
+  // return 0
+  return $topNavHeight
 }, 0)
 
 export const modBase = base == "" ? "/" : base

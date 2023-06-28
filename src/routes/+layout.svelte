@@ -108,6 +108,7 @@
             on:click="{() => {
                 toggleSidebar();
             }}"
+            aria-hidden="true"
             on:keyup
         ></div>
     {/if}
@@ -412,53 +413,56 @@
         margin-right: auto;
     }
 
-    .shadowclick {
-        position: fixed;
-        top: var(--topbarheight);
-        left: var(--sidebar-width-px);
-        z-index: 3;
-        height: calc(100vh - var(--topbarheight));
-        width: calc(var(--main-width-px));
-        /* background-color: blue; */
-    }
     footer {
         padding-left: 10px;
     }
-
+    
     @media (hover: hover) and (pointer: fine) {
         a:hover {
             background-color: var(--coloritem);
             transition: background-color 0s;
         }
     }
-
+    
     @media only screen and (max-width: 500px) {
-        .top {
-            --main-width-px: 100vw;
-            position: relative;
-        }
-        .slotandfoot {
-            padding-left: 0px;
-        }
-        .shadow {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            background-color: black;
-            opacity: 0.5;
-            z-index: 1;
-        }
+        /* .top { */
+            /* --main-width-px: 100vw; */
+            /* position: relative; */
+            /* } */
+            .slotandfoot {
+                padding-left: 0px;
+            }
+            .shadow {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                background-color: black;
+                opacity: 0.5;
+                z-index: 1;
+            }
+            .shadowclick {
+                position: fixed;
+                top: var(--topbarheight);
+                left: var(--sidebar-width-px);
+                z-index: 3;
+                height: calc(100vh - var(--topbarheight));
+                width: calc(100vw - var(--sidebar-width-px));
+                /* background-color: blue; */
+            }
     }
     @media only screen and (min-width: 500px) {
-        .top {
-            --main-width-px: calc(100vw - var(--sidebar-width-px));
-        }
+        /* .top { */
+            /* --main-width-px: calc(100vw - var(--sidebar-width-px)); */
+        /* } */
         .slotandfoot {
             padding-left: var(--sidebar-width-px);
         }
         .shadow {
+            display: none;
+        }
+        .shadowclick{
             display: none;
         }
     }

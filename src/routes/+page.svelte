@@ -1,22 +1,15 @@
 <script lang="ts">
-    import pachnor from "$lib/assets/pachnor.png";
+    import gamesprites from "$lib/assets/gamesprites.png";
     import wavy from "$lib/assets/wavy.png";
     import wavydark from "$lib/assets/wavydark.png";
-    import xbig from "$lib/assets/xbig.png";
-    import gamesprites from "$lib/assets/gamesprites.png";
-    import Footer from "$lib/components/Footer.svelte";
     import {
-        barColorState,
-        burgopen,
-        mobileMode,
-        navSelect,
         lowerSplashTopMargin,
         themeMode,
         themes,
+        topbarheight
     } from "$lib/stores";
-    import { fade } from "svelte/transition";
     import { onMount } from "svelte";
-    import { derived } from "svelte/store";
+    import { fade } from "svelte/transition";
 
     $: splashimg = $themeMode == themes.dark ? wavydark : wavy;
     let falling = false;
@@ -33,7 +26,6 @@
         mounted = true;
     });
     let msg = 0;
-
 </script>
 
 <div
@@ -45,8 +37,11 @@
 >
     <div
         class="splash brutal-border"
-        style="background-image:url({splashimg});"
-        class:lower-border="{$lowerSplashTopMargin}"
+        style="background-image:url({splashimg});
+         margin-top:{$lowerSplashTopMargin
+            ? $topbarheight + 10
+            : 3}px;
+         padding-top:{$lowerSplashTopMargin ? 15 : 65}px"
     >
         <h1 class="glowing">
             <!-- <img width=70 height=40 src="{pachnor}" alt="peachy" /> -->
@@ -58,15 +53,13 @@
         </p>
         <!-- bind:this="{gagEl}" -->
         <div
-        class="gag"
-        bind:clientHeight="{gagHeight}"
-        class:fixed-min-height="{clickedCall && !gagFinished}"
-        class:min-height-transition="{gagFinished}"
+            class="gag"
+            bind:clientHeight="{gagHeight}"
+            class:fixed-min-height="{clickedCall && !gagFinished}"
+            class:min-height-transition="{gagFinished}"
         >
-        {#if !clickedCall}
-        <div 
-        class="gagstart"
-                >
+            {#if !clickedCall}
+                <div class="gagstart">
                     <p class="gag-start-text">
                         But you hunger.. you crave. You long for
                         something to click. Languish no longer, dear
@@ -82,7 +75,7 @@
                             buty = r.top + scrollY;
 
                             // gagHeight = gagEl.clientHeight;
-                            gagMsgsHeight = gagHeight
+                            gagMsgsHeight = gagHeight;
                             falling = true;
                             clickedCall = true;
                             msg++;
@@ -97,11 +90,11 @@
                     >
                 </div>
             {:else}
-            <!-- class:gag-height="{msg > 2}" -->
-            <!-- class:gag-height="{gagMsgsHeight != 0}" -->
-                <div 
-                class="gagmsgs"
-                class:text-align-left="{gagFinished}"
+                <!-- class:gag-height="{msg > 2}" -->
+                <!-- class:gag-height="{gagMsgsHeight != 0}" -->
+                <div
+                    class="gagmsgs"
+                    class:text-align-left="{gagFinished}"
                 >
                     {#if msg == 1}
                         <p
@@ -116,7 +109,7 @@
                                 duration: 500,
                             }}"
                             on:outroend="{() => {
-                                    msg++;
+                                msg++;
                             }}"
                         >
                             Oops!
@@ -136,12 +129,12 @@
                                 duration: 500,
                             }}"
                             on:outroend="{() => {
-                                    msg++;
-                                    gagFinished = true
+                                msg++;
+                                gagFinished = true;
                             }}"
                         >
-                            That button is experiencing transformational..
-                            ah.. maintenance.
+                            That button is experiencing
+                            transformational.. ah.. maintenance.
                         </p>
                     {:else if msg == 5}
                         <p
@@ -157,21 +150,21 @@
                         </p>
                     {/if}
                 </div>
-                {/if}
-            </div>
+            {/if}
         </div>
-        {#if falling}
-            <button
-                class="fallingbutton"
-                class:falling="{falling}"
-                class:trans="{doneFalling}"
-                on:animationend="{(e) => {
-                    falling = false;
-                }}"
-            >
-                Heed the Call!</button
-            >
-        {/if}
+    </div>
+    {#if falling}
+        <button
+            class="fallingbutton"
+            class:falling="{falling}"
+            class:trans="{doneFalling}"
+            on:animationend="{(e) => {
+                falling = false;
+            }}"
+        >
+            Heed the Call!</button
+        >
+    {/if}
 
     <img
         class="normalimg brutal-border"
@@ -184,9 +177,10 @@
     <p>
         Are you tired of humdrum, run-of-the-mill websites that lack
         the cognitive surplus to leverage synergistic optimization?
-        Fear not, for we have the ultimate solution to these pseudointellectual cravings. Our state-of-the-art
-        platform is meticulously engineered to harmonize seamless
-        scalability with disruptive hyper-convergence.
+        Fear not, for we have the ultimate solution to these
+        pseudointellectual cravings. Our state-of-the-art platform is
+        meticulously engineered to harmonize seamless scalability with
+        disruptive hyper-convergence.
     </p>
     <p>
         Oh, and did we mention the cloud? Yes, we have harnessed the
@@ -205,8 +199,6 @@
     .splash {
         padding-inline: 3vw;
         padding-bottom: 20px;
-        padding-top: 65px;
-        margin-top: 3px;
         margin-bottom: 20px;
         background-repeat: no-repeat;
         background-size: cover;
@@ -214,14 +206,11 @@
         transition: margin-top 500ms ease-in-out,
             padding-top 500ms ease-in-out;
     }
-    .lower-border {
-        padding-top: 15px;
-        margin-top: 73px;
-    }
+
     .gag {
         min-height: 0px;
     }
-    .min-height-transition{
+    .min-height-transition {
         transition: min-height 1s ease-in-out;
     }
     .gagstart {
@@ -249,14 +238,14 @@
     }
     .gagmsgs {
         display: grid;
-        align-items:center;
+        align-items: center;
         justify-items: center;
         text-align: center;
         height: 100%;
     }
-    .text-align-left{
+    .text-align-left {
         text-align: left;
-        align-items:flex-start;
+        align-items: flex-start;
         justify-items: left;
     }
     .fixed-min-height {
