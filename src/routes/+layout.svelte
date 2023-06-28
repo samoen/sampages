@@ -1,11 +1,10 @@
 <script lang="ts">
-    import { preloadData } from "$app/navigation";
+    import { afterNavigate, preloadData } from "$app/navigation";
     import { base } from "$app/paths";
     import { page } from "$app/stores";
     import Gear from "$lib/assets/Gear.svelte";
     import Hamburger from "$lib/assets/Hamburger.svelte";
     import Hand from "$lib/assets/Hand.svelte";
-    import Palette from "$lib/assets/Palette.svelte";
     import Contact from "$lib/components/Contact.svelte";
     import Settings from "$lib/components/Settings.svelte";
     import TopBarIcon from "$lib/components/TopBarIcon.svelte";
@@ -28,7 +27,6 @@
         themes,
         toggleSidebar,
         topNavHeight,
-        topNavOutDuration,
         topbarheight,
         wscrollY,
     } from "$lib/stores";
@@ -52,23 +50,14 @@
         lastEvent.set({ e: "layoutMounted" });
         // mounted = true;
     });
-    // $: {
-    //     console.log($page.url.pathname);
-    // }
-    // afterNavigate(() => {
-    // window.scrollTo(0, 0);
-    // });
+
+    afterNavigate((e) => {
+        if ($mobileMode && $burgopen) {
+            toggleSidebar();
+        }
+    });
 
     // let preloadedImages = [xbig, biggy];
-    // function mayslide(node: Element) {
-    //     if ($topnavshouldslideaway) {
-    //         return slide(node, { delay: 0, duration: 300 });
-    //     } else {
-    //         return {
-    //             duration: 0,
-    //         };
-    //     }
-    // }
 </script>
 
 <svelte:head>
@@ -128,7 +117,8 @@
         class="topbar"
         class:transpar="{$barColorState.color == 'transparent'}"
         class:solidbar="{$barColorState.color == 'solid'}"
-        class:brutal-border="{$barColorState.color == 'solid' || $barColorState.color == 'blur'}"
+        class:brutal-border="{$barColorState.color == 'solid' ||
+            $barColorState.color == 'blur'}"
         class:blurbar="{$barColorState.color == 'blur'}"
         class:quick-transition="{$barColorState.speed == 'instant'}"
         bind:clientHeight="{$topbarheight}"
@@ -148,10 +138,9 @@
             />
         </TopBarIcon>
         <span class="barp">SAM OEN</span>
-        <!-- {$mobileMode} -->
+        <!-- {$wscrollY} -->
         <TopBarIcon
             push="{() => {
-                // toggleContact();
                 lastEvent.set({ e: 'contactClick' });
             }}"
             state="{$contactIconState}"
@@ -164,7 +153,6 @@
         </TopBarIcon>
         <TopBarIcon
             push="{() => {
-                // toggleSettings();
                 lastEvent.set({ e: 'settingsClick' });
             }}"
             state="{$settingsIconState}"
@@ -186,7 +174,7 @@
                 axis: 'x',
             }}"
             on:outroend="{() => {
-                if(!$burgopen){
+                if (!$burgopen) {
                     $sidebarwidth = 0;
                 }
                 lastEvent.set({ e: 'menuOut' });
@@ -196,13 +184,6 @@
                 <ul>
                     <li>
                         <a
-                            on:click="{() => {
-                                if ($mobileMode && $burgopen) {
-                                    setTimeout(() => {
-                                        toggleSidebar();
-                                    }, 50);
-                                }
-                            }}"
                             href="{modBase}"
                             class:inset-brutal="{$page.url.pathname ==
                                 `${modBase}`}"
@@ -221,18 +202,11 @@
                     </li>
                     <li>
                         <a
+                            href="{base}/about"
                             class:inset-brutal="{$page.url.pathname ==
                                 `${base}/about`}"
                             class:brutal-border="{$page.url
                                 .pathname != `${base}/about`}"
-                            on:click="{() => {
-                                if ($mobileMode && $burgopen) {
-                                    setTimeout(() => {
-                                        toggleSidebar();
-                                    }, 50);
-                                }
-                            }}"
-                            href="{base}/about"
                         >
                             <div
                                 class="sideitem"
@@ -295,18 +269,17 @@
 
 <style>
     .top {
-        
     }
 
     .slotandfoot {
-        min-height: 100dvh;
+        min-height: 100vh;
         /* padding-top: calc(var(--top-nav-height)); */
         display: grid;
         grid-template-rows: 1fr auto;
     }
     .topbar {
         position: fixed;
-        top: 0;
+        top: 0px;
         left: 3px;
         right: 4px;
         z-index: 2;
@@ -403,12 +376,10 @@
     .sidenav li {
     }
     .sidenav a {
-        /* grid-template-columns: auto auto; */
         background-color: var(--colorprimary);
         text-decoration: none;
         -webkit-tap-highlight-color: transparent;
         display: block;
-        
     }
     .lil-shrinky {
         transform: scale(0.9);
@@ -505,9 +476,8 @@
         box-shadow: 2px 2px 0px 0px var(--colorshadow);
         border-radius: 8px;
     }
-    .top :global(.no-top-border){
+    .top :global(.no-top-border) {
         border-top: 0px solid var(--colorshadow);
-
     }
     .top :global(.inset-brutal) {
         box-shadow: inset 2px 2px 3px 1px var(--colorshadow);
@@ -535,6 +505,7 @@
     :global(html) {
         transition: background-color 1s ease-in-out;
         box-sizing: border-box;
+        /* scroll-behavior: smooth; */
     }
 
     :global(*, *:before, *:after) {

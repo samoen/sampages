@@ -216,7 +216,7 @@ export const mainPadding = derived([topNavHeight, navSelect],([$tnh, $ns])=>{
   // if($ns.sel != "none"){
   // }
   return 0
-})
+},0)
 
 export const modBase = base == "" ? "/" : base
 

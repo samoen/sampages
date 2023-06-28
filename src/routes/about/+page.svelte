@@ -1,11 +1,21 @@
-<script>
+<script lang='ts'>
     import biggy from "$lib/assets/biggy.png";
     import Footer from "$lib/components/Footer.svelte";
     import { onMount } from "svelte";
 
-    // onMount(() => {});
-</script>
+    // let dum:HTMLElement;
+    onMount(() => {
+        console.log('about mounted')
+        // setTimeout(()=>{
+        //     window.scrollTo(0,1)
 
+        // },500)
+        // dum?.scrollIntoView();
+
+    });
+    
+</script>
+<!-- <div bind:this={dum} class="dum"></div> -->
 <div class="cont">
     <h1>About</h1>
     <p>Made with &hearts; by Sam Oen</p>

@@ -114,15 +114,11 @@
                             }}"
                             out:fade="{{
                                 duration: 500,
-                                // delay: 1000,
                             }}"
                             on:outroend="{() => {
-                                // setTimeout(() => {
                                     msg++;
-                                // }, 1000);
                             }}"
                         >
-                            <!-- on:outroend="{()=>msg++}" -->
                             Oops!
                         </p>
                     {:else if msg == 3}
@@ -130,7 +126,6 @@
                             class="grid1"
                             in:fade="{{
                                 duration: 2000,
-                                // delay: 1500,
                             }}"
                             on:introend="{() => {
                                 setTimeout(() => {
@@ -201,7 +196,6 @@
         packets, granting you an ethereal connection that defies the
         boundaries of physicality.
     </p>
-    <!-- <Footer></Footer> -->
 </div>
 
 <style>
