@@ -40,14 +40,13 @@ export const topBarTransitionQuick = writable(false)
 export const showJsButtons = writable(false)
 export const topNavOutDuration = writable(DEFAULT_MENU_SLIDE_DURATION)
 
-type UiEventKey = 'fresh' | 'layoutMounted' | 'burgclick' | 'contactClick' | 'settingsClick' | 'reachedTop' | 'menuOut' | 'scrolled' | 'wentMobile'
+type UiEventKey = 'fresh' | 'burgclick' | 'contactClick' | 'settingsClick' | 'reachedTop' | 'menuOut' | 'scrolled' | 'wentMobile'
 type UiEvent = { e: UiEventKey }
 export const lastEvent = writable<UiEvent>({ e: 'fresh' })
 
 export type TopBarColorState = { color: 'transparent' | 'solid' | 'blur', speed: 'instant' | 'slow' }
 
 export const barColorState: Readable<TopBarColorState> = derived([lastEvent], ([$le]) => {
-
   if (get(atTop) && noMenusOpen() && $le.e == 'scrolled') {
     return { color: 'transparent', speed: 'slow' } satisfies TopBarColorState
   }
@@ -68,13 +67,10 @@ export const barColorState: Readable<TopBarColorState> = derived([lastEvent], ([
     return { color: 'solid', speed: 'instant' } satisfies TopBarColorState
   }
   return get(barColorState)
-})
+},{color:'transparent',speed:'instant'})
 
 
 export const burgopen: Readable<boolean> = derived<typeof lastEvent, boolean>(lastEvent, ($le) => {
-  if ($le.e == 'layoutMounted') {
-    return false
-  }
   if ($le.e == 'burgclick' && !get(burgopen)) {
     return true
   }
@@ -87,7 +83,7 @@ export const burgopen: Readable<boolean> = derived<typeof lastEvent, boolean>(la
     }
   }
   return get(burgopen)
-})
+},false)
 
 function noMenusOpen() {
   return !get(burgopen) && get(navSelect).sel == 'none'

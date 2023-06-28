@@ -34,7 +34,6 @@
     import { fade, slide } from "svelte/transition";
 
     // export let data;
-    // $croute = data.currentRoute;
 
     let preloadableRoutes = [modBase, `${base}/about`];
     // let mounted = false;
@@ -47,7 +46,6 @@
             }
         }
         showJsButtons.set(true);
-        lastEvent.set({ e: "layoutMounted" });
         // mounted = true;
     });
 
@@ -55,6 +53,7 @@
         if ($mobileMode && $burgopen) {
             toggleSidebar();
         }
+        window.scrollTo(0,1)
     });
 
     // let preloadedImages = [xbig, biggy];
