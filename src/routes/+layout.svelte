@@ -224,7 +224,7 @@
     {#key $navSelect.sel}
         {#if $navSelect.sel != "none"}
             <div
-                class="topnav brutal-border no-top-border"
+                class="topnav brutal-border"
                 bind:clientHeight="{$topNavHeight}"
                 in:slide|global="{{
                     duration: DEFAULT_MENU_SLIDE_DURATION,
@@ -330,7 +330,7 @@
 
     .topnav {
         position: fixed;
-        top: calc(var(--topbarheight) + 5px);
+        top: calc(var(--topbarheight) + 2px);
         left: calc(var(--sidebar-width-px) + 3px);
         right: 4px;
         display: grid;

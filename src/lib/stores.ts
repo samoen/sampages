@@ -44,54 +44,22 @@ type UiEventKey = 'fresh' | 'burgclick' | 'contactClick' | 'settingsClick' | 're
 type UiEvent = { e: UiEventKey }
 export const lastEvent = writable<UiEvent>({ e: 'fresh' })
 
-export type TopBarColorState = { color: 'transparent' | 'solid' | 'blur', speed: 'instant' | 'slow' }
 
-export const barColorState: Readable<TopBarColorState> = derived([lastEvent], ([$le]) => {
-  if (get(atTop) && noMenusOpen() && $le.e == 'scrolled') {
-    return { color: 'transparent', speed: 'slow' } satisfies TopBarColorState
-  }
-  if (get(atTop) && noMenusOpen() && $le.e == 'menuOut') {
-    return { color: 'transparent', speed: 'slow' } satisfies TopBarColorState
-  }
-  if (!get(atTop) && noMenusOpen() && $le.e == 'menuOut') {
-    return { color: 'blur', speed: 'slow' } satisfies TopBarColorState
-  }
-  if ($le.e == 'burgclick' || $le.e == 'settingsClick' || $le.e == 'contactClick') {
-    return { color: 'solid', speed: 'instant' } satisfies TopBarColorState
+export const burgopen: Readable<boolean> = derived<typeof lastEvent, boolean>(lastEvent, ($le, set, update) => {
+  if ($le.e == 'burgclick') {
+    update((x) => { return !x })
+    return () => { }
   }
 
-  if (!get(atTop) && noMenusOpen() && $le.e == 'scrolled') {
-    return { color: 'blur', speed: 'slow' } satisfies TopBarColorState
-  }
-  if (!noMenusOpen()) {
-    return { color: 'solid', speed: 'instant' } satisfies TopBarColorState
-  }
-  return get(barColorState)
-},{color:'transparent',speed:'instant'})
-
-
-export const burgopen: Readable<boolean> = derived<typeof lastEvent, boolean>(lastEvent, ($le) => {
-  if ($le.e == 'burgclick' && !get(burgopen)) {
-    return true
-  }
-  if ($le.e == 'burgclick' && get(burgopen)) {
-    return false
-  }
-  if (get(mobileMode)) {
-    if ($le.e == 'contactClick' || $le.e == 'settingsClick') {
-      return false
+  if ($le.e == 'contactClick' || $le.e == 'settingsClick') {
+    if (get(mobileMode)) {
+      set(false)
+      return () => { }
     }
   }
-  return get(burgopen)
-},false)
+  return () => { }
+}, false)
 
-function noMenusOpen() {
-  return !get(burgopen) && get(navSelect).sel == 'none'
-}
-
-export type TopBarIconColor = 'solid' | 'transparent' | 'inset'
-export type TransitionSpeed = 'instant' | 'slow'
-export type TopBarIconState = { color: TopBarIconColor, transition: TransitionSpeed }
 
 type Topnavselect = { sel: 'settings' | 'contact' | 'none', outSpeed: number }
 export const navSelect: Readable<Topnavselect> = derived([lastEvent, mobileMode, burgopen], ([$le, $mm, $bo]) => {
@@ -125,99 +93,77 @@ export const navSelect: Readable<Topnavselect> = derived([lastEvent, mobileMode,
     return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION } as Topnavselect
   }
 })
-function computeTopBarIconState(ev: UiEventKey) {
-  if (ev == 'scrolled') {
-    if (!get(atTop) && noMenusOpen()) {
-      return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
-    }
-    if (get(atTop) && noMenusOpen()) {
-      return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
-    }
-  }
-  if (ev == 'menuOut') {
-    if (!get(atTop) && noMenusOpen()) {
-      return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
-    }
-    if (get(atTop) && noMenusOpen()) {
-      return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
-    }
-  }
-  return null
-}
 
-export const burgIconState: Readable<TopBarIconState> = derived([lastEvent, burgopen, barColorState], ([$le, $bo, $bcs]) => {
-  let next = computeTopBarIconState($le.e);
-  if (next) {
-    return next
+export type TopBarColorState = { color: 'transparent' | 'solid' | 'blur', speed: 'instant' | 'slow' }
+export const barColorState: Readable<TopBarColorState> = derived([atTop, burgopen, navSelect], ([$atTop, $burgopen, $navSelect]) => {
+  if ($burgopen || $navSelect.sel != 'none') {
+    return { color: 'solid', speed: 'instant' } satisfies TopBarColorState
   }
+  if ($atTop) {
+    return { color: 'transparent', speed: 'slow' } satisfies TopBarColorState
+  }
+  return { color: 'blur', speed: 'slow' } satisfies TopBarColorState
+}, { color: 'transparent', speed: 'instant' } as TopBarColorState)
+
+export type TopBarIconColor = 'solid' | 'transparent' | 'inset'
+export type TransitionSpeed = 'instant' | 'slow'
+export type TopBarIconState = { color: TopBarIconColor, transition: TransitionSpeed }
+export const burgIconState: Readable<TopBarIconState> = derived([burgopen, barColorState], ([$bo, $bcs]) => {
   if ($bo) {
     return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
   }
-  if ($le.e == 'burgclick') {
-    if (!$bo) {
-      return { color: 'transparent', transition: 'instant' } satisfies TopBarIconState
-    }
+  if ($bcs.color == 'blur') {
+    return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
   }
-  if ($bcs.color == 'solid') {
-    return { color: 'transparent', transition: 'instant' } satisfies TopBarIconState
-  }
-  return get(burgIconState)
+  return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
 })
-export const contactIconState: Readable<TopBarIconState> = derived([lastEvent, navSelect, barColorState], ([$le, $ns, $bcs]) => {
-  let next = computeTopBarIconState($le.e);
-  if (next) {
-    return next
-  }
+export const contactIconState: Readable<TopBarIconState> = derived([navSelect, barColorState], ([$ns, $bcs]) => {
   if ($ns.sel == 'contact') {
-    return { color: 'inset', transition: 'instant' } as TopBarIconState
+    return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
   }
-  if ($bcs.color == 'solid') {
-    return { color: 'transparent', transition: 'instant' } as TopBarIconState
+  if ($bcs.color == 'blur') {
+    return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
   }
-  return get(contactIconState)
+  return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
 })
-export const settingsIconState: Readable<TopBarIconState> = derived([lastEvent, navSelect, barColorState], ([$le, $ns, $bcs]) => {
-  let next = computeTopBarIconState($le.e);
-  if (next) {
-    return next
-  }
+export const settingsIconState: Readable<TopBarIconState> = derived([navSelect, barColorState], ([$ns, $bcs]) => {
   if ($ns.sel == 'settings') {
-    return { color: 'inset', transition: 'instant' } as TopBarIconState
+    return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
   }
-  if ($bcs.color == 'solid') {
-    return { color: 'transparent', transition: 'instant' } as TopBarIconState
+  if ($bcs.color == 'blur') {
+    return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
   }
-  return get(settingsIconState)
+  return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
 })
 
 
 type Lang = 'EN' | 'ES'
 export const selectedLang = writable<Lang>('EN')
 
-export const lowerSplashTopMargin = derived([navSelect, burgopen, mobileMode],([$ns, $bo, $mm])=>{
-  if($bo && !$mm){
+export const lowerSplashTopMargin = derived([navSelect, burgopen, mobileMode], ([$ns, $bo, $mm]) => {
+  if ($bo && !$mm) {
     return true
   }
-  if($ns.sel != 'none'){
+  if ($ns.sel != 'none') {
     return true
   }
   return false
   // return {pad:65, marg:3}
 })
 export const topNavHeight = writable<number>();
-export const mainPadding = derived([topNavHeight, navSelect],([$tnh, $ns])=>{
-  if($tnh > 0){
-    return $tnh + Math.min($tnh,10)
+export const mainPadding = derived([topNavHeight, navSelect], ([$tnh, $ns]) => {
+  if ($tnh > 0) {
+    return $tnh + Math.min($tnh, 10)
   }
   // if($ns.sel != "none"){
   // }
   return 0
-},0)
+}, 0)
 
 export const modBase = base == "" ? "/" : base
 
 mobileMode.subscribe((val) => {
-  if(val){
+  if (val) {
     lastEvent.set({ e: 'wentMobile' })
   }
 })
