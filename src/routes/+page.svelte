@@ -2,6 +2,7 @@
     import gamesprites from "$lib/assets/gamesprites.png";
     import wavy from "$lib/assets/wavy.png";
     import wavydark from "$lib/assets/wavydark.png";
+    import ImageTextCard from "$lib/components/ImageTextCard.svelte";
     import {
         lowerSplashTopMargin,
         themeMode,
@@ -67,8 +68,8 @@
                         <span class="">CALL TO ACTION:</span>
                     </p>
                     <button
+                        class="press-me"
                         bind:this="{gagbut}"
-                        class:glowing-border="{true}"
                         on:click="{() => {
                             let r = gagbut.getBoundingClientRect();
                             butx = r.left;
@@ -90,8 +91,6 @@
                     >
                 </div>
             {:else}
-                <!-- class:gag-height="{msg > 2}" -->
-                <!-- class:gag-height="{gagMsgsHeight != 0}" -->
                 <div
                     class="gagmsgs"
                     class:text-align-left="{gagFinished}"
@@ -166,35 +165,44 @@
         >
     {/if}
 
-    <img
+    <!-- <img
         class="normalimg brutal-border"
         width="400"
         height="200"
         src="{gamesprites}"
         alt="a squiggle"
-    />
+    /> -->
+
+    <ImageTextCard>
+        <span>
+            Are you tired of humdrum, run-of-the-mill websites that lack
+            the cognitive surplus to leverage synergistic optimization?
+            Fear not, for we have the ultimate solution to these
+            pseudointellectual cravings. Our state-of-the-art platform is
+            meticulously engineered to harmonize seamless scalability with
+            disruptive hyper-convergence.
+        </span>
+        <br>
+        <span>
+            Oh, and did we mention the cloud? Yes, we have harnessed the
+            boundless power of cloud computing to transcend the limits of
+            terrestrial computing. Our servers float high above,
+            majestically showering you with a mystical rain of data
+            packets, granting you an ethereal connection that defies the
+            boundaries of physicality.
+        </span>
+    </ImageTextCard>
+    
     <br />
     <p>
-        Are you tired of humdrum, run-of-the-mill websites that lack
-        the cognitive surplus to leverage synergistic optimization?
-        Fear not, for we have the ultimate solution to these
-        pseudointellectual cravings. Our state-of-the-art platform is
-        meticulously engineered to harmonize seamless scalability with
-        disruptive hyper-convergence.
     </p>
     <p>
-        Oh, and did we mention the cloud? Yes, we have harnessed the
-        boundless power of cloud computing to transcend the limits of
-        terrestrial computing. Our servers float high above,
-        majestically showering you with a mystical rain of data
-        packets, granting you an ethereal connection that defies the
-        boundaries of physicality.
     </p>
 </div>
 
 <style>
     .container {
-        padding-inline: 3vw;
+        padding-inline: calc(3vw);
     }
     .splash {
         padding-inline: 3vw;
@@ -334,8 +342,8 @@
         animation-timing-function: linear;
         /* position: relative; */
     }
-    .glowing-border {
-        animation: glowing-border 1600ms infinite;
+    .press-me {
+        animation: press-me 1600ms infinite;
         /* animation-direction:alternate-reverse; */
         /* animation-timing-function:ease-in-out; */
         /* animation-fill-mode:both; */
@@ -361,18 +369,15 @@
             transform: scale(1);
         }
     }
-    @keyframes glowing-border {
-        0% {
+    @keyframes press-me {
+        0%,20% {
             /* box-shadow: none; */
             box-shadow: 3px 3px 0px 0px var(--colorshadow);
             /* border-color: var(--colorprimary); */
             /* border-color: transparent; */
             /* box-shadow: none; */
         }
-        20% {
-            box-shadow: 3px 3px 0px 0px var(--colorshadow);
-            /* box-shadow: none; */
-        }
+
         30% {
             box-shadow: none;
             /* border-color: var(--colorsecondary); */
@@ -392,14 +397,11 @@
             /* box-shadow: 3px 3px 0px 1px var(--colorshadow); */
             /* font-size: x-small; */
         }
-        53% {
+        53%,100% {
             box-shadow: 3px 3px 0px 0px var(--colorshadow);
             /* border-color: transparent; */
             /* font-size: x-small; */
             /* color: darkgreen; */
-        }
-        100% {
-            box-shadow: 3px 3px 0px 0px var(--colorshadow);
         }
     }
     @keyframes glowing {
@@ -447,7 +449,7 @@
 
     .container > p {
         display: block;
-        max-width: clamp(0px, 80%, 700px);
+        max-width: clamp(0px, 85%, 200ch);
         margin-inline: auto;
         margin-top: 1em;
     }
