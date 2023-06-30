@@ -323,7 +323,8 @@
         white-space: nowrap;
         user-select: none;
         font-size: 1.4rem;
-        font-family: "Impact";
+        font-family:monospace;
+        font-weight: bold;
         color: var(--colortext);
         flex-grow: 1;
         text-align: center;
@@ -349,12 +350,13 @@
         position: fixed;
         top: calc(var(--topbarheight) + 2px);
         left: 4px;
+        bottom:0px;
         z-index: 2;
         background-color: var(--colorsecondary);
         overflow-x: hidden;
         overflow-y: hidden;
-        height: calc(100dvh - var(--topbarheight) - 5px);
-        transition: height 100ms ease-in-out;
+        /* height: calc(100dvh - var(--topbarheight) - 5px); */
+        /* transition: height 100ms ease-in-out; */
     }
 
     .sidenav {

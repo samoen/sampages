@@ -43,7 +43,6 @@
         from its dynamic atmosphere and the beauty of Western
         Australia's surroundings.
     </p>
-    <br />
     <p>
         With a solid foundation in software engineering principles and
         a genuine passion for his work, Sam continues to push
@@ -62,12 +61,13 @@
         /* background-color: aqua; */
         --textwidth: 300px;
         --maximagewidth: 600px;
-        container: conty / inline-size;
+        /* container: conty / inline-size; */
     }
     .cont > p {
         display: block;
         margin-inline: auto;
         max-width: 120rch;
+        margin-bottom: 1rem;
     }
     .cont > h1 {
         display: block;
@@ -88,7 +88,7 @@
         background-color: var(--colorsecondary);
     }
 
-    @container conty (min-width: 600px) {
+    @media only screen and (min-width: 600px) {
         .imgwithtext {
             margin-left: auto;
             margin-right: auto;
@@ -115,13 +115,12 @@
             width: var(--textwidth);
         }
     }
-    @container conty (max-width: 600px) {
+    /* @container conty (max-width: 600px) { */
+    @media only screen and (max-width: 600px) {
         .myimgcont {
-            /* text-align: center; */
         }
         .myimg {
             display: block;
-            /* max-width: 300px; */
             max-height: 100px;
             width: clamp(0px, 100%, 600px);
             margin-inline: auto;
