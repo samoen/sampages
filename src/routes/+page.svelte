@@ -174,29 +174,29 @@
     /> -->
 
     <ImageTextCard>
-        <span>
-            Are you tired of humdrum, run-of-the-mill websites that lack
-            the cognitive surplus to leverage synergistic optimization?
-            Fear not, for we have the ultimate solution to these
-            pseudointellectual cravings. Our state-of-the-art platform is
-            meticulously engineered to harmonize seamless scalability with
-            disruptive hyper-convergence.
-        </span>
+        <h1>Fun Designs 
+        </h1>
         <br>
         <span>
-            Oh, and did we mention the cloud? Yes, we have harnessed the
-            boundless power of cloud computing to transcend the limits of
-            terrestrial computing. Our servers float high above,
-            majestically showering you with a mystical rain of data
-            packets, granting you an ethereal connection that defies the
-            boundaries of physicality.
+            Solid Fundamentals
         </span>
     </ImageTextCard>
     
     <br />
     <p>
+        Are you tired of humdrum, run-of-the-mill websites that lack
+        the cognitive surplus to leverage synergistic optimization?
+        Fear not, for we have the solution. Our state-of-the-art platform is
+        meticulously engineered to harmonize seamless scalability with
+        disruptive hyper-convergence.
     </p>
     <p>
+        Oh, and did we mention the cloud? Yes, we have harnessed the
+        boundless power of cloud computing to transcend the limits of
+        terrestrial computing. Our servers float high above,
+        majestically showering you with a mystical rain of data
+        packets, granting you an ethereal connection that defies the
+        boundaries of physicality.
     </p>
 </div>
 
@@ -214,7 +214,10 @@
         transition: margin-top 500ms ease-in-out,
             padding-top 500ms ease-in-out;
     }
-
+    h1{
+        font-size:1.0rem;
+        text-wrap:balance;
+    }
     .gag {
         min-height: 0px;
     }
@@ -327,6 +330,7 @@
         transition: background-color 700ms, color 700ms,
             box-shadow 700ms;
         color: var(--colortext);
+        z-index:3;
     }
     .trans {
         color: transparent;

@@ -61,7 +61,7 @@
         grid-column: 1 / 1;
         height:100%;
         width: 100%;
-        z-index: 2;
+        z-index: 0;
     }
     
     img {
@@ -91,8 +91,8 @@
         padding-left:5px;
         /* justify-content: center; */
         /* text-align: center; */
-        min-width: 40ch;
-        max-width: 100ch;
+        min-width: 50px;
+        max-width: 200px;
     }
     .text > span {
     /* background-color: aqua; */
