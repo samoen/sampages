@@ -34,7 +34,7 @@
 <style>
     .baricon {
         touch-action: none;
-        background-color: var(--colorsecondary);
+        background-color: var(--colorpressed);
         display: flex;
         align-items: center;
         justify-content: center;

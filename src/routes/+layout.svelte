@@ -53,7 +53,7 @@
         if ($mobileMode && $burgopen) {
             toggleSidebar();
         }
-        window.scrollTo(0,1)
+        window.scrollTo(0, 1);
     });
 
     // let preloadedImages = [xbig, biggy];
@@ -68,9 +68,10 @@
                 --colorprimary: wheat;
                 --colorsecondary: beige;
                 --colortext: black;
-                --coloritem: limegreen;
+                --coloritem: blanchedalmond;
+                --colorpressed: bisque;
                 --colorshadow: black;
-                --colorlight: white;
+                --colorlight: antiquewhite;
             }
         </style>
     {:else}
@@ -80,6 +81,7 @@
                 --colorsecondary: cadetblue;
                 --coloritem: teal;
                 --colortext: white;
+                --colorpressed: burlywood;
                 --colorshadow: black;
                 --colorlight: gray;
             }
@@ -202,12 +204,14 @@
                     </li>
                     <li>
                         <a
-                            href="{base}/about"
-                            class:inset-brutal="{$page.url.pathname ==
+                        href="{base}/about"
+                        class:brutal-border="{$page.url
+                            .pathname != `${base}/about`}"
+                        class:inset-brutal="{$page.url.pathname ==
                                 `${base}/about`}"
-                            class:brutal-border="{$page.url
-                                .pathname != `${base}/about`}"
                         >
+                        <!-- style:background-color={$page.url
+                            .pathname == `${base}/about`? 'var(--colorpressed)' : 'var(--colorlight)'} -->
                             <div
                                 class="sideitem"
                                 class:lil-shrinky="{$page.url
@@ -307,7 +311,7 @@
         /* box-shadow: 2px 2px 1px 0px var(--colorshadow); */
     }
     .solidbar {
-        background-color: var(--colorsecondary);
+        background-color: var(--coloritem);
         /* border: 2px solid var(--colorshadow); */
         /* box-shadow: 2px 2px 1px 0px var(--colorshadow); */
     }
@@ -323,7 +327,7 @@
         white-space: nowrap;
         user-select: none;
         font-size: 1.4rem;
-        font-family:monospace;
+        font-family: monospace;
         font-weight: bold;
         color: var(--colortext);
         flex-grow: 1;
@@ -338,7 +342,7 @@
         display: grid;
         overflow: hidden;
         z-index: 3;
-        background-color: var(--colorsecondary);
+        background-color: var(--coloritem);
     }
     .top-nav-selection {
         /* position: absolute; */
@@ -350,9 +354,9 @@
         position: fixed;
         top: calc(var(--topbarheight) + 2px);
         left: 4px;
-        bottom:0px;
+        bottom: 6px;
         z-index: 2;
-        background-color: var(--colorsecondary);
+        background-color: var(--coloritem);
         overflow-x: hidden;
         overflow-y: hidden;
         /* height: calc(100dvh - var(--topbarheight) - 5px); */
@@ -378,7 +382,7 @@
     .sidenav li {
     }
     .sidenav a {
-        background-color: var(--colorprimary);
+        background-color: var(--colorlight);
         text-decoration: none;
         -webkit-tap-highlight-color: transparent;
         display: block;
@@ -408,7 +412,7 @@
         width: 90%;
         border: 2px solid var(--coloritem);
         border-radius: 3px;
-        border-color: var(--colortext);
+        border-color: var(--coloritem);
         opacity: 50%;
         text-align: center;
         margin-left: auto;
@@ -418,45 +422,45 @@
     footer {
         padding-left: 10px;
     }
-    
+
     @media (hover: hover) and (pointer: fine) {
         a:hover {
-            background-color: var(--coloritem);
+            background-color: var(--colorlight);
             transition: background-color 0s;
         }
     }
-    
+
     @media only screen and (max-width: 500px) {
         /* .top { */
-            /* --main-width-px: 100vw; */
-            /* position: relative; */
-            /* } */
-            .slotandfoot {
-                padding-left: 0px;
-            }
-            .shadow {
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width: 100%;
-                background-color: black;
-                opacity: 0.5;
-                z-index: 1;
-            }
-            .shadowclick {
-                position: fixed;
-                top: var(--topbarheight);
-                left: var(--sidebar-width-px);
-                z-index: 3;
-                height: calc(100vh - var(--topbarheight));
-                width: calc(100vw - var(--sidebar-width-px));
-                /* background-color: blue; */
-            }
+        /* --main-width-px: 100vw; */
+        /* position: relative; */
+        /* } */
+        .slotandfoot {
+            padding-left: 0px;
+        }
+        .shadow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: black;
+            opacity: 0.5;
+            z-index: 1;
+        }
+        .shadowclick {
+            position: fixed;
+            top: var(--topbarheight);
+            left: var(--sidebar-width-px);
+            z-index: 3;
+            height: calc(100vh - var(--topbarheight));
+            width: calc(100vw - var(--sidebar-width-px));
+            /* background-color: blue; */
+        }
     }
     @media only screen and (min-width: 500px) {
         /* .top { */
-            /* --main-width-px: calc(100vw - var(--sidebar-width-px)); */
+        /* --main-width-px: calc(100vw - var(--sidebar-width-px)); */
         /* } */
         .slotandfoot {
             padding-left: var(--sidebar-width-px);
@@ -464,7 +468,7 @@
         .shadow {
             display: none;
         }
-        .shadowclick{
+        .shadowclick {
             display: none;
         }
     }
@@ -486,7 +490,7 @@
     }
     .top :global(.inset-brutal) {
         box-shadow: inset 2px 2px 3px 1px var(--colorshadow);
-        border: 2px solid var(--colorsecondary);
+        border: 2px solid var(--coloritem);
         border-radius: 9px;
     }
     a:focus,
