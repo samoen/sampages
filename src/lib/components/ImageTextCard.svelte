@@ -1,16 +1,37 @@
-<script>
+<script lang="ts">
     import gamesprites from "$lib/assets/gamesprites.png";
+    import { wscrollY } from "$lib/stores";
+
+    // let rot = 0
+    // let tout : number | undefined = undefined
+    // let oldScroll = 0;
+    // wscrollY.subscribe((value)=>{
+    //     if(tout){
+    //         clearTimeout(tout)
+    //     }
+    //     // rot = Math.min(4*(oldScroll - value),40)
+    //     if(value > oldScroll){
+    //         rot = 10;
+    //     }else{
+    //         rot = -10
+    //     }
+    //     // tout = setTimeout(()=>{rot = 0},700)
+    //     oldScroll = value
+    // })
 </script>
 
-<div class="wrapper brutal-border">
+<div 
+class="wrapper brutal-border"
+style:transform="translateZ(-500px) perspective(800px) rotateX({$wscrollY * 2}deg)"
+>
     <div class="left">
         <div class="img-wrap">
             <!-- width="400" -->
             <!-- height="200" -->
             <img
-                class="img"
-                src="{gamesprites}"
-                alt="a squiggle"
+            class="img"
+            src="{gamesprites}"
+            alt="a squiggle"
             />
             <div class="grad">
                 
@@ -27,12 +48,19 @@
     .wrapper {
         display: flex;
         background-color: var(--colorsecondary);
+        z-index: -999;
         /* height:200px; */
         /* gap:40px; */
         /* background-color: blue; */
         /* justify-content:center; */
         /* align-items: stretch; */
         /* max-width: 200px; */
+        transform-style: preserve-3d;
+        
+        /* transform-origin: top; */
+        /* transform: perspective(400px) rotateX(10deg); */
+        /* transition: transform 0.7s; */
+        
     }
     .left{
         position: relative;
@@ -79,6 +107,7 @@
         width: 100%;
         min-height: 0px;
         border-radius: 9px;
+        
     }
     .right {
         flex-grow: 1;
