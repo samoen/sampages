@@ -77,7 +77,7 @@
         padding-inline: calc(3vw);
     }
     .splash {
-        padding-inline: 3vw;
+        padding-inline: 20px;
         padding-bottom: 20px;
         margin-bottom: 20px;
         background-repeat: no-repeat;
@@ -88,7 +88,7 @@
     }
     .card {
         margin-block:20px;
-        padding:10px;
+        padding:20px;
         background-color: var(--colorsecondary);
     }
     h1 {

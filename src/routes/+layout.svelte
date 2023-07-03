@@ -5,8 +5,10 @@
     import Gear from "$lib/assets/Gear.svelte";
     import Hamburger from "$lib/assets/Hamburger.svelte";
     import Hand from "$lib/assets/Hand.svelte";
+    import Palette from "$lib/assets/Palette.svelte";
     import Contact from "$lib/components/Contact.svelte";
     import Settings from "$lib/components/Settings.svelte";
+    import SideBarItem from "$lib/components/SideBarItem.svelte";
     import TopBarIcon from "$lib/components/TopBarIcon.svelte";
     import {
         DEFAULT_MENU_SLIDE_DURATION,
@@ -185,42 +187,10 @@
             <nav class="sidenav">
                 <ul>
                     <li>
-                        <a
-                            href="{modBase}"
-                            class:inset-brutal="{$page.url.pathname ==
-                                `${modBase}`}"
-                            class:brutal-border="{$page.url
-                                .pathname != `${modBase}`}"
-                        >
-                            <div
-                                class="sideitem"
-                                class:lil-shrinky="{$page.url
-                                    .pathname == `${modBase}`}"
-                            >
-                                <Hand size="{0.5}" />
-                                <span>Home Page</span>
-                            </div>
-                        </a>
+                        <SideBarItem txt="Home Page" icon={Hand} path={modBase}></SideBarItem>
                     </li>
                     <li>
-                        <a
-                        href="{base}/about"
-                        class:brutal-border="{$page.url
-                            .pathname != `${base}/about`}"
-                        class:inset-brutal="{$page.url.pathname ==
-                                `${base}/about`}"
-                        >
-                        <!-- style:background-color={$page.url
-                            .pathname == `${base}/about`? 'var(--colorpressed)' : 'var(--colorlight)'} -->
-                            <div
-                                class="sideitem"
-                                class:lil-shrinky="{$page.url
-                                    .pathname == `${base}/about`}"
-                            >
-                                <Hand size="{0.5}" />
-                                <span>About</span>
-                            </div>
-                        </a>
+                        <SideBarItem txt="About" icon={Palette} path="{base}/about"></SideBarItem>
                     </li>
                 </ul>
             </nav>
@@ -381,30 +351,7 @@
     }
     .sidenav li {
     }
-    .sidenav a {
-        background-color: var(--colorlight);
-        text-decoration: none;
-        -webkit-tap-highlight-color: transparent;
-        display: block;
-    }
-    .lil-shrinky {
-        transform: scale(0.9);
-    }
-    .sideitem {
-        display: flex;
-        align-items: center;
-        column-gap: 5px;
-        padding-inline: 5px;
-        padding-block: 5px;
-        /* background-color: var(--colorsecondary); */
-    }
-
-    .sideitem span {
-        /* padding-right: 1rem; */
-        width: max-content;
-        white-space: nowrap;
-        font-size: 1.3rem;
-    }
+    
 
     hr {
         margin-top: 15px;
