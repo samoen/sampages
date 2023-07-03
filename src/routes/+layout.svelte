@@ -65,8 +65,8 @@
     {#if $themeMode == themes.light}
         <style>
             html {
-                --colorprimary: beige;
-                --colorsecondary: wheat;
+                --colorprimary: wheat;
+                --colorsecondary: beige;
                 --colortext: black;
                 --coloritem: limegreen;
                 --colorshadow: black;

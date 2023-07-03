@@ -22,7 +22,7 @@
 
 <div 
 class="wrapper brutal-border"
-style:transform="translateZ(-500px) perspective(800px) rotateX({$wscrollY * 2}deg)"
+style:transform="translateZ(-500px) perspective(800px) rotateX({$wscrollY * 1.5}deg)"
 >
     <div class="left">
         <div class="img-wrap">
