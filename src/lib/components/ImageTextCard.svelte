@@ -35,7 +35,7 @@
 
 <div 
 class="wrapper brutal-border"
-style:transform="translateZ(-500px) perspective(800px) rotateX({(rot * 1.5) % 360}deg)"
+style:transform="translateZ(-500px) perspective(1800px) rotateX({(rot * 1.5) % 360}deg)"
 style:transition={transition}
 >
     <div class="left">

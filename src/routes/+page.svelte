@@ -1,6 +1,8 @@
 <script lang="ts">
     import Hand from "$lib/assets/Hand.svelte";
+    import HeartBalloon from "$lib/assets/HeartBalloon.svelte";
     import Heartbeat from "$lib/assets/Heartbeat.svelte";
+    import Lightbulb from "$lib/assets/Lightbulb.svelte";
     import Palette from "$lib/assets/Palette.svelte";
     import gamesprites from "$lib/assets/gamesprites.png";
     import wavy from "$lib/assets/wavy.png";
@@ -62,18 +64,19 @@
         <div class="brutal-border"
         bind:offsetWidth="{cardwidth}">
             <!-- <div> -->
-                <Heartbeat scl={cardwidth/135}></Heartbeat>
+                <HeartBalloon dims={cardwidth/2.2} anim="heartBeat"></HeartBalloon>
             <!-- </div> -->
-            <p>Hand crafted. Made with love.</p>
+            <p>Hand crafted. Made with love</p>
         </div>
         <div class="brutal-border">
-            <Palette></Palette>
+            <Lightbulb dims={cardwidth/2} anim="swing"></Lightbulb>
             <p>
-
+                Bring your ideas to life
             </p>
         </div>
     </div>
     <div class="brutal-border card">
+        <h1>Want Buzzwords? We Got Em!</h1>
         <p>
             Are you tired of humdrum, run-of-the-mill websites that lack
             the cognitive surplus to leverage synergistic optimization?
@@ -94,6 +97,9 @@
 </div>
 
 <style>
+    h1{
+        margin-bottom: 0.5em;
+    }
     .twocards{
         margin-block:20px;
         display:flex;
@@ -115,7 +121,7 @@
         aspect-ratio: 1 / 0.7;
         display: flex;
         flex-direction: column;
-        gap:31%;
+        gap:15px;
         align-items: center;
         justify-content: center;
     }

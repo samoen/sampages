@@ -21,7 +21,7 @@ class:brutal-border="{$page.url
     class:lil-shrinky="{$page.url
         .pathname == `${path}`}"
 >
-    <svelte:component this={icon} size="{0.5}" />
+    <svelte:component this={icon} dims=25 />
     <span>{txt}</span>
 </div>
 </a>

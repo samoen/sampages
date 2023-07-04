@@ -6,6 +6,7 @@
     import Hamburger from "$lib/assets/Hamburger.svelte";
     import Hand from "$lib/assets/Hand.svelte";
     import Palette from "$lib/assets/Palette.svelte";
+    import User from "$lib/assets/User.svelte";
     import Contact from "$lib/components/Contact.svelte";
     import Settings from "$lib/components/Settings.svelte";
     import SideBarItem from "$lib/components/SideBarItem.svelte";
@@ -187,10 +188,18 @@
             <nav class="sidenav">
                 <ul>
                     <li>
-                        <SideBarItem txt="Home Page" icon={Hand} path={modBase}></SideBarItem>
+                        <SideBarItem
+                            txt="Home Page"
+                            icon="{User}"
+                            path="{modBase}"
+                        />
                     </li>
                     <li>
-                        <SideBarItem txt="About" icon={Palette} path="{base}/about"></SideBarItem>
+                        <SideBarItem
+                            txt="About"
+                            icon="{User}"
+                            path="{base}/about"
+                        />
                     </li>
                 </ul>
             </nav>
@@ -351,7 +360,6 @@
     }
     .sidenav li {
     }
-    
 
     hr {
         margin-top: 15px;
@@ -440,7 +448,7 @@
         border: 2px solid var(--coloritem);
         border-radius: 9px;
     }
-    .top :global(.responsivetitle){
+    .top :global(.responsivetitle) {
         font-size: clamp(1rem, 4vw + 0.6rem, 3rem);
         margin-bottom: 0.6em;
         text-wrap: balance;
@@ -487,4 +495,76 @@
     :global(html) {
         background-color: var(--colorprimary);
     }
+
+    @keyframes -global-rubberBand {
+        from {
+            transform: scale3d(1, 1, 1);
+        }
+
+        30% {
+            transform: scale3d(1.25, 0.75, 1);
+        }
+
+        40% {
+            transform: scale3d(0.75, 1.25, 1);
+        }
+
+        50% {
+            transform: scale3d(1.15, 0.85, 1);
+        }
+
+        65% {
+            transform: scale3d(0.95, 1.05, 1);
+        }
+
+        75% {
+            transform: scale3d(1.05, 0.95, 1);
+        }
+
+        to {
+            transform: scale3d(1, 1, 1);
+        }
+    }
+    @keyframes -global-heartBeat {
+  0% {
+    transform: scale(1);
+  }
+
+  14% {
+    transform: scale(1.3);
+  }
+
+  28% {
+    transform: scale(1);
+  }
+
+  42% {
+    transform: scale(1.3);
+  }
+
+  70% {
+    transform: scale(1);
+  }
+}
+@keyframes -global-swing {
+  20% {
+    transform: rotate3d(0, 0, 1, 15deg);
+  }
+
+  40% {
+    transform: rotate3d(0, 0, 1, -10deg);
+  }
+
+  60% {
+    transform: rotate3d(0, 0, 1, 5deg);
+  }
+
+  80% {
+    transform: rotate3d(0, 0, 1, -5deg);
+  }
+
+  to {
+    transform: rotate3d(0, 0, 1, 0deg);
+  }
+}
 </style>
