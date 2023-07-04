@@ -2,27 +2,41 @@
     import gamesprites from "$lib/assets/gamesprites.png";
     import { wscrollY } from "$lib/stores";
 
-    // let rot = 0
-    // let tout : number | undefined = undefined
-    // let oldScroll = 0;
-    // wscrollY.subscribe((value)=>{
-    //     if(tout){
-    //         clearTimeout(tout)
-    //     }
-    //     // rot = Math.min(4*(oldScroll - value),40)
-    //     if(value > oldScroll){
-    //         rot = 10;
-    //     }else{
-    //         rot = -10
-    //     }
-    //     // tout = setTimeout(()=>{rot = 0},700)
-    //     oldScroll = value
-    // })
+    let rot = 0
+    let base = 0
+    let tout : number | undefined = undefined
+    let oldScroll = 0;
+    let transition = 'none'
+    wscrollY.subscribe((value)=>{
+        if(tout){
+            clearTimeout(tout)
+        }
+        rot = (value - base)
+        transition = 'none'
+        // rot = Math.min(4*(oldScroll - value),40)
+        // if(value > oldScroll){
+        //     rot = 10;
+        // }else{
+        //     rot = -10
+        // }
+        tout = setTimeout(()=>{
+            if(value - base == rot){
+                rot = 0
+                transition = 'transform 0.4s'
+                base = value
+            }
+            // setTimeout(()=>{
+
+            // })
+        },200)
+        // oldScroll = value
+    })
 </script>
 
 <div 
 class="wrapper brutal-border"
-style:transform="translateZ(-500px) perspective(800px) rotateX({$wscrollY * 1.5}deg)"
+style:transform="translateZ(-500px) perspective(800px) rotateX({(rot * 1.5) % 360}deg)"
+style:transition={transition}
 >
     <div class="left">
         <div class="img-wrap">
@@ -59,7 +73,7 @@ style:transform="translateZ(-500px) perspective(800px) rotateX({$wscrollY * 1.5}
         
         /* transform-origin: top; */
         /* transform: perspective(400px) rotateX(10deg); */
-        /* transition: transform 0.7s; */
+        /* transition: transform 0.2s; */
         
     }
     .left{

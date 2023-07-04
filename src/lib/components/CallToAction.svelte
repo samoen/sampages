@@ -38,12 +38,14 @@
 >
     {#if !clickedCall}
         <div class="gagstart">
-            <p class="gag-start-text">
-                But you hunger.. you crave. You long for something to
-                click. Languish no longer, dear visitor. Behold the
-                glorious
-                <span class="">CALL TO ACTION:</span>
-            </p>
+            <div class="gag-start-text">
+                <h1 class="title">Extreme Interactivity</h1>
+                <p>
+                    You hunger for interaction. You crave it. Even now, you long for something to
+                    click. <br><br> Languish no longer dear visitor. Behold a
+                    glorious CALL TO ACTION
+                </p>
+            </div>
             <button
                 class="press-me"
                 bind:this="{gagbut}"
@@ -110,7 +112,7 @@
                 </p>
             {:else if msg == 5}
                 <p
-                    class="grid1"
+                    class="grid1 finalmsg"
                     in:fade="{{
                         duration: 2000,
                     }}"
@@ -149,22 +151,29 @@
         transition: min-height 1s ease-in-out;
     }
     .gagstart {
-        display: inline-flex;
+        display: flex;
         flex-wrap: wrap;
+        justify-content: flex-start;
         align-items: center;
         row-gap: 20px;
-        column-gap: calc(10vw - 15px);
+        column-gap: 10px;
     }
     .gag-start-text {
-        justify-self: start;
-        flex-basis: 30ch;
-        flex-grow: 1;
-        max-width: 90ch;
+        flex: 1 0 0;
+        /* justify-self: start; */
+        max-width: max-content;
+        /* flex-basis: 30ch; */
+        /* flex-grow: 1; */
+        /* background-color: aqua; */
+    }
+    .title{
+        margin-bottom: 0.5em;
     }
 
     .gagstart > button {
-        flex: 0 0 auto;
+        flex: 0 0 0;
         font-weight: bold;
+        min-width: max-content;
         margin-inline: auto;
         padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
         padding-block: clamp(0.1rem, 1rem, 2rem);

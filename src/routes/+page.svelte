@@ -1,4 +1,7 @@
 <script lang="ts">
+    import Hand from "$lib/assets/Hand.svelte";
+    import Heartbeat from "$lib/assets/Heartbeat.svelte";
+    import Palette from "$lib/assets/Palette.svelte";
     import gamesprites from "$lib/assets/gamesprites.png";
     import wavy from "$lib/assets/wavy.png";
     import wavydark from "$lib/assets/wavydark.png";
@@ -19,6 +22,7 @@
     onMount(() => {
         mounted = true;
     });
+    let cardwidth = 32;
 </script>
 
 <div
@@ -33,9 +37,9 @@
             : 3}px;
          padding-top:{$lowerSplashTopMargin ? 15 : 65}px"
     >
-        <h1 class="glowing">
+        <h1 class="glowing responsivetitle">
             <!-- <img width=70 height=40 src="{pachnor}" alt="peachy" /> -->
-            A Software Engineer
+            Software Engineering
         </h1>
         <p>
             Innovating transformative digital experiences to delight
@@ -53,26 +57,72 @@
         <br />
         <span> Solid Fundamentals </span>
     </ImageTextCard>
+    <!-- {Math.floor(cardwidth)} -->
+    <div class="twocards">
+        <div class="brutal-border"
+        bind:offsetWidth="{cardwidth}">
+            <!-- <div> -->
+                <Heartbeat scl={cardwidth/135}></Heartbeat>
+            <!-- </div> -->
+            <p>Hand crafted. Made with love.</p>
+        </div>
+        <div class="brutal-border">
+            <Palette></Palette>
+            <p>
 
-    <br />
-    <p>
-        Are you tired of humdrum, run-of-the-mill websites that lack
-        the cognitive surplus to leverage synergistic optimization?
-        Fear not, for we have the solution. Our state-of-the-art
-        platform is meticulously engineered to harmonize seamless
-        scalability with disruptive hyper-convergence.
-    </p>
-    <p>
-        Oh, and did we mention the cloud? Yes, we have harnessed the
-        boundless power of cloud computing to transcend the limits of
-        terrestrial computing. Our servers float high above,
-        majestically showering you with a mystical rain of data
-        packets, granting you an ethereal connection that defies the
-        boundaries of physicality.
-    </p>
+            </p>
+        </div>
+    </div>
+    <div class="brutal-border card">
+        <p>
+            Are you tired of humdrum, run-of-the-mill websites that lack
+            the cognitive surplus to leverage synergistic optimization?
+            Fear not, for we have the solution. Our state-of-the-art
+            platform is meticulously engineered to harmonize seamless
+            scalability with disruptive hyper-convergence.
+        </p>
+        <br>
+        <p>
+            Oh, and did we mention the cloud? Yes, we have harnessed the
+            boundless power of cloud computing to transcend the limits of
+            terrestrial computing. Our servers float high above,
+            majestically showering you with a mystical rain of data
+            packets, granting you an ethereal connection that defies the
+            boundaries of physicality.
+        </p>
+    </div>
 </div>
 
 <style>
+    .twocards{
+        margin-block:20px;
+        display:flex;
+        flex-wrap: wrap;
+        justify-content: center; 
+        gap:20px;
+    }
+    .twocards > div{
+        flex-basis: 0px;
+        flex-grow: 1;
+        flex-shrink:1;
+        max-width: 360px;
+        min-width:100px;
+        text-align: center;
+        /* min-width: 30ch; */
+        background-color: var(--colorsecondary);
+        padding:20px;
+        /* padding-block:10%; */
+        aspect-ratio: 1 / 0.7;
+        display: flex;
+        flex-direction: column;
+        gap:31%;
+        align-items: center;
+        justify-content: center;
+    }
+    .twocards > div > p{
+        text-wrap:balance;
+
+    }
     .container {
         padding-inline: calc(3vw);
     }
@@ -91,10 +141,10 @@
         padding:20px;
         background-color: var(--colorsecondary);
     }
-    h1 {
+    /* h1 {
         font-size: 1rem;
         text-wrap: balance;
-    }
+    } */
     .glowing {
         animation: move-bg 4s infinite;
         animation-timing-function: ease-out;
@@ -159,12 +209,6 @@
         /* max-width: 50rch; */
     }
 
-    .splash > h1 {
-        /* text-align: center; */
-        font-size: clamp(1rem, 4vw + 0.6rem, 3rem);
-        margin-bottom: 0.6em;
-        /* margin-top: 1em; */
-    }
 
     .normalimg {
         display: block;

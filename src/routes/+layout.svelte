@@ -79,13 +79,13 @@
     {:else}
         <style>
             html {
-                --colorprimary: blue;
-                --colorsecondary: cadetblue;
+                --colorprimary: cadetblue;
+                --colorsecondary: darkblue;
                 --coloritem: teal;
                 --colortext: white;
-                --colorpressed: burlywood;
+                --colorpressed: darkslategrey;
                 --colorshadow: black;
-                --colorlight: gray;
+                --colorlight: cadetblue;
             }
         </style>
     {/if}
@@ -439,6 +439,11 @@
         box-shadow: inset 2px 2px 3px 1px var(--colorshadow);
         border: 2px solid var(--coloritem);
         border-radius: 9px;
+    }
+    .top :global(.responsivetitle){
+        font-size: clamp(1rem, 4vw + 0.6rem, 3rem);
+        margin-bottom: 0.6em;
+        text-wrap: balance;
     }
     a:focus,
     a:active {
