@@ -21,7 +21,10 @@ class:brutal-border="{$page.url
     class:lil-shrinky="{$page.url
         .pathname == `${path}`}"
 >
-    <svelte:component this={icon} dims=25 />
+        <div class="icon">
+
+            <svelte:component this={icon} dims=25 />
+        </div>
     <span>{txt}</span>
 </div>
 </a>
@@ -32,6 +35,8 @@ class:brutal-border="{$page.url
         text-decoration: none;
         -webkit-tap-highlight-color: transparent;
         display: block;
+        padding-inline: 5px;
+        padding-block: 5px;
     }
     .lil-shrinky {
         transform: scale(0.9);
@@ -40,15 +45,15 @@ class:brutal-border="{$page.url
         display: flex;
         align-items: center;
         column-gap: 5px;
-        padding-inline: 5px;
-        padding-block: 5px;
-        /* background-color: var(--colorsecondary); */
     }
-
+    .icon{
+        height:1.6rem;
+        width: 1.6rem;
+    }
+    
     .sideitem span {
-        /* padding-right: 1rem; */
-        width: max-content;
         white-space: nowrap;
+        max-width: max-content;
         font-size: 1.3rem;
     }
 </style>

@@ -1,14 +1,14 @@
 <script lang="ts">
-    export let dims : number = 48
-    export let anim : string | undefined = undefined
-    export let animDuration : number = 1200
+    // export let dims : number = 48
+    // export let anim : string | undefined = undefined
+    // export let animDuration : number = 1200
 </script>
-<div
-style:height="{dims}px"
+<!-- style:height="{dims}px"
 style:width="{dims}px"
 style:animation-name={anim ? anim : 'none'}
-style:animation-duration="{animDuration}ms"
->
+style:animation-duration="{animDuration}ms" -->
+<!-- <div -->
+<!-- > -->
 
     <svg
     viewBox="0 0 48 48"
@@ -73,7 +73,7 @@ style:animation-duration="{animDuration}ms"
         </g>
     </g>
 </svg>
-</div>
+<!-- </div> -->
 
 <style>
     div{

@@ -5,7 +5,6 @@
     let rot = 0
     let base = 0
     let tout : number | undefined = undefined
-    let oldScroll = 0;
     let transition = 'none'
     wscrollY.subscribe((value)=>{
         if(tout){
@@ -35,7 +34,7 @@
 
 <div 
 class="wrapper brutal-border"
-style:transform="translateZ(-500px) perspective(1800px) rotateX({(rot * 1.5) % 360}deg)"
+style:transform="translateZ(-500px) perspective(1800px) rotateX({(rot * 0.5) % 360}deg)"
 style:transition={transition}
 >
     <div class="left">

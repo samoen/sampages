@@ -4,17 +4,19 @@
 
 <!-- width="{dims}"
 height="{dims}" -->
-<div
+<!-- <div
 style:height="{dims}px"
 style:width="{dims}px"
+> -->
 
+
+<svg
+viewBox="0 0 48 48"
 >
 
-    <svg
-    viewBox="0 0 48 48"
-    ><rect
-    width="48"
-    height="48"
+<rect
+width="48"
+height="48"
     stroke="none"
     fill="#000000"
     opacity="0"></rect>
@@ -27,11 +29,15 @@ style:width="{dims}px"
         stroke-linecap="round"></path>
     </g>
 </svg>
-</div>
+<!-- </div> -->
 
 <style>
-    svg{
+svg {
         height:100%;
-        width:100%;
+        width: 100%;
+        /* aspect-ratio: 1/1; */
+        /* width:100%; */
+        /* height:auto; */
+        /* width:auto; */
     }
 </style>

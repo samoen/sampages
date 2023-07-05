@@ -60,20 +60,48 @@
         <span> Solid Fundamentals </span>
     </ImageTextCard>
     <!-- {Math.floor(cardwidth)} -->
-    <div class="twocards">
-        <div class="brutal-border"
-        bind:offsetWidth="{cardwidth}">
-            <!-- <div> -->
-                <HeartBalloon dims={cardwidth/2.2} anim="heartBeat"></HeartBalloon>
-            <!-- </div> -->
-            <p>Hand crafted. Made with love</p>
+    <div class="fourcards">
+        <div class="twocards">
+            <div class="brutal-border">
+                <div class="cardim balloon">
+                    <HeartBalloon></HeartBalloon>
+                </div>
+                <div class="cardtxt">
+                    <p>Hand crafted. Made with love</p>
+                </div>
+            </div>
+            <div class="brutal-border">
+                <div class="cardim bulb">
+                    <Lightbulb></Lightbulb>
+                </div>
+                <div class="cardtxt">
+                    <p>
+                        Bring your ideas to life
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="brutal-border">
-            <Lightbulb dims={cardwidth/2} anim="swing"></Lightbulb>
-            <p>
-                Bring your ideas to life
-            </p>
+        <div class="twocards">
+            <div class="brutal-border">
+                <div class="cardim balloon">
+                    <HeartBalloon></HeartBalloon>
+                </div>
+                <div class="cardtxt">
+                    <p>Hand crafted. Made with love</p>
+                </div>
+            </div>
+            <div class="brutal-border">
+                <div class="cardim bulb">
+                    <Lightbulb></Lightbulb>
+                </div>
+                <div class="cardtxt">
+                    <p>
+                        Bring your ideas to life
+                    </p>
+                </div>
+            </div>
         </div>
+
     </div>
     <div class="brutal-border card">
         <h1>Want Buzzwords? We Got Em!</h1>
@@ -97,36 +125,62 @@
 </div>
 
 <style>
+    .bulb{
+        /* padding:10%; */
+        animation: swing 1200ms infinite;
+        /* background-color: aqua; */
+    }
+    .balloon{
+        animation: heartBeat 1200ms infinite;
+        
+    }
     h1{
         margin-bottom: 0.5em;
     }
-    .twocards{
+    .fourcards{
         margin-block:20px;
-        display:flex;
+        display: flex;
         flex-wrap: wrap;
-        justify-content: center; 
+        gap:20px;
+    }
+    .twocards{
+        flex-grow: 1;
+        flex-basis: 25rem;
+        flex-grow: 1;
+        flex-shrink: 1;
+        display:flex;
         gap:20px;
     }
     .twocards > div{
         flex-basis: 0px;
         flex-grow: 1;
-        flex-shrink:1;
-        max-width: 360px;
-        min-width:100px;
-        text-align: center;
-        /* min-width: 30ch; */
+        flex-shrink:0;
+        min-height: 1px;
         background-color: var(--colorsecondary);
         padding:20px;
-        /* padding-block:10%; */
-        aspect-ratio: 1 / 0.7;
         display: flex;
+        flex-wrap: nowrap;
         flex-direction: column;
         gap:15px;
+    }
+    .cardim{
+        height:70px;
+        flex-basis: 0px;
+        flex-grow:1;
+        flex-shrink: 1;
+    }
+    
+    .cardtxt{
+        flex-basis: 0px;
+        text-align:center;
+        flex-grow: 1;
+        flex-shrink: 1;
+        display: flex;
         align-items: center;
         justify-content: center;
+        
     }
-    .twocards > div > p{
-        text-wrap:balance;
+    .cardtxt > p {
 
     }
     .container {
