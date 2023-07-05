@@ -1,9 +1,11 @@
 <script lang="ts">
     import Hand from "$lib/assets/Hand.svelte";
+    import HappyMessage from "$lib/assets/HappyMessage.svelte";
     import HeartBalloon from "$lib/assets/HeartBalloon.svelte";
     import Heartbeat from "$lib/assets/Heartbeat.svelte";
     import Lightbulb from "$lib/assets/Lightbulb.svelte";
     import Palette from "$lib/assets/Palette.svelte";
+    import Wallet from "$lib/assets/Wallet.svelte";
     import gamesprites from "$lib/assets/gamesprites.png";
     import wavy from "$lib/assets/wavy.png";
     import wavydark from "$lib/assets/wavydark.png";
@@ -51,6 +53,7 @@
 
     </div>
     <div class="card brutal-border">
+        <h1 class="title">Extreme Interactivity</h1>
         <CallToAction></CallToAction>
     </div>
 
@@ -83,20 +86,20 @@
         </div>
         <div class="twocards">
             <div class="brutal-border">
-                <div class="cardim balloon">
-                    <HeartBalloon></HeartBalloon>
+                <div class="cardim wallet">
+                    <Wallet></Wallet>
                 </div>
                 <div class="cardtxt">
-                    <p>Hand crafted. Made with love</p>
+                    <p>Easy on the front pocket</p>
                 </div>
             </div>
             <div class="brutal-border">
-                <div class="cardim bulb">
-                    <Lightbulb></Lightbulb>
+                <div class="cardim happyMsg">
+                    <HappyMessage></HappyMessage>
                 </div>
                 <div class="cardtxt">
                     <p>
-                        Bring your ideas to life
+                        Joyful collaboration
                     </p>
                 </div>
             </div>
@@ -128,11 +131,19 @@
     .bulb{
         /* padding:10%; */
         animation: swing 1200ms infinite;
+        /* animation-delay: 4000ms; */
+        /* animation-duration: 3000ms; */
         /* background-color: aqua; */
     }
     .balloon{
         animation: heartBeat 1200ms infinite;
         
+    }
+    .wallet{
+        animation: bounce 1200ms infinite;
+    }
+    .happyMsg{
+        animation: rubberBand 1200ms infinite;
     }
     h1{
         margin-bottom: 0.5em;
@@ -142,10 +153,13 @@
         display: flex;
         flex-wrap: wrap;
         gap:20px;
+        justify-content: center;
+        flex-basis: 0px;
     }
     .twocards{
         flex-grow: 1;
-        flex-basis: 25rem;
+        flex-basis: 0px;
+        min-width: 17rem;
         flex-grow: 1;
         flex-shrink: 1;
         display:flex;
@@ -154,8 +168,9 @@
     .twocards > div{
         flex-basis: 0px;
         flex-grow: 1;
-        flex-shrink:0;
+        flex-shrink:1;
         min-height: 1px;
+        min-width: 8rem;
         background-color: var(--colorsecondary);
         padding:20px;
         display: flex;

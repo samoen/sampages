@@ -5,7 +5,6 @@
     import Gear from "$lib/assets/Gear.svelte";
     import Hamburger from "$lib/assets/Hamburger.svelte";
     import Hand from "$lib/assets/Hand.svelte";
-    import Palette from "$lib/assets/Palette.svelte";
     import User from "$lib/assets/User.svelte";
     import Contact from "$lib/components/Contact.svelte";
     import Settings from "$lib/components/Settings.svelte";
@@ -109,7 +108,12 @@
     {#if $mobileMode && $burgopen}
         <div class="shadow" transition:fade></div>
         <div
+            transition:fade="{{ duration: 0 }}"
             class="shadowclick"
+            style:left="{$sidebarwidth}px"
+            style:height="calc(100vh - {$topbarheight}px)"
+            style:width="calc(100vw - {$sidebarwidth}px)"
+            style:top="{$topbarheight}px"
             on:click="{() => {
                 toggleSidebar();
             }}"
@@ -143,7 +147,7 @@
             />
         </TopBarIcon>
         <span class="barp">SAM OEN</span>
-        <!-- {$wscrollY} -->
+        <!-- {$mobileMode && $burgopen} -->
         <TopBarIcon
             push="{() => {
                 lastEvent.set({ e: 'contactClick' });
@@ -173,6 +177,7 @@
         <div
             class="sidebar brutal-border"
             bind:offsetWidth="{$sidebarwidth}"
+            style:top="{$topbarheight + 2}px"
             transition:slide="{{
                 delay: 0,
                 duration: DEFAULT_MENU_SLIDE_DURATION,
@@ -209,6 +214,8 @@
         {#if $navSelect.sel != "none"}
             <div
                 class="topnav brutal-border"
+                style:left="{$sidebarwidth + 3}px"
+                style:top="calc({$topbarheight + 2}px"
                 bind:clientHeight="{$topNavHeight}"
                 in:slide|global="{{
                     duration: DEFAULT_MENU_SLIDE_DURATION,
@@ -239,7 +246,8 @@
         <div
             class="slotandfoot"
             in:fade="{{ duration: 500, delay: 0 }}"
-            style="padding-top:{$mainPadding}px"
+            style:padding-top="{$mainPadding}px"
+            style:padding-left="{$mobileMode ? 0 : $sidebarwidth}px"
         >
             <slot />
             <footer>
@@ -315,8 +323,8 @@
 
     .topnav {
         position: fixed;
-        top: calc(var(--topbarheight) + 2px);
-        left: calc(var(--sidebar-width-px) + 3px);
+        /* top: calc(var(--topbarheight) + 2px); */
+        /* left: calc(var(--sidebar-width-px) + 3px); */
         right: 4px;
         display: grid;
         overflow: hidden;
@@ -331,15 +339,12 @@
 
     .sidebar {
         position: fixed;
-        top: calc(var(--topbarheight) + 2px);
         left: 4px;
         bottom: 6px;
         z-index: 2;
         background-color: var(--coloritem);
         overflow-x: hidden;
         overflow-y: hidden;
-        /* height: calc(100dvh - var(--topbarheight) - 5px); */
-        /* transition: height 100ms ease-in-out; */
     }
 
     .sidenav {
@@ -386,10 +391,6 @@
     }
 
     @media only screen and (max-width: 500px) {
-        /* .top { */
-        /* --main-width-px: 100vw; */
-        /* position: relative; */
-        /* } */
         .slotandfoot {
             padding-left: 0px;
         }
@@ -405,20 +406,12 @@
         }
         .shadowclick {
             position: fixed;
-            top: var(--topbarheight);
-            left: var(--sidebar-width-px);
             z-index: 3;
-            height: calc(100vh - var(--topbarheight));
-            width: calc(100vw - var(--sidebar-width-px));
-            /* background-color: blue; */
         }
     }
     @media only screen and (min-width: 500px) {
-        /* .top { */
-        /* --main-width-px: calc(100vw - var(--sidebar-width-px)); */
-        /* } */
         .slotandfoot {
-            padding-left: var(--sidebar-width-px);
+            /* padding-left: var(--sidebar-width-px); */
         }
         .shadow {
             display: none;
@@ -526,45 +519,94 @@
         }
     }
     @keyframes -global-heartBeat {
-  0% {
-    transform: scale(1);
-  }
+        0% {
+            transform: scale(1);
+        }
 
-  14% {
-    transform: scale(1.3);
-  }
+        14% {
+            transform: scale(1.3);
+        }
 
-  28% {
-    transform: scale(1);
-  }
+        28% {
+            transform: scale(1);
+        }
 
-  42% {
-    transform: scale(1.3);
-  }
+        42% {
+            transform: scale(1.3);
+        }
 
-  70% {
-    transform: scale(1);
-  }
-}
-@keyframes -global-swing {
-  20% {
-    transform: rotate3d(0, 0, 1, 15deg);
-  }
+        70% {
+            transform: scale(1);
+        }
+    }
+    @keyframes -global-swing {
+        20% {
+            transform: rotate3d(0, 0, 1, 15deg);
+        }
 
-  40% {
-    transform: rotate3d(0, 0, 1, -10deg);
-  }
+        40% {
+            transform: rotate3d(0, 0, 1, -10deg);
+        }
 
-  60% {
-    transform: rotate3d(0, 0, 1, 5deg);
-  }
+        60% {
+            transform: rotate3d(0, 0, 1, 5deg);
+        }
 
-  80% {
-    transform: rotate3d(0, 0, 1, -5deg);
-  }
+        80% {
+            transform: rotate3d(0, 0, 1, -5deg);
+        }
 
-  to {
-    transform: rotate3d(0, 0, 1, 0deg);
-  }
-}
+        to {
+            transform: rotate3d(0, 0, 1, 0deg);
+        }
+    }
+    @keyframes -global-bounce {
+        from,
+        20%,
+        53%,
+        to {
+            animation-timing-function: cubic-bezier(
+                0.215,
+                0.61,
+                0.355,
+                1
+            );
+            transform: translate3d(0, 0, 0);
+        }
+
+        40%,
+        43% {
+            animation-timing-function: cubic-bezier(
+                0.755,
+                0.05,
+                0.855,
+                0.06
+            );
+            transform: translate3d(0, -20px, 0) scaleY(1.1);
+        }
+
+        70% {
+            animation-timing-function: cubic-bezier(
+                0.755,
+                0.05,
+                0.855,
+                0.06
+            );
+            transform: translate3d(0, -10px, 0) scaleY(1.05);
+        }
+
+        80% {
+            transition-timing-function: cubic-bezier(
+                0.215,
+                0.61,
+                0.355,
+                1
+            );
+            transform: translate3d(0, 0, 0) scaleY(0.95);
+        }
+
+        90% {
+            transform: translate3d(0, -4px, 0) scaleY(1.02);
+        }
+    }
 </style>

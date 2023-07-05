@@ -39,7 +39,7 @@
     {#if !clickedCall}
         <div class="gagstart">
             <div class="gag-start-text">
-                <h1 class="title">Extreme Interactivity</h1>
+                
                 <p>
                     You hunger for interaction. You crave it. Even now, you long for something to
                     click. <br><br> Languish no longer dear visitor. Behold a
@@ -166,10 +166,7 @@
         /* flex-grow: 1; */
         /* background-color: aqua; */
     }
-    .title{
-        margin-bottom: 0.5em;
-    }
-
+    
     .gagstart > button {
         flex: 0 0 0;
         font-weight: bold;
