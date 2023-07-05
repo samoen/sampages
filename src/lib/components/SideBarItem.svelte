@@ -23,7 +23,7 @@ class:brutal-border="{$page.url
 >
         <div class="icon">
 
-            <svelte:component this={icon} dims=25 />
+            <svelte:component this={icon} />
         </div>
     <span>{txt}</span>
 </div>

@@ -133,7 +133,7 @@ style:transition={transition}
         padding-left:5px;
         /* justify-content: center; */
         /* text-align: center; */
-        min-width: 50px;
+        /* min-width: 50px; */
         max-width: 200px;
     }
     .text > span {

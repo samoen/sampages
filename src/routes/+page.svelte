@@ -164,6 +164,7 @@
         flex-shrink: 1;
         display:flex;
         gap:20px;
+        flex-wrap: wrap;
     }
     .twocards > div{
         flex-basis: 0px;

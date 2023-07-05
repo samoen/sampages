@@ -94,7 +94,9 @@ export var navSelect: Readable<Topnavselect> =
       }
 
       if ($mobileMode && $burgopen) {
-        set({ sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION })
+        // setTimeout(()=>{
+          set({ sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION })
+        // },1000)
         return () => { }
       }
       return () => { }

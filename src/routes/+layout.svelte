@@ -5,6 +5,7 @@
     import Gear from "$lib/assets/Gear.svelte";
     import Hamburger from "$lib/assets/Hamburger.svelte";
     import Hand from "$lib/assets/Hand.svelte";
+    import House from "$lib/assets/House.svelte";
     import User from "$lib/assets/User.svelte";
     import Contact from "$lib/components/Contact.svelte";
     import Settings from "$lib/components/Settings.svelte";
@@ -195,7 +196,7 @@
                     <li>
                         <SideBarItem
                             txt="Home Page"
-                            icon="{User}"
+                            icon="{House}"
                             path="{modBase}"
                         />
                     </li>
@@ -215,7 +216,7 @@
             <div
                 class="topnav brutal-border"
                 style:left="{$sidebarwidth + 3}px"
-                style:top="calc({$topbarheight + 2}px"
+                style:top="{$topbarheight + 2}px"
                 bind:clientHeight="{$topNavHeight}"
                 in:slide|global="{{
                     duration: DEFAULT_MENU_SLIDE_DURATION,

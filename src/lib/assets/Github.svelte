@@ -1,6 +1,6 @@
 <!-- width="100"
 height="100" -->
-<div>
+<!-- <div> -->
 
     <svg
     viewBox="0 0 100 100"
@@ -12,25 +12,16 @@ height="100" -->
     fill="#24292f"></path></svg
     >
     
-</div>
+<!-- </div> -->
 <style>
     path {
         stroke: var(--colortext);
         fill: var(--colortext);
     }
-    div {
-        position: relative;
-        display: grid;
-        place-items: center;
-        width: 100%;
-        height: 100%;
-
-        /* text-align: center; */
-    }
     svg {
         /* display: grid; */
         /* place-items: center; */
-        position: absolute;
+        /* position: absolute; */
         /* top:50%; */
         /* left:50%; */
         /* top: 0;
@@ -39,12 +30,13 @@ height="100" -->
         bottom: 0; */
         /* min-width: 24px;
             min-height: 24px; */
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        height: auto;
+        /* max-width: 100%; */
+        /* max-height: 100%; */
+        width: 100%;
+        height: 100%;
         /* transform: translate(-50%, -50%); */
-        padding: var(--pad, 0);
+        /* padding: var(--pad, 0); */
+        padding:5px;
         /* height:4rem; */
         /* width: 2.5rem; */
         /* display: none; */
