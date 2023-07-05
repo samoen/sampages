@@ -88,14 +88,6 @@
         </div>
         <div class="twocards">
             <div class="brutal-border">
-                <div class="cardim wallet">
-                    <Wallet></Wallet>
-                </div>
-                <div class="cardtxt">
-                    <p>Easy on the front pocket</p>
-                </div>
-            </div>
-            <div class="brutal-border">
                 <div class="cardim happyMsg">
                     <HappyMessage></HappyMessage>
                 </div>
@@ -103,6 +95,14 @@
                     <p>
                         Joyful collaboration
                     </p>
+                </div>
+            </div>
+            <div class="brutal-border">
+                <div class="cardim wallet">
+                    <Wallet></Wallet>
+                </div>
+                <div class="cardtxt">
+                    <p>Easy on the front pocket</p>
                 </div>
             </div>
         </div>

@@ -76,10 +76,7 @@ style:animation-duration="{animDuration}ms" -->
 <!-- </div> -->
 
 <style>
-    div{
-        /* animation-duration: 1.2s; */
-        animation-iteration-count: infinite;
-    }
+    
     svg{
         height:100%;
         width:100%;

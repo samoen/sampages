@@ -1,6 +1,5 @@
-<svg
-    viewBox="0 0 48 48"
-    ><rect
+<svg viewBox="0 0 48 48">
+    <rect
         width="48"
         height="48"
         stroke="none"
@@ -61,9 +60,10 @@
         </g>
     </g>
 </svg>
+
 <style>
-    svg{
-        height:100%;
-        width:100%;
+    svg {
+        height: 100%;
+        width: 100%;
     }
 </style>
