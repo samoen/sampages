@@ -12,7 +12,8 @@
     import CallToAction from "$lib/components/CallToAction.svelte";
     import ImageTextCard from "$lib/components/ImageTextCard.svelte";
     import {
-        lowerSplashTopMargin,
+        
+        splashMarginTop,
         themeMode,
         themes,
         topbarheight,
@@ -26,20 +27,21 @@
     onMount(() => {
         mounted = true;
     });
-    let cardwidth = 32;
 </script>
 
 <div
     class="container"
 
 >
+<!-- margin-top:{$lowerSplashTopMargin
+   ? $topbarheight + 10
+   : 3}px; -->
     <div
         class="splash brutal-border"
-        style="background-image:url({splashimg});
-         margin-top:{$lowerSplashTopMargin
-            ? $topbarheight + 10
-            : 3}px;
-         padding-top:{$lowerSplashTopMargin ? 15 : 65}px"
+        style="background-image:url({splashimg});"
+         style:margin-top="{$splashMarginTop.marg}px"
+         style:padding-top="{$splashMarginTop.pad}px"
+         
     >
         <h1 class="glowing responsivetitle">
             <!-- <img width=70 height=40 src="{pachnor}" alt="peachy" /> -->

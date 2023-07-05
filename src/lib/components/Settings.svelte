@@ -7,6 +7,7 @@
 </script>
 
 <div class="wrapper">
+    <h1>Settings</h1>
     <span>Languages</span>
     <div class="langs">
         <button

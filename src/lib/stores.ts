@@ -1,5 +1,5 @@
 import { base } from "$app/paths";
-import { derived, get, writable, type Readable, type Stores } from "svelte/store"
+import { derived, get, writable, type Readable, type Stores } from "svelte/store";
 
 export const DEFAULT_MENU_SLIDE_DURATION: number = 800;
 export const WAIT_FOR_MENU_SLIDE = DEFAULT_MENU_SLIDE_DURATION - 200;
@@ -34,7 +34,6 @@ type Theme = typeof themes[keyof typeof themes]
 
 
 export const themeMode = writable<Theme>(themes.light)
-// export const topBarTransitionDelayed = writable(false)
 export const topBarTransitionQuick = writable(false)
 
 export const showJsButtons = writable(false)
@@ -44,6 +43,10 @@ type UiEventKey = 'fresh' | 'burgclick' | 'contactClick' | 'settingsClick' | 're
 type UiEvent = { e: UiEventKey }
 export const lastEvent = writable<UiEvent>({ e: 'fresh' })
 
+type Lang = 'EN' | 'ES'
+export const selectedLang = writable<Lang>('EN')
+
+export const topNavHeight = writable<number>();
 
 export const burgopen: Readable<boolean> = derived<Stores, boolean>(
   [lastEvent],
@@ -61,7 +64,6 @@ export const burgopen: Readable<boolean> = derived<Stores, boolean>(
   },
   false
 )
-
 
 type Topnavselect = { sel: 'settings' | 'contact' | 'none', outSpeed?: number }
 export var navSelect: Readable<Topnavselect> =
@@ -95,7 +97,7 @@ export var navSelect: Readable<Topnavselect> =
 
       if ($mobileMode && $burgopen) {
         // setTimeout(()=>{
-          set({ sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION })
+        set({ sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION })
         // },1000)
         return () => { }
       }
@@ -145,29 +147,18 @@ export const settingsIconState: Readable<TopBarIconState> = derived([navSelect, 
 })
 
 
-type Lang = 'EN' | 'ES'
-export const selectedLang = writable<Lang>('EN')
 
-export const lowerSplashTopMargin = derived([navSelect, burgopen, mobileMode], ([$navSelect, $bo, $mm]) => {
-  if ($bo && !$mm) {
-    return true
+export const splashMarginTop = derived([navSelect, burgopen, mobileMode], ([$navSelect, $burgopen, $mm]) => {
+  let lowered = false
+  if ($burgopen && !$mm) {
+    lowered = true
+    return { marg: get(topbarheight) + 20, pad: 15 }
   }
   if ($navSelect.sel != 'none') {
-    return true
+    return { marg: get(topbarheight) + 20, pad: 15 }
   }
-  return false
-  // return {pad:65, marg:3}
+  return { marg: 3, pad: 65 };
 })
-export const topNavHeight = writable<number>();
-export const mainPadding = derived([topNavHeight, navSelect], ([$topNavHeight, $ns]) => {
-  // if ($tnh > 0) {
-    // return $tnh + Math.min($tnh, 10)
-  // }
-  // if($ns.sel != "none"){
-  // }
-  // return 0
-  return $topNavHeight
-}, 0)
 
 export const modBase = base == "" ? "/" : base
 

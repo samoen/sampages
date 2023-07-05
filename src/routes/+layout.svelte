@@ -18,7 +18,6 @@
         burgopen,
         contactIconState,
         lastEvent,
-        mainPadding,
         mobileMode,
         modBase,
         navSelect,
@@ -215,7 +214,6 @@
         {#if $navSelect.sel != "none"}
             <div
                 class="topnav brutal-border"
-                style:left="{$sidebarwidth + 3}px"
                 style:top="{$topbarheight + 2}px"
                 bind:clientHeight="{$topNavHeight}"
                 in:slide|global="{{
@@ -247,7 +245,7 @@
         <div
             class="slotandfoot"
             in:fade="{{ duration: 500, delay: 0 }}"
-            style:padding-top="{$mainPadding}px"
+            style:padding-top="{$topNavHeight}px"
             style:padding-left="{$mobileMode ? 0 : $sidebarwidth}px"
         >
             <slot />
@@ -324,15 +322,16 @@
 
     .topnav {
         position: fixed;
-        /* top: calc(var(--topbarheight) + 2px); */
-        /* left: calc(var(--sidebar-width-px) + 3px); */
+        left: calc(var(--sidebar-width-px) + 3px);
         right: 4px;
         display: grid;
         overflow: hidden;
         z-index: 3;
         background-color: var(--coloritem);
+        /* padding:10px; */
     }
     .top-nav-selection {
+        /* overflow: hidden; */
         /* position: absolute; */
         /* grid-row: 1 / 1; */
         /* grid-column: 1 / 1; */
