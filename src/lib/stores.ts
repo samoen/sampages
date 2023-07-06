@@ -44,22 +44,34 @@ export const selectedLang = writable<Lang>('EN')
 
 export const topNavHeight = writable<number>();
 
-export const burgopen: Readable<boolean> = derived<Stores, boolean>(
+export type SidebarState = { open: boolean, speed: number }
+export const burgopen: Readable<SidebarState> = derived<Stores, SidebarState>(
   [lastEvent],
   ([$lastEvent], set, update) => {
     if ($lastEvent.e == 'burgclick') {
-      update((x) => { return !x })
+      update((x) => {
+        console.log('set long')
+        return { open: !x.open, speed: DEFAULT_MENU_SLIDE_DURATION }
+      })
       return () => { }
     }
 
-    if (($lastEvent.e == 'contactClick' || $lastEvent.e == 'settingsClick') && get(mobileMode)) {
-      set(false)
+    if (
+      ($lastEvent.e == 'contactClick' || $lastEvent.e == 'settingsClick') &&
+      get(mobileMode)
+      ) {
+      console.log('settin short')
+      update(() => { return { open: false, speed: 0 } })
       return () => { }
     }
     return () => { }
-  },
-  false
+  }
+  ,
+  { open: false, speed: 0 }
 )
+burgopen.subscribe((e) => {
+  console.log(e)
+})
 
 type Topnavselect = { sel: 'settings' | 'contact' | 'none', outSpeed?: number }
 export var navSelect: Readable<Topnavselect> =
@@ -91,9 +103,9 @@ export var navSelect: Readable<Topnavselect> =
         return () => { }
       }
 
-      if ($mobileMode && $burgopen) {
+      if ($mobileMode && $burgopen.open) {
         // setTimeout(()=>{
-        set({ sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION })
+        set({ sel: 'none', outSpeed: 0 })
         // },1000)
         return () => { }
       }
@@ -102,7 +114,7 @@ export var navSelect: Readable<Topnavselect> =
 
 export type TopBarColorState = { color: 'transparent' | 'solid' | 'blur', speed: 'instant' | 'slow' }
 export const barColorState: Readable<TopBarColorState> = derived([atTop, burgopen, navSelect], ([$atTop, $burgopen, $navSelect]) => {
-  if ($burgopen || $navSelect.sel != 'none') {
+  if ($burgopen.open || $navSelect.sel != 'none') {
     return { color: 'solid', speed: 'instant' } satisfies TopBarColorState
   }
   if ($atTop) {
@@ -114,8 +126,8 @@ export const barColorState: Readable<TopBarColorState> = derived([atTop, burgope
 export type TopBarIconColor = 'solid' | 'transparent' | 'inset'
 export type TransitionSpeed = 'instant' | 'slow'
 export type TopBarIconState = { color: TopBarIconColor, transition: TransitionSpeed }
-export const burgIconState: Readable<TopBarIconState> = derived([burgopen, barColorState], ([$bo, $bcs]) => {
-  if ($bo) {
+export const burgIconState: Readable<TopBarIconState> = derived([burgopen, barColorState], ([$burgopen, $bcs]) => {
+  if ($burgopen.open) {
     return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
   }
   if ($bcs.color == 'blur') {
@@ -146,7 +158,7 @@ export const settingsIconState: Readable<TopBarIconState> = derived([navSelect, 
 
 export const splashMarginTop = derived([navSelect, burgopen, mobileMode], ([$navSelect, $burgopen, $mm]) => {
   let lowered = false
-  if ($burgopen && !$mm) {
+  if ($burgopen.open && !$mm) {
     lowered = true
     return { marg: get(topbarheight) + 20, pad: 15 }
   }

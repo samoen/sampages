@@ -4,24 +4,23 @@
     import Gmail from "$lib/assets/Gmail.svelte";
     import LinkedIn from "$lib/assets/LinkedIn.svelte";
     import Phone from "$lib/assets/Phone.svelte";
-    import { burgopen, screenWidth, sidebarwidth } from "$lib/stores";
-    import { derived } from "svelte/store";
+    import { topbarheight } from "$lib/stores";
 
-    let PADDING = 60
-
+    // let PADDING = 60
     // The width the component will be after animations finish
     // Prevents animating in with too much height due to wrapping
-    let destinationWidth = derived([screenWidth,burgopen,sidebarwidth],([$screenWidth,$burgopen,$sidebarwidth])=>{
-        if($burgopen){
-            return $screenWidth - $sidebarwidth - PADDING
-        }
-        return $screenWidth - PADDING
-    });
+    // let destinationWidth = derived([screenWidth,burgopen,sidebarwidth],([$screenWidth,$burgopen,$sidebarwidth])=>{
+    //     if($burgopen){
+    //         return $screenWidth - $sidebarwidth - PADDING
+    //     }
+    //     return $screenWidth - PADDING
+    // });
 </script>
 
+<!-- style:width="{$destinationWidth}px" -->
+<!-- style:max-height="calc(100vh - {$topbarheight + 11}px)" -->
 <div 
     class="wrapper" 
-    style:width="{$destinationWidth}px"
     >
     <h2>Contact Me</h2>
     <p>Samuel Cleveland Oen</p>
@@ -85,8 +84,15 @@
 
 <style>
     .wrapper {
-        margin-inline: auto;
-        margin-block: 20px;
+        /* margin-inline: auto; */
+        /* margin-left: auto; */
+
+        /* padding-right:10px; */
+        /* position: absolute; */
+        /* inset:0; */
+        padding-block: 20px;
+        padding-inline:15px;
+        overflow-y: auto;
         /* padding-block: 15px; */
         /* padding:15px; */
         /* padding-bottom:20px; */
@@ -122,6 +128,8 @@
     .icon {
         /* background-color: aqua; */
         height: 50px;
+        width: 50px;
+        /* flex-grow: 0; */
         /* width: 50px; */
         /* align-self: stretch; */
 

@@ -52,7 +52,7 @@
     });
 
     afterNavigate((e) => {
-        if ($mobileMode && $burgopen) {
+        if ($mobileMode && $burgopen.open) {
             toggleSidebar();
         }
         window.scrollTo(0, 1);
@@ -94,17 +94,13 @@
     {/each} -->
 </svelte:head>
 
-<!-- bind:innerWidth="{$screenWidth}" -->
 <svelte:window
     bind:scrollY="{$wscrollY}"
     bind:innerWidth="{$screenWidth}"
 />
 
-<div
-    class="top"
-    style:--sidebar-width-px="{$sidebarwidth}px"
->
-    {#if $mobileMode && $burgopen}
+<div class="top">
+    {#if $mobileMode && $burgopen.open}
         <div class="shadow" transition:fade></div>
         <div
             transition:fade="{{ duration: 0 }}"
@@ -141,7 +137,7 @@
             <Hamburger
                 size="{1}"
                 padding="{5}"
-                lilShrink="{$burgopen}"
+                lilShrink="{$burgopen.open}"
                 gone="{!$showJsButtons}"
             />
         </TopBarIcon>
@@ -172,18 +168,25 @@
             />
         </TopBarIcon>
     </div>
-    {#if $burgopen}
+    {#if $burgopen.open}
         <div
             class="sidebar brutal-border"
             bind:offsetWidth="{$sidebarwidth}"
             style:top="{$topbarheight + 2}px"
-            transition:slide="{{
+            out:slide="{{
                 delay: 0,
-                duration: DEFAULT_MENU_SLIDE_DURATION,
+                duration: $burgopen.speed,
+                // duration:0,
+                axis: 'x',
+            }}"
+            in:slide="{{
+                delay: 0,
+                duration: $burgopen.speed,
+                // duration:0,
                 axis: 'x',
             }}"
             on:outroend="{() => {
-                if (!$burgopen) {
+                if (!$burgopen.open) {
                     $sidebarwidth = 0;
                 }
                 lastEvent.set({ e: 'menuOut' });
@@ -214,6 +217,8 @@
             <div
                 class="topnav brutal-border"
                 style:top="{$topbarheight + 2}px"
+                style:left="{$mobileMode ? 3 : $sidebarwidth + 3}px"
+                style:max-height="calc(100vh - {$topbarheight + 8}px)"
                 bind:clientHeight="{$topNavHeight}"
                 in:slide|global="{{
                     duration: DEFAULT_MENU_SLIDE_DURATION,
@@ -258,12 +263,12 @@
 
 <style>
     .top {
+        position: relative; /* so backdrop can position absolute */
     }
 
     .slotandfoot {
         min-height: 100vh;
-        /* padding-top: calc(var(--top-nav-height)); */
-        display: grid;
+        display: grid; /* So the footer goes at least bottom */
         grid-template-rows: 1fr auto;
     }
     .topbar {
@@ -286,19 +291,14 @@
             border-color 500ms ease-in-out 0ms,
             box-shadow 500ms ease-in-out 0ms;
         /* user-select: none; */
-        /* box-sizing: content-box; */
     }
     .blurbar {
         background-color: transparent;
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(5px);
-        /* border: 2px solid var(--colorshadow); */
-        /* box-shadow: 2px 2px 1px 0px var(--colorshadow); */
     }
     .solidbar {
         background-color: var(--coloritem);
-        /* border: 2px solid var(--colorshadow); */
-        /* box-shadow: 2px 2px 1px 0px var(--colorshadow); */
     }
     .transpar {
         background-color: transparent;
@@ -320,10 +320,10 @@
 
     .topnav {
         position: fixed;
-        left: calc(var(--sidebar-width-px) + 3px);
         right: 4px;
-        display: grid;
-        overflow: hidden;
+        /* display: grid; */
+
+        overflow-y: auto;
         z-index: 3;
         background-color: var(--coloritem);
         /* padding:15px; */
@@ -461,7 +461,8 @@
         transition: background-color 1s ease-in-out;
         /* font-family: 'Courier New', monospace; */
         /* font-family: Verdana, sans-serif; */
-        font-family: 'Brush Script MT', cursive;
+        font-family: "Brush Script MT", "Comic Sans MS", Verdana,
+            Arial;
     }
     :global(html) {
         transition: background-color 1s ease-in-out;
@@ -472,7 +473,7 @@
     :global(*, *:before, *:after) {
         padding: 0;
         margin: 0;
-        /* overscroll-behavior: contain; */
+        overscroll-behavior: contain;
         box-sizing: border-box;
         text-size-adjust: none;
         -webkit-text-size-adjust: none;
