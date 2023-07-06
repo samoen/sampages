@@ -33,9 +33,6 @@
     class="container"
 
 >
-<!-- margin-top:{$lowerSplashTopMargin
-   ? $topbarheight + 10
-   : 3}px; -->
     <div
         class="splash brutal-border"
         style="background-image:url({splashimg});"
@@ -55,16 +52,14 @@
 
     </div>
     <div class="card brutal-border">
-        <h1 class="title">Extreme Interactivity</h1>
+        <h2>Extreme Interactivity</h2>
         <CallToAction></CallToAction>
     </div>
 
     <ImageTextCard>
-        <h1>Fun Designs</h1>
-        <br />
+        <h2>Fun Designs</h2>
         <span> Solid Fundamentals </span>
     </ImageTextCard>
-    <!-- {Math.floor(cardwidth)} -->
     <div class="fourcards">
         <div class="twocards">
             <div class="brutal-border">
@@ -109,7 +104,7 @@
 
     </div>
     <div class="brutal-border card">
-        <h1>Want Buzzwords? We Got Em!</h1>
+        <h2>Want Buzzwords? We Got Em!</h2>
         <p>
             Are you tired of humdrum, run-of-the-mill websites that lack
             the cognitive surplus to leverage synergistic optimization?

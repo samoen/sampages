@@ -10,11 +10,7 @@ export const screenWidth = writable(0)
 export const mobileMode = derived(
   screenWidth,
   $w => {
-    if ($w >= 500) {
-      return false
-    } else {
-      return true
-    }
+    return $w < 600
   }
 )
 

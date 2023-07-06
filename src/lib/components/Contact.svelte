@@ -7,7 +7,7 @@
 </script>
 
 <div class="wrapper">
-    <h1>Contact Me</h1>
+    <h2>Contact Me</h2>
     <div class="icons" style:width="{$screenWidth - ($burgopen ? $sidebarwidth : 0)}px">
         <a class="barlink" href="mailto:samoen@gmail.com">
             <div class="icon">

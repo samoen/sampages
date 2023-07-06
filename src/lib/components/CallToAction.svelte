@@ -2,7 +2,7 @@
     import { fade } from "svelte/transition";
 
     let falling = false;
-    let doneFalling = false;
+    let fading = false;
     let gagbut: HTMLButtonElement;
     let butx = 0;
     let buty = 0;
@@ -15,14 +15,10 @@
 
 {#if falling}
     <button
-        style:--but-x="{butx}px"
-        style:--but-y="{buty}px"
+        style:left="{butx}px"
+        style:top="{buty}px"
+        class:trans="{fading}"
         class="fallingbutton"
-        class:falling="{falling}"
-        class:trans="{doneFalling}"
-        on:animationend="{(e) => {
-            falling = false;
-        }}"
     >
         Heed the Call!</button
     >
@@ -39,11 +35,11 @@
     {#if !clickedCall}
         <div class="gagstart">
             <div class="gag-start-text">
-                
                 <p>
-                    You hunger for interaction. You crave it. Even now, you long for something to
-                    click. <br><br> Languish no longer dear visitor. Behold a
-                    glorious CALL TO ACTION
+                    You hunger for interaction. You crave it. Even
+                    now, you long for something to click. <br /><br />
+                    Languish no longer dear visitor. Behold a glorious
+                    CALL TO ACTION
                 </p>
             </div>
             <button
@@ -60,8 +56,11 @@
                     clickedCall = true;
                     msg++;
                     setTimeout(() => {
-                        doneFalling = true;
-                    }, 700);
+                        fading = true;
+                    }, 1000);
+                    setTimeout(() => {
+                        falling = false;
+                    }, 2000);
                 }}"
             >
                 <span class="gag-but-text">Heed the Call!</span
@@ -129,20 +128,20 @@
 <style>
     .fallingbutton {
         position: absolute;
-        /* top: var(--but-y); */
-        /* left: var(--but-x); */
-        top: var(--but-y);
-        left: var(--but-x);
         background-color: var(--colorprimary);
-        border-color: var(--colorshadow);
-        box-shadow: 3px 3px 0px 0px var(--colorshadow);
-        border-radius: 8px;
+        box-shadow: inset 1px 1px 1px 1px var(--colorshadow);
+        border: 1px solid black;
+        border-radius: 9px;
         padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
         padding-block: clamp(0.1rem, 1rem, 2rem);
         transition: background-color 700ms, color 700ms,
             box-shadow 700ms;
         color: var(--colortext);
         z-index: 3;
+        animation-name: fall;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        animation-timing-function: linear;
     }
     .gag {
         min-height: 0px;
@@ -166,7 +165,7 @@
         /* flex-grow: 1; */
         /* background-color: aqua; */
     }
-    
+
     .gagstart > button {
         flex: 0 0 0;
         font-weight: bold;
@@ -218,29 +217,15 @@
 
     .trans {
         color: transparent;
-        animation: none;
         border-color: transparent;
         box-shadow: 3px 3px 0px 0px transparent;
         background-color: transparent;
     }
-    .falling {
-        animation-name: fall;
-        animation-duration: 1s;
-        animation-fill-mode: forwards;
-        animation-timing-function: linear;
-        /* position: relative; */
-    }
+
     .press-me {
         animation: press-me 1600ms infinite;
-        /* animation-direction:alternate-reverse; */
-        /* animation-timing-function:ease-in-out; */
-        /* animation-fill-mode:both; */
-       
         border-radius: 8px;
-        /* border-color: black; */
         border: 1px solid var(--colorshadow);
-        /* transition: box-shadow 500ms linear; */
-        /* transition-duration: 0s; */
     }
     .gag-but-text {
         display: inline-block;

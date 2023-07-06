@@ -116,9 +116,7 @@
         }
     }
     /* @container conty (max-width: 600px) { */
-    @media only screen and (max-width: 600px) {
-        .myimgcont {
-        }
+    @media only screen and (max-width: 599px) {
         .myimg {
             display: block;
             max-height: 100px;

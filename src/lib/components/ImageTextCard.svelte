@@ -60,6 +60,8 @@ style:transition={transition}
 <style>
     .wrapper {
         display: flex;
+        align-items: center;
+        justify-content: center;
         background-color: var(--colorsecondary);
         z-index: -999;
         /* height:200px; */
@@ -79,9 +81,10 @@ style:transition={transition}
         position: relative;
         flex-grow: 1;
         flex-basis: 0px;
-        flex-shrink: 0;
-        
-        /* align-self: stretch; */
+        flex-shrink: 1;
+        min-width: 5px;
+        min-height: 5px;
+        align-self: stretch;
     }
     .img-wrap {
         display: grid;
@@ -123,18 +126,11 @@ style:transition={transition}
         
     }
     .right {
-        flex-grow: 1;
-        flex-basis: 0;
-        /* background-color: brown; */
-        display: flex;
-        flex-direction: column;
+        flex-grow: 0;
+        flex-basis: auto;
+        flex-shrink: 1;
         padding-block:15px;
         padding-right:15px;
-        padding-left:5px;
-        /* justify-content: center; */
-        /* text-align: center; */
-        /* min-width: 50px; */
-        max-width: 200px;
     }
     .text > span {
     /* background-color: aqua; */

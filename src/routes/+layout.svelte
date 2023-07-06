@@ -95,15 +95,14 @@
 </svelte:head>
 
 <!-- bind:innerWidth="{$screenWidth}" -->
-<svelte:window bind:scrollY="{$wscrollY}" />
+<svelte:window
+    bind:scrollY="{$wscrollY}"
+    bind:innerWidth="{$screenWidth}"
+/>
 
 <div
     class="top"
-    bind:clientWidth="{$screenWidth}"
-    style:--sidebar-width="{$sidebarwidth}"
     style:--sidebar-width-px="{$sidebarwidth}px"
-    style:--topbarheight="{$topbarheight}px"
-    style:--top-nav-height="{$topNavHeight}px"
 >
     {#if $mobileMode && $burgopen}
         <div class="shadow" transition:fade></div>
@@ -313,7 +312,6 @@
         white-space: nowrap;
         user-select: none;
         font-size: 1.4rem;
-        font-family: monospace;
         font-weight: bold;
         color: var(--colortext);
         flex-grow: 1;
@@ -390,10 +388,7 @@
         }
     }
 
-    @media only screen and (max-width: 500px) {
-        .slotandfoot {
-            padding-left: 0px;
-        }
+    @media only screen and (max-width: 599px) {
         .shadow {
             position: absolute;
             top: 0;
@@ -409,10 +404,7 @@
             z-index: 3;
         }
     }
-    @media only screen and (min-width: 500px) {
-        .slotandfoot {
-            /* padding-left: var(--sidebar-width-px); */
-        }
+    @media only screen and (min-width: 600px) {
         .shadow {
             display: none;
         }
@@ -446,6 +438,11 @@
         margin-bottom: 0.6em;
         text-wrap: balance;
     }
+    .top :global(h2) {
+        font-size: clamp(1rem, 3vw + 0.5rem, 2rem);
+        margin-bottom: 0.6em;
+        text-wrap: balance;
+    }
     a:focus,
     a:active {
         outline: none;
@@ -453,7 +450,6 @@
     :global(p, span, h1, a) {
         color: var(--colortext);
         /* transition: color 1s; */
-        font-family: monospace;
     }
     /* :global(div, button, a, h1, path, hr) {
         transition: background-color 400ms ease-in-out,
@@ -463,6 +459,9 @@
     } */
     :global(body) {
         transition: background-color 1s ease-in-out;
+        /* font-family: 'Courier New', monospace; */
+        /* font-family: Verdana, sans-serif; */
+        font-family: 'Brush Script MT', cursive;
     }
     :global(html) {
         transition: background-color 1s ease-in-out;
@@ -473,12 +472,10 @@
     :global(*, *:before, *:after) {
         padding: 0;
         margin: 0;
-        /* font-size:1rem; */
-        overscroll-behavior: contain;
+        /* overscroll-behavior: contain; */
         box-sizing: border-box;
         text-size-adjust: none;
         -webkit-text-size-adjust: none;
-        /* border-radius: 4px; */
     }
 
     :global(body) {
