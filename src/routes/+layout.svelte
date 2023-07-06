@@ -250,7 +250,7 @@
             <slot />
             <footer>
                 <hr />
-                <p>&copy Sam Oen</p>
+                <p>&copy Sam Oen {new Date().getFullYear()}</p>
             </footer>
         </div>
     {/key}
@@ -326,7 +326,7 @@
         overflow: hidden;
         z-index: 3;
         background-color: var(--coloritem);
-        /* padding:10px; */
+        padding:15px;
     }
     .top-nav-selection {
         /* overflow: hidden; */
@@ -378,7 +378,7 @@
     }
 
     footer {
-        padding-left: 10px;
+        padding: 25px;
     }
 
     @media (hover: hover) and (pointer: fine) {
@@ -434,12 +434,12 @@
         border-radius: 9px;
     }
     .top :global(.responsivetitle) {
-        font-size: clamp(1rem, 4vw + 0.6rem, 3rem);
+        font-size: clamp(1.2rem, 4vw + 0.6rem, 3rem);
         margin-bottom: 0.6em;
         text-wrap: balance;
     }
     .top :global(h2) {
-        font-size: clamp(1rem, 3vw + 0.5rem, 2rem);
+        font-size: clamp(1.1rem, 2vw + 0.4rem, 2rem);
         margin-bottom: 0.6em;
         text-wrap: balance;
     }
@@ -447,7 +447,7 @@
     a:active {
         outline: none;
     }
-    :global(p, span, h1, a) {
+    :global(p, span, h1, a, h2) {
         color: var(--colortext);
         /* transition: color 1s; */
     }
