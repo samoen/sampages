@@ -326,7 +326,7 @@
         overflow: hidden;
         z-index: 3;
         background-color: var(--coloritem);
-        padding:15px;
+        /* padding:15px; */
     }
     .top-nav-selection {
         /* overflow: hidden; */
