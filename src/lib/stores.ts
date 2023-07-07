@@ -25,8 +25,9 @@ export const atTop = derived(wscrollY, ($s) => {
 export const themes = {
   light: 'light',
   dark: 'dark',
+  red: 'red',
 } as const;
-type Theme = typeof themes[keyof typeof themes]
+export type Theme = typeof themes[keyof typeof themes]
 
 
 export const themeMode = writable<Theme>(themes.light)
@@ -181,7 +182,7 @@ wscrollY.subscribe((value) => {
 })
 
 export const toggleTheme = () => {
-  topBarTransitionQuick.set(false)
+  // topBarTransitionQuick.set(false)
   // topBarTransitionDelayed.set(false);
   if (get(themeMode) == themes.light) {
     themeMode.set(themes.dark);

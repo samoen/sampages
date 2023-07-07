@@ -11,8 +11,8 @@
 
 <a
 href="{path}"
-class:inset-brutal="{$page.url.pathname ==
-    `${path}`}"
+class:inset-brutal="{$page.url.pathname ==`${path}`}"
+class:grow="{$page.url.pathname ==`${path}`}"
 class:brutal-border="{$page.url
     .pathname != `${path}`}"
 >
@@ -22,7 +22,6 @@ class:brutal-border="{$page.url
         .pathname == `${path}`}"
 >
         <div class="icon">
-
             <svelte:component this={icon} />
         </div>
     <span>{txt}</span>
@@ -40,6 +39,9 @@ class:brutal-border="{$page.url
     }
     .lil-shrinky {
         transform: scale(0.9);
+    }
+    .grow {
+        transform: scale(1.04);
     }
     .sideitem {
         display: flex;

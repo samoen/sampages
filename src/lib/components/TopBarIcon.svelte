@@ -1,14 +1,11 @@
 <script lang="ts">
-    import { showJsButtons, type TopBarIconState } from "$lib/stores";
-    import { fade } from "svelte/transition";
+    import { showJsButtons } from "$lib/stores";
+    import type { TopBarIconState } from "$lib/stores";
 
     export let push = () => {};
     export let state: TopBarIconState;
 </script>
 
-<!-- {#if $showJsButtons} -->
-<!-- class:quick-transition="{$topBarTransitionQuick}" -->
-<!-- class:delayed-transition="{$topBarTransitionDelayed}" -->
 <button
     class:inset-brutal="{state.color == 'inset'}"
     class="baricon"
@@ -16,9 +13,6 @@
     class:brutal-border="{state.color == 'solid'}"
     class:fadey="{state.transition == 'slow'}"
     class:gone="{!$showJsButtons}"
-    on:transitionend="{() => {
-        // $topBarTransitionDelayed = false;
-    }}"
     on:click="{() => {
         push();
     }}"
@@ -26,10 +20,6 @@
 >
     <slot />
 </button>
-
-<!-- {:else} -->
-<!-- <div></div> -->
-<!-- {/if} -->
 
 <style>
     .baricon {

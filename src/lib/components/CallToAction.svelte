@@ -33,14 +33,15 @@
     style:--gag-msgs-height="{gagMsgsHeight}px"
 >
     {#if !clickedCall}
+        <p>
+            Do you yearn for interaction? Yes, you crave a click.. you
+            pine for something to press.
+        </p>
         <div class="gagstart">
             <div class="gag-start-text">
                 <p>
-                    You hunger for interaction. You crave it. You long for something to click.
-                </p>
-                <p>
                     Languish no longer dear visitor. Behold a glorious
-                    CALL TO ACTION
+                    CALL TO ACTION:
                 </p>
             </div>
             <button
@@ -129,7 +130,7 @@
 <style>
     .fallingbutton {
         position: absolute;
-        background-color: var(--colorprimary);
+        background-color: var(--colorlight);
         box-shadow: inset 1px 1px 1px 1px var(--colorshadow);
         border: 1px solid black;
         border-radius: 9px;
@@ -167,17 +168,6 @@
         /* background-color: aqua; */
     }
 
-    .gagstart > button {
-        flex: 0 0 0;
-        font-weight: bold;
-        min-width: max-content;
-        margin-inline: auto;
-        padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
-        padding-block: clamp(0.1rem, 1rem, 2rem);
-        background-color: var(--colorsecondary);
-        background-color: var(--colorprimary);
-        border-color: var(--colorshadow);
-    }
     .gagmsgs {
         display: grid;
         align-items: center;
@@ -210,12 +200,6 @@
         /* text-wrap:balance; */
     }
 
-    .trans p,
-    .trans span {
-        color: transparent;
-        animation: none;
-    }
-
     .trans {
         color: transparent;
         border-color: transparent;
@@ -224,7 +208,17 @@
     }
 
     .press-me {
+        flex: 0 0 0;
+        font-weight: bold;
+        min-width: max-content;
+        margin-inline: auto;
+        padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
+        padding-block: clamp(0.1rem, 1rem, 2rem);
+        background-color: var(--colorsecondary);
+        background-color: var(--colorprimary);
+        border-color: var(--colorshadow);
         animation: press-me 1600ms infinite;
+        background-color: var(--colorlight);
         border-radius: 8px;
         border: 1px solid var(--colorshadow);
     }

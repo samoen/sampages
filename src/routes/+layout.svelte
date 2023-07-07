@@ -76,6 +76,18 @@
                 --colorlight: antiquewhite;
             }
         </style>
+    {:else if $themeMode == themes.red}
+        <style>
+            html {
+                --colorprimary: red;
+                --colorsecondary: magenta;
+                --coloritem: pink;
+                --colortext: white;
+                --colorpressed: rebeccapurple;
+                --colorshadow: darkred;
+                --colorlight: pink;
+            }
+        </style>
     {:else}
         <style>
             html {
@@ -326,7 +338,7 @@
         overflow: auto;
         z-index: 3;
         background-color: var(--coloritem);
-        padding:15px;
+        padding: 15px;
     }
     .top-nav-selection {
         /* overflow: hidden; */
@@ -438,11 +450,19 @@
         margin-bottom: 0.6em;
         text-wrap: balance;
     }
-    .top :global(h2) {
+    :global(h2) {
         font-size: clamp(1.1rem, 2vw + 0.4rem, 2rem);
         text-wrap: balance;
     }
-    :global(p,h1,h2){
+    :global(h3) {
+        font-size: clamp(1rem, 1vw + 0.3rem, 1.5rem);
+        text-wrap: balance;
+        font-weight: 500;
+    }
+    :global(button,a){
+        -webkit-tap-highlight-color: transparent;
+    }
+    :global(p, h1, h2, h3) {
         margin-bottom: 0.6em;
     }
     :global(a:focus, a:active) {
@@ -456,7 +476,8 @@
         transition: background-color 1s ease-in-out;
         /* font-family: 'Courier New', monospace; */
         /* font-family: Verdana, Arial, sans-serif; */
-        font-family: "Brush Script MT", "Comic Sans MS", Verdana, Arial;
+        font-family: "Brush Script MT", "Comic Sans MS", Verdana,
+            Arial;
     }
     :global(html) {
         transition: background-color 1s ease-in-out;

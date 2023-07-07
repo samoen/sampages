@@ -51,10 +51,13 @@
             min-height: 24px; */
         /* max-width: 100%; */
         /* max-height:100%; */
-        width: 24px;
-        height: 24px;
+        height:100%;
+        width:100%;
+        /* background-color: aqua; */
+        /* width: 24px; */
+        /* height: 24px; */
         /* transform: translate(-50%, -50%); */
-        padding: var(--pad, 0);
+        /* padding: var(--pad, 0); */
         padding-inline: 5px;
         /* height:4rem; */
         /* width: 2.5rem; */

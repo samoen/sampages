@@ -21,7 +21,7 @@
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
 
-    $: splashimg = $themeMode == themes.dark ? wavydark : wavy;
+    $: splashimg = $themeMode == themes.dark || $themeMode == themes.red ? wavydark : wavy;
     let mounted = false;
     
     onMount(() => {
