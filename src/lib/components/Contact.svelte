@@ -68,4 +68,7 @@
         /* padding-left:15px; */
         /* background-color: blue; */
     }
+    h2 {
+        margin-bottom: 0.4em;
+    }
 </style>

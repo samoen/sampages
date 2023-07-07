@@ -112,10 +112,9 @@
         transform: scale(0.9);
     }
     .grow {
-        transform: scale(1.2);
+        transform: scale(1.1);
     }
     .cream {
-        border-color: black;
         background-color: beige;
         color: black;
     }
@@ -133,7 +132,6 @@
 
     .night {
         background-color: blue;
-        border-color: aqua;
         color: white;
     }
     .borderNight {
@@ -143,16 +141,13 @@
     }
 
     .insetNight {
-        box-shadow: inset 2px 2px 3px 1px darkblue;
+        box-shadow: inset 3px 3px 3px 2px darkblue;
         border: 2px solid var(--coloritem);
         border-radius: 9px;
     }
     .anger {
         background-color: red;
-        color: pink;
-        border: 2px solid darkred;
-        box-shadow: 2px 2px 0px 0px darkred;
-        border-radius: 8px;
+        color: white;
     }
     .borderRed {
         border: 2px solid darkred;
@@ -161,7 +156,7 @@
     }
 
     .insetRed {
-        box-shadow: inset 2px 2px 3px 1px darkred;
+        box-shadow: inset 3px 3px 3px 1px darkred;
         border: 2px solid var(--coloritem);
         border-radius: 9px;
     }
@@ -170,10 +165,15 @@
         gap: 10px;
         padding-left:8px;
         margin-bottom: 10px;
+        /* background-color: aqua; */
     }
     .themes {
+        /* background-color: aqua; */
         display: flex;
         gap: 10px;
-        padding-left:8px;
+        padding-left:10px;
+    }
+    h2, h3 {
+        margin-bottom: 0.4em;
     }
 </style>

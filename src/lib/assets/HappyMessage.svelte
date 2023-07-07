@@ -10,7 +10,7 @@
         <g style="">
             <g transform="matrix(1 0 0 1 0 0)">
                 <path
-                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: var(--colorprimary); fill-rule: nonzero; opacity: 1;"
+                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(249,227,174); fill-rule: nonzero; opacity: 1;"
                     transform=" translate(-12, -12)"
                     d="M 12.767 0.500014 C 10.8541 0.496974 8.97529 1.00598 7.32553 1.97419 C 5.67578 2.9424 4.31524 4.33452 3.38513 6.00606 C 2.45503 7.67759 1.98927 9.5676 2.03619 11.4799 C 2.08312 13.3922 2.64103 15.2571 3.652 16.881 L 0.5 23.5 L 7.119 20.348 C 8.52998 21.2227 10.1247 21.758 11.7776 21.9118 C 13.4306 22.0657 15.0967 21.8339 16.6448 21.2346 C 18.193 20.6353 19.581 19.685 20.6996 18.4583 C 21.8182 17.2317 22.6369 15.7622 23.0912 14.1655 C 23.5456 12.5688 23.6232 10.8884 23.318 9.25664 C 23.0129 7.62484 22.3332 6.08612 21.3325 4.76154 C 20.3318 3.43697 19.0373 2.36268 17.551 1.62321 C 16.0647 0.883739 14.4271 0.499256 12.767 0.500014 L 12.767 0.500014 Z"
                     stroke-linecap="round"></path>

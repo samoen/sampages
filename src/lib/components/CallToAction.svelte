@@ -33,7 +33,7 @@
     style:--gag-msgs-height="{gagMsgsHeight}px"
 >
     {#if !clickedCall}
-        <p>
+        <p class="gagintro">
             Do you yearn for interaction? Yes, you crave a click.. you
             pine for something to press.
         </p>
@@ -151,21 +151,47 @@
     .min-height-transition {
         transition: min-height 1s ease-in-out;
     }
+    .gagintro{
+        margin-bottom: 10px;
+    }
     .gagstart {
-        display: flex;
+        display: inline-flex;
         flex-wrap: wrap;
-        justify-content: flex-start;
+        justify-content: center;
         align-items: center;
-        row-gap: 20px;
+        row-gap: 12px;
         column-gap: 10px;
     }
     .gag-start-text {
         flex: 1 0 0;
         /* justify-self: start; */
         max-width: max-content;
-        /* flex-basis: 30ch; */
+        flex-basis: 20ch;
+
+        /* text-wrap: balance; */
         /* flex-grow: 1; */
-        /* background-color: aqua; */
+        /* background-color: brown; */
+    }
+    .press-me {
+        flex: 1 0 0;
+        font-weight: bold;
+        max-width: max-content;
+        justify-self: center;
+        /* margin-inline: auto; */
+        padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
+        padding-block: clamp(0.1rem, 1rem, 2rem);
+        background-color: var(--colorsecondary);
+        background-color: var(--colorprimary);
+        border-color: var(--colorshadow);
+        animation: press-me 1600ms infinite;
+        background-color: var(--colorlight);
+        border-radius: 8px;
+        border: 1px solid var(--colorshadow);
+    }
+    .gag-but-text {
+        white-space: nowrap;
+        display: inline-block;
+        animation: gagbutscale 1600ms infinite;
     }
 
     .gagmsgs {
@@ -207,25 +233,6 @@
         background-color: transparent;
     }
 
-    .press-me {
-        flex: 0 0 0;
-        font-weight: bold;
-        min-width: max-content;
-        margin-inline: auto;
-        padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
-        padding-block: clamp(0.1rem, 1rem, 2rem);
-        background-color: var(--colorsecondary);
-        background-color: var(--colorprimary);
-        border-color: var(--colorshadow);
-        animation: press-me 1600ms infinite;
-        background-color: var(--colorlight);
-        border-radius: 8px;
-        border: 1px solid var(--colorshadow);
-    }
-    .gag-but-text {
-        display: inline-block;
-        animation: gagbutscale 1600ms infinite;
-    }
     @keyframes gagbutscale {
         25% {
             transform: scale(1);
