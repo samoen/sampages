@@ -36,8 +36,9 @@
         <div class="gagstart">
             <div class="gag-start-text">
                 <p>
-                    You hunger for interaction. You crave it. Even
-                    now, you long for something to click. <br /><br />
+                    You hunger for interaction. You crave it. You long for something to click.
+                </p>
+                <p>
                     Languish no longer dear visitor. Behold a glorious
                     CALL TO ACTION
                 </p>

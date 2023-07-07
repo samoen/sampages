@@ -433,36 +433,30 @@
         border: 2px solid var(--coloritem);
         border-radius: 9px;
     }
-    .top :global(.responsivetitle) {
+    :global(h1) {
         font-size: clamp(1.2rem, 4vw + 0.6rem, 3rem);
         margin-bottom: 0.6em;
         text-wrap: balance;
     }
     .top :global(h2) {
         font-size: clamp(1.1rem, 2vw + 0.4rem, 2rem);
-        margin-bottom: 0.6em;
         text-wrap: balance;
     }
-    a:focus,
-    a:active {
+    :global(p,h1,h2){
+        margin-bottom: 0.6em;
+    }
+    :global(a:focus, a:active) {
         outline: none;
     }
     :global(p, span, h1, a, h2) {
         color: var(--colortext);
         /* transition: color 1s; */
     }
-    /* :global(div, button, a, h1, path, hr) {
-        transition: background-color 400ms ease-in-out,
-        border-color 400ms ease-in-out, color 400ms, stroke 400ms,
-        box-shadow 400ms ease-in-out,
-        height 100ms ease-in-out;
-    } */
     :global(body) {
         transition: background-color 1s ease-in-out;
         /* font-family: 'Courier New', monospace; */
-        /* font-family: Verdana, sans-serif; */
-        font-family: "Brush Script MT", "Comic Sans MS", Verdana,
-            Arial;
+        /* font-family: Verdana, Arial, sans-serif; */
+        font-family: "Brush Script MT", "Comic Sans MS", Verdana, Arial;
     }
     :global(html) {
         transition: background-color 1s ease-in-out;

@@ -40,7 +40,7 @@
          style:padding-top="{$splashMarginTop.pad}px"
          
     >
-        <h1 class="glowing responsivetitle">
+        <h1 class="glowing">
             <!-- <img width=70 height=40 src="{pachnor}" alt="peachy" /> -->
             Software Engineering
         </h1>
