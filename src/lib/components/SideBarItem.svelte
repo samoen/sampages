@@ -13,8 +13,7 @@
 href="{path}"
 class:inset-brutal="{$page.url.pathname ==`${path}`}"
 class:grow="{$page.url.pathname ==`${path}`}"
-class:brutal-border="{$page.url
-    .pathname != `${path}`}"
+class:brutal-border="{$page.url.pathname != `${path}`}"
 >
 <div
     class="sideitem"
@@ -32,7 +31,6 @@ class:brutal-border="{$page.url
     a {
         background-color: var(--colorlight);
         text-decoration: none;
-        -webkit-tap-highlight-color: transparent;
         display: block;
         padding-inline: 5px;
         padding-block: 5px;
@@ -41,6 +39,7 @@ class:brutal-border="{$page.url
         transform: scale(0.9);
     }
     .grow {
+        background-color: var(--colorpressed);
         transform: scale(1.04);
     }
     .sideitem {

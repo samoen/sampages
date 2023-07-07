@@ -73,7 +73,7 @@
                 --coloritem: blanchedalmond;
                 --colorpressed: bisque;
                 --colorshadow: black;
-                --colorlight: antiquewhite;
+                --colorlight: rgb(250, 231, 207);
             }
         </style>
     {:else if $themeMode == themes.red}

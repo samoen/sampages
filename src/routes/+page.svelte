@@ -51,7 +51,7 @@
         <!-- bind:this="{gagEl}" -->
 
     </div>
-    <div class="card brutal-border">
+    <div class="card brutal-border callToAction">
         <h2>Extreme Interactivity</h2>
         <CallToAction></CallToAction>
     </div>
@@ -125,6 +125,32 @@
 </div>
 
 <style>
+    .container {
+        padding-inline: calc(3vw);
+        /* overflow-x: hidden; */
+    }
+    .splash {
+        padding-inline: 20px;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: local;
+        transition: margin-top 500ms ease-in-out,
+            padding-top 500ms ease-in-out;
+    }
+    .card {
+        margin-block:20px;
+        padding:20px;
+        background-color: var(--colorsecondary);
+    }
+    /* h1 {
+        font-size: 1rem;
+        text-wrap: balance;
+    } */
+    .callToAction{
+        /* overflow-x: auto; */
+    }
     .bulb{
         /* padding:10%; */
         animation: swing 1200ms infinite;
@@ -147,94 +173,80 @@
     }
     .fourcards{
         margin-block:20px;
-        display: flex;
-        flex-wrap: wrap;
+        /* display: flex; */
+        /* flex-wrap: wrap; */
         gap:20px;
-        justify-content: center;
-        flex-basis: 0px;
+        /* justify-content: center; */
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(45vw,1fr));
+        grid-auto-rows:1fr;
+
     }
     .twocards{
-        flex-grow: 1;
-        flex-basis: 0px;
-        min-width: 17rem;
-        flex-grow: 1;
-        flex-shrink: 1;
-        display:flex;
+        /* flex-basis: 0px; */
+        /* flex-grow: 1; */
+        /* flex-shrink: 1; */
+        /* min-width: 17rem; */
+
+        /* display:flex; */
+        /* flex-wrap: nowrap; */
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+        grid-auto-rows:1fr;
         gap:20px;
-        flex-wrap: wrap;
     }
     .twocards > div{
-        flex-basis: 0px;
-        flex-grow: 1;
-        flex-shrink:1;
-        min-height: 1px;
-        min-width: 8rem;
+        /* flex-basis: 0px; */
+        /* flex-grow: 1; */
+        /* flex-shrink:1; */
+        /* min-height: 1px; */
+        min-width: 50px;
         background-color: var(--colorsecondary);
         padding:20px;
         display: flex;
-        flex-wrap: nowrap;
         flex-direction: column;
-        gap:15px;
+        justify-content: flex-start;
+        align-items: center;
+        /* flex-wrap: nowrap; */
+        gap:10px;
+        /* gap:15px; */
     }
     .cardim{
-        height:70px;
-        flex-basis: 0px;
-        flex-grow:1;
+        min-height:1px;
+        min-width:1px;
+        flex-basis: 70px;
+        flex-grow:0;
         flex-shrink: 1;
     }
     
     .cardtxt{
-        flex-basis: 0px;
+        flex-basis: auto;
         text-align:center;
-        flex-grow: 1;
-        flex-shrink: 1;
+        margin-block: auto;
+        /* flex-grow: 1; */
+        /* flex-shrink: 1; */
         display: flex;
         align-items: center;
-        justify-content: center;
+        /* background-color: aqua; */
         
     }
     .cardtxt > p {
-
+        text-wrap:balance;
     }
-    .container {
-        padding-inline: calc(3vw);
-    }
-    .splash {
-        padding-inline: 20px;
-        padding-bottom: 20px;
-        margin-bottom: 20px;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-attachment: local;
-        transition: margin-top 500ms ease-in-out,
-            padding-top 500ms ease-in-out;
-    }
-    .card {
-        margin-block:20px;
-        padding:20px;
-        background-color: var(--colorsecondary);
-    }
-    /* h1 {
-        font-size: 1rem;
-        text-wrap: balance;
-    } */
     .glowing {
-        animation: move-bg 4s infinite;
+        animation: move-bg 3500ms infinite;
         animation-timing-function: ease-out;
-        /* animation-direction:reverse; */
-        /* animation-timing-function: linear; */
         background-image: linear-gradient(
             90deg,
-            /* var(--colortext), */ /* var(--colortext), */
-                /* var(--colortext), */ var(--colortext),
+            var(--colortext),
             var(--colortext),
             var(--colorlight),
-            /* transparent, */ /* var(--colorlight), */
-                var(--colortext),
             var(--colortext),
             var(--colortext),
             var(--colortext),
             var(--colortext)
+            /* , */
+            /* var(--colortext) */
         );
         background-size: 800% 100%;
         /* background-clip: 400%; */

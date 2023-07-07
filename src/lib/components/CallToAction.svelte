@@ -180,11 +180,9 @@
         /* margin-inline: auto; */
         padding-inline: clamp(0px, 2vw + 0.2rem, 2rem);
         padding-block: clamp(0.1rem, 1rem, 2rem);
-        background-color: var(--colorsecondary);
-        background-color: var(--colorprimary);
         border-color: var(--colorshadow);
         animation: press-me 1600ms infinite;
-        background-color: var(--colorlight);
+        background-color: var(--coloritem);
         border-radius: 8px;
         border: 1px solid var(--colorshadow);
     }
