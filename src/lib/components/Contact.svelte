@@ -4,7 +4,7 @@
     import Gmail from "$lib/assets/Gmail.svelte";
     import LinkedIn from "$lib/assets/LinkedIn.svelte";
     import Phone from "$lib/assets/Phone.svelte";
-    import { topbarheight } from "$lib/stores";
+    import ContactItem from "./ContactItem.svelte";
 
     // let PADDING = 60
     // The width the component will be after animations finish
@@ -17,130 +17,55 @@
     // });
 </script>
 
-<!-- style:width="{$destinationWidth}px" -->
-<!-- style:max-height="calc(100vh - {$topbarheight + 11}px)" -->
-<div 
-    class="wrapper" 
-    >
+<div class="wrapper">
     <h2>Contact Me</h2>
-    <p>Samuel Cleveland Oen</p>
-    <p>Perth, Western Australia</p>
-    <br>
     <div class="icons">
-        <div class="contactItem brutal-border">
-            <!-- <div class="iconAndType"> -->
-                <div class="icon">
-                    <Phone />
-                </div>
-            <!-- </div> -->
-            <span>
-                Phone
-                <br>
-                +61 459 753 902
-            </span>
-        </div>
-        
-        <div class="contactItem brutal-border">
-            <a class="barlink" href="mailto:samoen@gmail.com">
-                <div class="icon">
-                    <Gmail />
-                </div>
-            </a>
-            <span>
-                Email<br>samoen@gmail.com
-            </span>
-            
-        </div>
-        
-        <div class="contactItem brutal-border">
-            <a class="barlink" href="https://github.com/samoen">
-                <div class="icon">
-                    <Github />
-                </div>
-            </a>
-            <span>Github<br>github.com/samoen</span>
-        </div>
-        <div class="contactItem brutal-border">
-            <a
-            class="barlink"
-            href="https://www.linkedin.com/in/sam-oen-22001436/"
-            >
-                <div class="icon">
-                    <LinkedIn />
-                </div>
-            </a>
-            <span>LinkedIn<br>linkedin.com/in/sam-oen-22001436</span>
-        </div>
-        <div class="contactItem brutal-border">
-            <a class="barlink" href="https://discord.gg/7JfUv46y">
-                <div class="icon">
-                    <Discord />
-                </div>
-            </a>
-            <span>Discord<br>samoen</span>
-        </div>
+        <ContactItem
+            icon="{Phone}"
+            path="#"
+            title="Phone"
+            detail="+61 459 753 902"
+        />
+        <ContactItem
+            icon="{Gmail}"
+            path="mailto:samoen@gmail.com"
+            title="Email"
+            detail="samoen@gmail.com"
+        />
+        <ContactItem
+            icon="{Github}"
+            path="https://github.com/samoen"
+            title="Github"
+            detail="github.com/samoen"
+        />
+        <ContactItem
+            icon="{LinkedIn}"
+            path="https://www.linkedin.com/in/sam-oen-22001436/"
+            title="LinkedIn"
+            detail="linkedin.com/in/sam-oen-22001436"
+        />
+        <ContactItem
+            icon="{Discord}"
+            path="https://discord.gg/7JfUv46y"
+            title="Discord"
+            detail="samoen"
+        />
     </div>
 </div>
 
 <style>
     .wrapper {
-        /* margin-inline: auto; */
-        /* margin-left: auto; */
-
-        /* padding-right:10px; */
-        /* position: absolute; */
-        /* inset:0; */
-        padding-block: 20px;
-        padding-inline:15px;
-        overflow-y: auto;
-        /* padding-block: 15px; */
-        /* padding:15px; */
-        /* padding-bottom:20px; */
-        /* background-color: aqua; */
-        /* width: 200px; */
-        /* overflow-x: hidden; */
-
+        /* padding-block: 20px; */
+        /* padding-inline: 15px; */
+        /* overflow: auto; */
     }
-    .contactItem{
-        background-color: var(--colorlight);
-        display: flex;
-        /* flex-direction: column; */
-        align-items: center;
-        gap:10px;
-        padding-inline: 8px;
-        padding-block: 6px;
-    }
-    /* .iconAndType{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    } */
-    /* .wrapper > :not(.icons){
-        margin: 10px;
-    } */
     .icons {
+        /* overflow: hidden; */
         display: flex;
         flex-wrap: wrap;
-        gap:10px;
+        gap: 10px;
+        align-items: center;
         /* padding-left:15px; */
         /* background-color: blue; */
-    }
-    .icon {
-        /* background-color: aqua; */
-        height: 50px;
-        width: 50px;
-        /* flex-grow: 0; */
-        /* width: 50px; */
-        /* align-self: stretch; */
-
-    }
-    .barlink {
-        /* background-color: aqua; */
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        /* height:80px; */
-        /* padding:10px; */
     }
 </style>

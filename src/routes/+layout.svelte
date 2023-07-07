@@ -323,10 +323,10 @@
         right: 4px;
         /* display: grid; */
 
-        overflow-y: auto;
+        overflow: auto;
         z-index: 3;
         background-color: var(--coloritem);
-        /* padding:15px; */
+        padding:15px;
     }
     .top-nav-selection {
         /* overflow: hidden; */
