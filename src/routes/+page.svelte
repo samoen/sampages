@@ -178,7 +178,7 @@
         gap:20px;
         /* justify-content: center; */
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(45%,1fr));
+        grid-template-columns: repeat(auto-fit, minmax(47%,1fr));
         grid-auto-rows:1fr;
 
     }

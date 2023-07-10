@@ -401,6 +401,7 @@
         color: var(--colortext);
         flex-grow: 1;
         text-align: center;
+        overflow-x: hidden;
     }
 
     .topnav {
@@ -411,7 +412,7 @@
         overflow: auto;
         z-index: 3;
         background-color: var(--coloritem);
-        padding: 15px;
+        padding: 10px;
     }
     .top-nav-selection {
         /* overflow: hidden; */
