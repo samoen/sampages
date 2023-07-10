@@ -15,7 +15,6 @@
         DEFAULT_MENU_SLIDE_DURATION,
         barColorState,
         burgIconState,
-        burgopen,
         contactIconState,
         lastBurgClickEvent,
         lastTopShelfEvent,
@@ -25,6 +24,7 @@
         screenWidth,
         settingsIconState,
         showJsButtons,
+        sideBarState,
         sidebarwidth,
         themeMode,
         themes,
@@ -52,7 +52,7 @@
     });
 
     afterNavigate((e) => {
-        if ($mobileMode && $burgopen.open) {
+        if ($mobileMode && $sideBarState.open) {
             lastBurgClickEvent.set(false)
         }
         window.scrollTo(0, 1);
@@ -112,7 +112,7 @@
 />
 
 <div class="top">
-    {#if $mobileMode && $burgopen.open}
+    {#if $mobileMode && $sideBarState.open}
         <div class="shadow" transition:fade></div>
         <div
             transition:fade="{{ duration: 0 }}"
@@ -142,7 +142,7 @@
         <!-- class:delayed-transition="{$topBarTransitionDelayed}" -->
         <TopBarIcon
             push="{() => {
-                if($burgopen){
+                if($sideBarState){
                     lastBurgClickEvent.set(true)
                 }else{
                     lastBurgClickEvent.set(false)
@@ -153,12 +153,12 @@
             <Hamburger
                 size="{1}"
                 padding="{5}"
-                lilShrink="{$burgopen.open}"
+                lilShrink="{$sideBarState.open}"
                 gone="{!$showJsButtons}"
             />
         </TopBarIcon>
         <span class="barp">SAM OEN</span>
-        <!-- {$mobileMode && $burgopen} -->
+        <!-- {$mobileMode && $sideBarState} -->
         <TopBarIcon
             push="{() => {
                 lastTopShelfEvent.set('contact')
@@ -184,25 +184,25 @@
             />
         </TopBarIcon>
     </div>
-    {#if $burgopen.open}
+    {#if $sideBarState.open}
         <div
             class="sidebar brutal-border"
             bind:offsetWidth="{$sidebarwidth}"
             style:top="{$topbarheight + 2}px"
             out:slide="{{
                 delay: 0,
-                duration: $burgopen.speed,
+                duration: $sideBarState.speed,
                 // duration:0,
                 axis: 'x',
             }}"
             in:slide="{{
                 delay: 0,
-                duration: $burgopen.speed,
+                duration: $sideBarState.speed,
                 // duration:0,
                 axis: 'x',
             }}"
             on:outroend="{() => {
-                if (!$burgopen.open) {
+                if (!$sideBarState.open) {
                     $sidebarwidth = 0;
                 }
             }}"
