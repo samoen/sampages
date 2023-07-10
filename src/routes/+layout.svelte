@@ -18,11 +18,13 @@
         contactIconState,
         lastBurgClickEvent,
         lastTopShelfEvent,
+        mobileEvent,
         mobileMode,
         modBase,
         navSelect,
-        screenWidth,
+        scrollEvent,
         settingsIconState,
+        shadowState,
         showJsButtons,
         sideBarState,
         sidebarwidth,
@@ -30,9 +32,10 @@
         themes,
         topNavHeight,
         topbarheight,
-        wscrollY,
+        wscrollY
     } from "$lib/stores";
     import { onMount } from "svelte";
+    import { get } from "svelte/store";
     import { fade, slide } from "svelte/transition";
 
     // export let data;
@@ -48,15 +51,38 @@
             }
         }
         showJsButtons.set(true);
+        // lastWindowWidth = window.innerWidth;
+        maybeMobileEvent();
         // mounted = true;
     });
 
     afterNavigate((e) => {
+        console.log("afterNavigate");
         if ($mobileMode && $sideBarState.open) {
-            lastBurgClickEvent.set(false)
+            lastBurgClickEvent.set({
+                type: "close",
+                mobileMode: get(mobileMode),
+            });
         }
         window.scrollTo(0, 1);
     });
+
+    let lastWindowWidth = 0;
+    function maybeMobileEvent() {
+        let newWindowWidth = window.innerWidth;
+        if (newWindowWidth < 600 && lastWindowWidth >= 600) {
+            mobileEvent.set({
+                type: "wentMobile",
+                sidebar: get(sideBarState),
+            });
+        } else if (newWindowWidth >= 600 && lastWindowWidth < 600) {
+            mobileEvent.set({
+                type: "leftMobile",
+                sidebar: get(sideBarState),
+            });
+        }
+        lastWindowWidth = window.innerWidth;
+    }
 
     // let preloadedImages = [xbig, biggy];
 </script>
@@ -106,13 +132,25 @@
     {/each} -->
 </svelte:head>
 
+<!-- bind:innerWidth="{$screenWidth}" -->
 <svelte:window
     bind:scrollY="{$wscrollY}"
-    bind:innerWidth="{$screenWidth}"
+    on:scroll="{() => {
+        console.log('window onscroll');
+        scrollEvent.set({
+            type: 'scrolled',
+            mobileMode: get(mobileMode),
+            sidebar: get(sideBarState),
+        });
+    }}"
+    on:resize="{(e) => {
+        console.log('window onresize');
+        maybeMobileEvent();
+    }}"
 />
 
 <div class="top">
-    {#if $mobileMode && $sideBarState.open}
+    {#if $shadowState}
         <div class="shadow" transition:fade></div>
         <div
             transition:fade="{{ duration: 0 }}"
@@ -122,7 +160,10 @@
             style:width="calc(100vw - {$sidebarwidth}px)"
             style:top="{$topbarheight}px"
             on:click="{() => {
-                lastBurgClickEvent.set(false)
+                lastBurgClickEvent.set({
+                    type: 'close',
+                    mobileMode: get(mobileMode),
+                });
             }}"
             aria-hidden="true"
             on:keyup
@@ -142,10 +183,16 @@
         <!-- class:delayed-transition="{$topBarTransitionDelayed}" -->
         <TopBarIcon
             push="{() => {
-                if($sideBarState){
-                    lastBurgClickEvent.set(true)
-                }else{
-                    lastBurgClickEvent.set(false)
+                if ($sideBarState.open) {
+                    lastBurgClickEvent.set({
+                        type: 'close',
+                        mobileMode: get(mobileMode),
+                    });
+                } else {
+                    lastBurgClickEvent.set({
+                        type: 'open',
+                        mobileMode: get(mobileMode),
+                    });
                 }
             }}"
             state="{$burgIconState}"
@@ -161,19 +208,43 @@
         <!-- {$mobileMode && $sideBarState} -->
         <TopBarIcon
             push="{() => {
-                lastTopShelfEvent.set('contact')
+                if ($navSelect.sel != 'contact') {
+                    lastTopShelfEvent.set({
+                        type: 'opencontact',
+                        old: $navSelect,
+                        mobileMode: get(mobileMode),
+                    });
+                } else {
+                    lastTopShelfEvent.set({
+                        type: 'close',
+                        old: $navSelect,
+                        mobileMode: get(mobileMode),
+                    });
+                }
             }}"
             state="{$contactIconState}"
-            >
+        >
             <Hand
-            padding="{5}"
-            lilShrink="{$navSelect.sel == 'contact'}"
-            gone="{!$showJsButtons}"
+                padding="{5}"
+                lilShrink="{$navSelect.sel == 'contact'}"
+                gone="{!$showJsButtons}"
             />
         </TopBarIcon>
         <TopBarIcon
-        push="{() => {
-            lastTopShelfEvent.set('settings')
+            push="{() => {
+                if ($navSelect.sel != 'settings') {
+                    lastTopShelfEvent.set({
+                        type: 'opensettings',
+                        old: $navSelect,
+                        mobileMode: $mobileMode,
+                    });
+                } else {
+                    lastTopShelfEvent.set({
+                        type: 'close',
+                        old: $navSelect,
+                        mobileMode: $mobileMode,
+                    });
+                }
             }}"
             state="{$settingsIconState}"
         >
@@ -402,30 +473,30 @@
         }
     }
 
-    @media only screen and (max-width: 599px) {
-        .shadow {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            background-color: black;
-            opacity: 0.5;
-            z-index: 1;
-        }
-        .shadowclick {
-            position: fixed;
-            z-index: 3;
-        }
+    /* @media only screen and (max-width: 599px) { */
+    .shadow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: black;
+        opacity: 0.5;
+        z-index: 1;
     }
-    @media only screen and (min-width: 600px) {
+    .shadowclick {
+        position: fixed;
+        z-index: 3;
+    }
+    /* } */
+    /* @media only screen and (min-width: 600px) {
         .shadow {
             display: none;
         }
         .shadowclick {
             display: none;
         }
-    }
+    } */
     .top :global(.quick-transition) {
         transition-duration: 0ms;
     }
@@ -462,11 +533,11 @@
         text-wrap: balance;
         font-weight: 500;
     }
-    :global(button,a){
+    :global(button, a) {
         -webkit-tap-highlight-color: transparent;
     }
     /* :global(p, h1, h2, h3) { */
-        /* margin-bottom: 0.6em; */
+    /* margin-bottom: 0.6em; */
     /* } */
     :global(a:focus, a:active) {
         outline: none;
@@ -493,7 +564,7 @@
         font-family: "Brush Script MT", "Comic Sans MS", Verdana,
             Arial, monospace;
     }
-    
+
     :global(body) {
         transition: background-color 1s ease-in-out;
         background-color: var(--colorprimary);
