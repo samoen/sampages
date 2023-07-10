@@ -17,7 +17,8 @@
         burgIconState,
         burgopen,
         contactIconState,
-        lastEvent,
+        lastBurgClickEvent,
+        lastTopShelfEvent,
         mobileMode,
         modBase,
         navSelect,
@@ -27,7 +28,6 @@
         sidebarwidth,
         themeMode,
         themes,
-        toggleSidebar,
         topNavHeight,
         topbarheight,
         wscrollY,
@@ -53,7 +53,7 @@
 
     afterNavigate((e) => {
         if ($mobileMode && $burgopen.open) {
-            toggleSidebar();
+            lastBurgClickEvent.set(false)
         }
         window.scrollTo(0, 1);
     });
@@ -122,7 +122,7 @@
             style:width="calc(100vw - {$sidebarwidth}px)"
             style:top="{$topbarheight}px"
             on:click="{() => {
-                toggleSidebar();
+                lastBurgClickEvent.set(false)
             }}"
             aria-hidden="true"
             on:keyup
@@ -142,7 +142,11 @@
         <!-- class:delayed-transition="{$topBarTransitionDelayed}" -->
         <TopBarIcon
             push="{() => {
-                toggleSidebar();
+                if($burgopen){
+                    lastBurgClickEvent.set(true)
+                }else{
+                    lastBurgClickEvent.set(false)
+                }
             }}"
             state="{$burgIconState}"
         >
@@ -157,19 +161,19 @@
         <!-- {$mobileMode && $burgopen} -->
         <TopBarIcon
             push="{() => {
-                lastEvent.set({ e: 'contactClick' });
+                lastTopShelfEvent.set('contact')
             }}"
             state="{$contactIconState}"
-        >
+            >
             <Hand
-                padding="{5}"
-                lilShrink="{$navSelect.sel == 'contact'}"
-                gone="{!$showJsButtons}"
+            padding="{5}"
+            lilShrink="{$navSelect.sel == 'contact'}"
+            gone="{!$showJsButtons}"
             />
         </TopBarIcon>
         <TopBarIcon
-            push="{() => {
-                lastEvent.set({ e: 'settingsClick' });
+        push="{() => {
+            lastTopShelfEvent.set('settings')
             }}"
             state="{$settingsIconState}"
         >
@@ -201,7 +205,6 @@
                 if (!$burgopen.open) {
                     $sidebarwidth = 0;
                 }
-                lastEvent.set({ e: 'menuOut' });
             }}"
         >
             <nav class="sidenav">
@@ -239,7 +242,6 @@
                     duration: $navSelect.outSpeed,
                 }}"
                 on:outroend="{() => {
-                    lastEvent.set({ e: 'menuOut' });
                     if ($navSelect.sel == 'none') {
                         $topNavHeight = 0;
                     }

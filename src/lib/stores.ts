@@ -36,32 +36,30 @@ export const topBarTransitionQuick = writable(false)
 export const showJsButtons = writable(false)
 export const topNavOutDuration = writable(DEFAULT_MENU_SLIDE_DURATION)
 
-type UiEventKey = 'fresh' | 'burgclick' | 'contactClick' | 'settingsClick' | 'reachedTop' | 'menuOut' | 'scrolled' | 'wentMobile'
-type UiEvent = { e: UiEventKey }
-export const lastEvent = writable<UiEvent>({ e: 'fresh' })
-
 type Lang = 'EN' | 'ES'
 export const selectedLang = writable<Lang>('EN')
 
 export const topNavHeight = writable<number>();
+export const lastBurgClickEvent = writable<boolean | 'done'>('done')
+export const lastTopShelfEvent = writable<TopShelfState | 'done'>('done')
 
 export type SidebarState = { open: boolean, speed: number }
-export const burgopen: Readable<SidebarState> = derived<Stores, SidebarState>(
-  [lastEvent],
-  ([$lastEvent], set, update) => {
-    if ($lastEvent.e == 'burgclick') {
+export const burgopen: Readable<SidebarState> = derived<[typeof lastBurgClickEvent, typeof lastTopShelfEvent], SidebarState>(
+  [lastBurgClickEvent, lastTopShelfEvent],
+  ([$lastBurgClickEvent, $lastTopShelfEvent], set, update) => {
+    if ($lastBurgClickEvent != 'done') {
       update((x) => {
-        console.log('set long')
         return { open: !x.open, speed: DEFAULT_MENU_SLIDE_DURATION }
       })
+      lastBurgClickEvent.set('done')
       return () => { }
     }
 
     if (
-      ($lastEvent.e == 'contactClick' || $lastEvent.e == 'settingsClick') &&
+      $lastTopShelfEvent != 'done' &&
+      $lastTopShelfEvent != 'none' &&
       get(mobileMode)
-      ) {
-      console.log('settin short')
+    ) {
       update(() => { return { open: false, speed: 0 } })
       return () => { }
     }
@@ -70,48 +68,58 @@ export const burgopen: Readable<SidebarState> = derived<Stores, SidebarState>(
   ,
   { open: false, speed: 0 }
 )
-burgopen.subscribe((e) => {
-  console.log(e)
-})
 
-type Topnavselect = { sel: 'settings' | 'contact' | 'none', outSpeed?: number }
+export type TopShelfState = 'settings' | 'contact' | 'none'
+export type Topnavselect = { sel: TopShelfState, outSpeed?: number }
 export var navSelect: Readable<Topnavselect> =
-  derived<Stores, Topnavselect>([lastEvent, mobileMode, burgopen],
-    ([$lastEvent, $mobileMode, $burgopen], set, update) => {
-      if ($lastEvent.e == 'settingsClick') {
-        update((x) => {
-          if (x.sel == 'none') {
-            return { sel: 'settings', outSpeed: 0 }
-          }
-          if (x.sel == 'contact') {
-            return { sel: 'settings', outSpeed: 0 }
-          }
-          return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION }
-        })
-        return () => { }
-      }
+  derived<
+    [typeof lastTopShelfEvent, typeof lastBurgClickEvent, typeof mobileMode],
+    Topnavselect>
+    ([lastTopShelfEvent, lastBurgClickEvent, mobileMode],
+      ([$lastTopShelfEvent, $lastBurgClickEvent, $mobileMode], set, update) => {
+        if ($lastTopShelfEvent == 'settings') {
+          update((x) => {
+            if (x.sel == 'none') {
+              console.log('yo')
+              return { sel: 'settings', outSpeed: 0 }
+            }
+            if (x.sel == 'contact') {
+              return { sel: 'settings', outSpeed: 0 }
+            }
+            return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION }
+          })
+          lastTopShelfEvent.set('done')
+          return () => { }
+        }
 
-      if ($lastEvent.e == 'contactClick') {
-        update((x) => {
-          if (x.sel == 'none') {
-            return { sel: 'contact', outSpeed: 0 }
-          }
-          if (x.sel == 'settings') {
-            return { sel: 'contact', outSpeed: 0 }
-          }
-          return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION }
-        })
-        return () => { }
-      }
+        if ($lastTopShelfEvent == 'contact') {
+          update((x) => {
+            if (x.sel == 'none') {
+              return { sel: 'contact', outSpeed: 0 }
+            }
+            if (x.sel == 'settings') {
+              return { sel: 'contact', outSpeed: 0 }
+            }
+            return { sel: 'none', outSpeed: DEFAULT_MENU_SLIDE_DURATION }
+          })
+          lastTopShelfEvent.set('done')
+          return () => { }
+        }
 
-      if ($mobileMode && $burgopen.open) {
-        // setTimeout(()=>{
-        set({ sel: 'none', outSpeed: 0 })
-        // },1000)
+        if ($lastBurgClickEvent == true && get(mobileMode)) {
+          console.log('closing shelf because opened side in mobile')
+          set({ sel: 'none', outSpeed: 0 })
+          return () => { }
+        }
+        
+        if ($mobileMode && get(burgopen).open) {
+          console.log('closing shelf because went mobile while side open')
+          set({ sel: 'none', outSpeed: 0 })
+          return () => { }
+        }
+
         return () => { }
-      }
-      return () => { }
-    }, { sel: 'none', outSpeed: 0 })
+      }, { sel: 'none', outSpeed: 0 })
 
 export type TopBarColorState = { color: 'transparent' | 'solid' | 'blur', speed: 'instant' | 'slow' }
 export const barColorState: Readable<TopBarColorState> = derived([atTop, burgopen, navSelect], ([$atTop, $burgopen, $navSelect]) => {
@@ -171,15 +179,6 @@ export const splashMarginTop = derived([navSelect, burgopen, mobileMode], ([$nav
 
 export const modBase = base == "" ? "/" : base
 
-mobileMode.subscribe((val) => {
-  if (val) {
-    lastEvent.set({ e: 'wentMobile' })
-  }
-})
-
-wscrollY.subscribe((value) => {
-  lastEvent.set({ e: 'scrolled' })
-})
 
 export const toggleTheme = () => {
   // topBarTransitionQuick.set(false)
@@ -189,8 +188,4 @@ export const toggleTheme = () => {
   } else {
     themeMode.set(themes.light);
   }
-}
-
-export const toggleSidebar = () => {
-  lastEvent.set({ e: 'burgclick' })
 }

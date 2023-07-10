@@ -178,7 +178,7 @@
         gap:20px;
         /* justify-content: center; */
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(45vw,1fr));
+        grid-template-columns: repeat(auto-fit, minmax(45%,1fr));
         grid-auto-rows:1fr;
 
     }
@@ -191,7 +191,7 @@
         /* display:flex; */
         /* flex-wrap: nowrap; */
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+        grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
         grid-auto-rows:1fr;
         gap:20px;
     }
