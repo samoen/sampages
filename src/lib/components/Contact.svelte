@@ -57,18 +57,25 @@
     .wrapper {
         /* padding-block: 20px; */
         /* padding-inline: 15px; */
-        /* overflow: auto; */
+        overflow-x: auto;
     }
     .icons {
         /* overflow: hidden; */
+
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
+        column-gap: 10px;
+        row-gap: 15px;
+        align-items: flex-start;
+        /* align-content: center; */
+        /* justify-items:flex-end; */
+        justify-content: center;
         /* padding-left:15px; */
         /* background-color: blue; */
+        /* padding-block: 10px; */
+        padding-inline: 10px;
     }
     h2 {
-        margin-bottom: 0.4em;
+        margin-bottom: calc(0.5em + 5px);
     }
 </style>
