@@ -14,7 +14,6 @@
     class="barlink" 
     href="{path}"
     style:height="{rightHeight}px"
-    
     >
             <svelte:component this={icon} />
     </a>
@@ -22,16 +21,16 @@
         class="right"
         bind:offsetHeight="{rightHeight}"
     >
-        <span>{title}<br /></span>
+        <span>{title}</span>
         <span class="detail">{detail}</span>
     </div>
 </div>
 
 <style>
     .contactItem{
-        padding-right:10px;
-        padding-left:5px;
-        padding-block:3px;
+        padding-right:5px;
+        padding-left:2px;
+        background-color: var(--colorsecondary);
         display: flex;
         flex-wrap: wrap;
         align-items: center;
@@ -39,14 +38,23 @@
         overflow: hidden;
     }
     .barlink{
+        /* width: 2em; */
+        /* height:2em; */
         aspect-ratio: 1/1;
     }
     .detail{
+        display: inline-block;
         font-size:0.7rem;
+        max-width: 16ch;
+        word-wrap: break-word;
+        /* background-color: aqua; */
+        line-height:0.9em;
     }
     .right{
-        line-height:1em;
-        padding-block: 6px;
+        padding-bottom: 6px;
+        display: flex;
+        flex-direction: column;
+        gap:1px;
         /* line-height:5px; */
     }
 </style>

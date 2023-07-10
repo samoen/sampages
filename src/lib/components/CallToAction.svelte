@@ -208,16 +208,7 @@
         min-height: var(--gag-msgs-height);
         height: var(--gag-msgs-height);
     }
-    @media (hover: hover) and (pointer: fine) {
-        .gagstart > button:hover {
-            background-color: var(--coloritem);
-            transition: background-color 0s;
-        }
-        .gagstart > button {
-            cursor: pointer;
-        }
-    }
-
+    
     .grid1 {
         grid-row: 1 / 1;
         grid-column: 1 / 1;

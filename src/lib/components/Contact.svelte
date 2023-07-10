@@ -39,16 +39,16 @@
             detail="github.com/samoen"
         />
         <ContactItem
-            icon="{LinkedIn}"
-            path="https://www.linkedin.com/in/sam-oen-22001436/"
-            title="LinkedIn"
-            detail="linkedin.com/in/sam-oen-22001436"
-        />
-        <ContactItem
             icon="{Discord}"
             path="https://discord.gg/7JfUv46y"
             title="Discord"
             detail="samoen"
+        />
+        <ContactItem
+            icon="{LinkedIn}"
+            path="https://www.linkedin.com/in/sam-oen-22001436/"
+            title="LinkedIn"
+            detail="linkedin.com/in/sam-oen-22001436"
         />
     </div>
 </div>
@@ -63,8 +63,9 @@
         /* overflow: hidden; */
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
+        gap: 7px;
+        /* align-items: center; */
+        /* justify-content: center; */
         /* padding-left:15px; */
         /* background-color: blue; */
     }

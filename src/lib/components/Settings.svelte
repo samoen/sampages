@@ -77,8 +77,6 @@
     .flag{
         height:35px;
         width:50px;
-        touch-action: none;
-        cursor: pointer;
         /* padding:10px; */
     }
     
@@ -96,17 +94,10 @@
         white-space: nowrap;
     }
     .themePick {
-        touch-action: none;
-        cursor: pointer;
-        /* width: 40px; */
-        /* height: 40px; */
         font-weight: bold;
         padding-inline: 15px;
         padding-block: 10px;
-        touch-action: none;
-        /* border-width: 0; */
         background-color: transparent;
-        cursor: pointer;
     }
     .shrink {
         transform: scale(0.9);

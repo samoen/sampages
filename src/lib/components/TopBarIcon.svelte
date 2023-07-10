@@ -23,12 +23,10 @@
 
 <style>
     .baricon {
-        touch-action: none;
         background-color: var(--colorpressed);
         display: flex;
         align-items: center;
         justify-content: center;
-        -webkit-tap-highlight-color: transparent;
     }
 
     .fadey {
@@ -45,14 +43,5 @@
     
     .gone {
         color: transparent;
-    }
-    @media (hover: hover) and (pointer: fine) {
-        .baricon.brutal-border:not(.delayed-transition):hover {
-            background-color: var(--coloritem);
-            transition: background-color 0s;
-        }
-        .baricon {
-            cursor: pointer;
-        }
     }
 </style>

@@ -30,7 +30,6 @@ class:brutal-border="{$page.url.pathname != `${path}`}"
 <style>
     a {
         background-color: var(--colorlight);
-        text-decoration: none;
         display: block;
         padding-inline: 5px;
         padding-block: 5px;

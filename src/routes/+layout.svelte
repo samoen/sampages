@@ -467,13 +467,6 @@
         padding: 25px;
     }
 
-    @media (hover: hover) and (pointer: fine) {
-        a:hover {
-            background-color: var(--colorlight);
-            transition: background-color 0s;
-        }
-    }
-
     /* @media only screen and (max-width: 599px) { */
     .shadow {
         position: absolute;
@@ -537,9 +530,13 @@
     :global(button, a) {
         -webkit-tap-highlight-color: transparent;
     }
-    /* :global(p, h1, h2, h3) { */
-    /* margin-bottom: 0.6em; */
-    /* } */
+    :global(button){
+        cursor: pointer;
+        touch-action: none;
+    }
+    :global(a){
+        text-decoration: none;
+    }
     :global(a:focus, a:active) {
         outline: none;
     }
