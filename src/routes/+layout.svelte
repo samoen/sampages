@@ -62,7 +62,7 @@
             lastBurgClickEvent.set({
                 type: "close",
                 mobileMode: get(mobileMode),
-                topShelfState: get(topShelfState)
+                topShelfState: get(topShelfState),
             });
         }
         window.scrollTo(0, 1);
@@ -148,14 +148,24 @@
         // console.log('window onresize');
         maybeMobileEvent();
     }}"
+    on:wheel="{(e) => {
+        // console.log(e.target);
+    }}"
 />
 
 <div class="top">
     {#if $shadowState}
-        <div class="shadow" transition:fade></div>
         <div
-            transition:fade="{{ duration: 0 }}"
+            class="shadow"
+            transition:fade
+            on:wheel="{(e) => {
+                console.log('heyo');
+                e.preventDefault();
+            }}"
+        ></div>
+        <div
             class="shadowclick"
+            transition:fade="{{ duration: 0 }}"
             style:left="{$sidebarwidth}px"
             style:height="calc(100vh - {$topbarheight}px)"
             style:width="calc(100vw - {$sidebarwidth}px)"
@@ -164,7 +174,7 @@
                 lastBurgClickEvent.set({
                     type: 'close',
                     mobileMode: get(mobileMode),
-                topShelfState: get(topShelfState),
+                    topShelfState: get(topShelfState),
                 });
             }}"
             on:touchstart|once|preventDefault="{() => {
@@ -176,6 +186,9 @@
             }}"
             aria-hidden="true"
             on:keyup
+            on:wheel="{(e) => {
+                e.preventDefault();
+            }}"
         ></div>
     {/if}
 
@@ -188,6 +201,12 @@
         class:blurbar="{$barColorState.color == 'blur'}"
         class:quick-transition="{$barColorState.speed == 'instant'}"
         bind:clientHeight="{$topbarheight}"
+        on:touchmove|nonpassive="{(e) => {
+            e.preventDefault();
+        }}"
+        on:wheel|nonpassive="{(e) => {
+            e.preventDefault();
+        }}"
     >
         <TopBarIcon
             push="{() => {
@@ -287,6 +306,12 @@
                     $sidebarwidth = 0;
                 }
             }}"
+            on:wheel|nonpassive="{(e) => {
+                if (!sidenav) return;
+                if (sidenav.scrollHeight <= sidenav.clientHeight) {
+                    e.preventDefault();
+                }
+            }}"
         >
             <nav
                 class="sidenav"
@@ -295,6 +320,17 @@
                     if (!sidenav) return;
                     if (
                         sidenav.scrollHeight <= sidenav.clientHeight
+                    ) {
+                        e.preventDefault();
+                    }
+                }}"
+                on:wheel|nonpassive="{(e) => {
+                    console.log('navwheel ');
+                    if (!sidenav) return;
+                    if (
+                        sidenav.scrollHeight <=
+                            sidenav.clientHeight &&
+                        $mobileMode
                     ) {
                         e.preventDefault();
                     }
@@ -369,7 +405,8 @@
 
 <style>
     .top {
-        position: relative; /* so backdrop can position absolute */
+        /* position: relative; */
+        /* so backdrop can position absolute */
     }
 
     .slotandfoot {
@@ -457,6 +494,7 @@
         overflow-x: hidden;
         overflow-y: auto;
     }
+
     .sidenav ul {
         /* overflow-x: hidden; */
         list-style: none;
@@ -488,13 +526,9 @@
         padding: 25px;
     }
 
-    /* @media only screen and (max-width: 599px) { */
     .shadow {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
+        position: fixed;
+        inset: 0px;
         background-color: black;
         opacity: 0.5;
         z-index: 1;
@@ -503,15 +537,6 @@
         position: fixed;
         z-index: 3;
     }
-    /* } */
-    /* @media only screen and (min-width: 600px) {
-        .shadow {
-            display: none;
-        }
-        .shadowclick {
-            display: none;
-        }
-    } */
     .top :global(.quick-transition) {
         transition-duration: 0ms;
     }

@@ -8,7 +8,7 @@ export const DEFAULT_COLOR_TRANSITION_DURATION = 600
 export const screenWidth = writable(0)
 
 export type MobileEvent = { type: 'wentMobile' | 'leftMobile', sidebar: SidebarState } | 'done'
-export const mobileEvent = writable<MobileEvent>({ type: 'wentMobile', sidebar: { open: false, speed: 0 } })
+export const mobileEvent = writable<MobileEvent>('done')
 mobileEvent.subscribe(val => {
   if (val != 'done') {
     mobileEvent.set('done')
@@ -66,7 +66,11 @@ type Lang = 'EN' | 'ES'
 export const selectedLang = writable<Lang>('EN')
 
 export const topNavHeight = writable<number>();
-export type BurgerClickEvent = { type: 'open' | 'close', mobileMode: boolean, topShelfState:TopShelfState } | 'done'
+export type BurgerClickEvent = { 
+  type: 'open' | 'close',
+  mobileMode: boolean,
+  topShelfState:TopShelfState
+} | 'done'
 export const lastBurgClickEvent = writable<BurgerClickEvent>('done')
 lastBurgClickEvent.subscribe(val => {
   if (val != 'done') {
