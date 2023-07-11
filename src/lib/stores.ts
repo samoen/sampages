@@ -42,7 +42,7 @@ export type ScrollEvent = { type: 'scrolled', mobileMode: boolean, sidebar: Side
 export const scrollEvent = writable<ScrollEvent>('done')
 scrollEvent.subscribe((val) => {
   if (val != 'done') {
-    console.log('scroll event done')
+    // console.log('scroll event done')
     scrollEvent.set('done')
   }
 })
@@ -102,18 +102,18 @@ export const sideBarState: Readable<SidebarState> =
       if (
         $lastTopShelfEvent != 'done' &&
         $lastTopShelfEvent.type != 'close' &&
-        get(mobileMode)
+        $lastTopShelfEvent.mobileMode
       ) {
         console.log('closing sidebar because top shelf opened in mobile')
         update(() => { return { open: false, speed: 0 } })
         return () => { }
       }
-      if ($scrollEvent != 'done') {
-        if ($scrollEvent.type == 'scrolled' && get(sideBarState).open && $scrollEvent.mobileMode) {
-          console.log('closing sidebar because scrolled while mobile')
-          set({ open: false, speed: DEFAULT_MENU_SLIDE_DURATION })
-        }
-      }
+      // if ($scrollEvent != 'done') {
+        // if ($scrollEvent.type == 'scrolled' && get(sideBarState).open && $scrollEvent.mobileMode) {
+          // console.log('closing sidebar because scrolled while mobile')
+          // set({ open: false, speed: DEFAULT_MENU_SLIDE_DURATION })
+        // }
+      // }
       return () => { }
     }
     ,
@@ -150,7 +150,7 @@ export var navSelect: Readable<Topnavselect> =
 
         }
 
-        if ($mobileEvent.type == 'wentMobile' && get(sideBarState).open) {
+        if ($mobileEvent.type == 'wentMobile' && $mobileEvent.sidebar.open) {
           console.log('closing shelf because went mobile while side open')
           set({ sel: 'none', outSpeed: 0 })
           return () => { }
@@ -175,24 +175,28 @@ export const barColorState: Readable<TopBarColorState> = derived(
 export type TopBarIconColor = 'solid' | 'transparent' | 'inset'
 export type TransitionSpeed = 'instant' | 'slow'
 export type TopBarIconState = { color: TopBarIconColor, transition: TransitionSpeed }
-export const burgIconState: Readable<TopBarIconState> = derived([sideBarState, barColorState], ([$sideBarState, $bcs]) => {
-  if ($sideBarState.open) {
-    return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
-  }
-  if ($bcs.color == 'blur') {
-    return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
-  }
-  return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
-})
-export const contactIconState: Readable<TopBarIconState> = derived([navSelect, barColorState], ([$ns, $bcs]) => {
-  if ($ns.sel == 'contact') {
-    return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
-  }
-  if ($bcs.color == 'blur') {
-    return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
-  }
-  return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
-})
+export const burgIconState: Readable<TopBarIconState> =
+  derived(
+    [sideBarState, barColorState],
+    ([$sideBarState, $bcs]) => {
+      if ($sideBarState.open) {
+        return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
+      }
+      if ($bcs.color == 'blur') {
+        return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
+      }
+      return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
+    })
+export const contactIconState: Readable<TopBarIconState> =
+  derived([navSelect, barColorState], ([$ns, $bcs]) => {
+    if ($ns.sel == 'contact') {
+      return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
+    }
+    if ($bcs.color == 'blur') {
+      return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
+    }
+    return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
+  })
 export const settingsIconState: Readable<TopBarIconState> = derived([navSelect, barColorState], ([$ns, $bcs]) => {
   if ($ns.sel == 'settings') {
     return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
@@ -228,13 +232,13 @@ export const shadowState: Readable<boolean> =
           }
         }
       }
-      if ($scrollEvent != 'done') {
-        if ($scrollEvent.type == 'scrolled' && $scrollEvent.mobileMode && $scrollEvent.sidebar.open) {
-          console.log('removing shadow because scrolled while sidebar open in mobile')
-          set(false)
-          return () => { }
-        }
-      }
+      // if ($scrollEvent != 'done') {
+      //   if ($scrollEvent.type == 'scrolled' && $scrollEvent.mobileMode && $scrollEvent.sidebar.open) {
+      //     console.log('removing shadow because scrolled while sidebar open in mobile')
+      //     set(false)
+      //     return () => { }
+      //   }
+      // }
       if ($mobileEvent.type == 'wentMobile' && $mobileEvent.sidebar?.open) {
         console.log('showing shadow because went mobile while sidebar open')
         set(true)
@@ -248,29 +252,16 @@ export const shadowState: Readable<boolean> =
       return () => { }
     }, false)
 
-
-
-export const splashMarginTop = derived([navSelect, sideBarState, mobileMode], ([$navSelect, $sideBarState, $mm]) => {
-  let lowered = false
-  if ($sideBarState.open && !$mm) {
-    lowered = true
-    return { marg: get(topbarheight) + 20, pad: 15 }
-  }
-  if ($navSelect.sel != 'none') {
-    return { marg: get(topbarheight) + 20, pad: 15 }
-  }
-  return { marg: 3, pad: 65 };
-})
+export const splashMarginTop = derived(
+  [navSelect, sideBarState, mobileMode],
+  ([$navSelect, $sideBarState, $mobileMode]) => {
+    if ($sideBarState.open && !$mobileMode) {
+      return { marg: get(topbarheight) + 20, pad: 15 }
+    }
+    if ($navSelect.sel != 'none') {
+      return { marg: get(topbarheight) + 20, pad: 15 }
+    }
+    return { marg: 3, pad: 65 };
+  })
 
 export const modBase = base == "" ? "/" : base
-
-
-export const toggleTheme = () => {
-  // topBarTransitionQuick.set(false)
-  // topBarTransitionDelayed.set(false);
-  if (get(themeMode) == themes.light) {
-    themeMode.set(themes.dark);
-  } else {
-    themeMode.set(themes.light);
-  }
-}

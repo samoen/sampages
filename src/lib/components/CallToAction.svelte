@@ -3,7 +3,7 @@
 
     let falling = false;
     let fading = false;
-    let gagbut: HTMLButtonElement;
+    let gagbut: HTMLButtonElement | undefined;
     let butx = 0;
     let buty = 0;
     let clickedCall = false;
@@ -48,6 +48,7 @@
                 class="press-me"
                 bind:this="{gagbut}"
                 on:click="{() => {
+                    if(!gagbut) return;
                     let r = gagbut.getBoundingClientRect();
                     butx = r.left;
                     buty = r.top + scrollY;

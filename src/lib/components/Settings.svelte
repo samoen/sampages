@@ -1,13 +1,11 @@
 <script>
     import Esflag from "$lib/assets/Esflag.svelte";
-    import Palette from "$lib/assets/Palette.svelte";
 
     import Ukflag from "$lib/assets/Ukflag.svelte";
     import {
         selectedLang,
         themeMode,
-        themes,
-        toggleTheme,
+        themes
     } from "$lib/stores";
 </script>
 

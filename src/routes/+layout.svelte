@@ -32,17 +32,17 @@
         themes,
         topNavHeight,
         topbarheight,
-        wscrollY
+        wscrollY,
     } from "$lib/stores";
     import { onMount } from "svelte";
     import { get } from "svelte/store";
     import { fade, slide } from "svelte/transition";
 
     // export let data;
-
-    let preloadableRoutes = [modBase, `${base}/about`];
     // let mounted = false;
 
+    let preloadableRoutes = [modBase, `${base}/about`];
+    let sidenav: HTMLElement | undefined = undefined;
     onMount(() => {
         for (let r of preloadableRoutes) {
             if ($page.url.pathname != r) {
@@ -135,7 +135,7 @@
 <!-- bind:innerWidth="{$screenWidth}" -->
 <svelte:window
     bind:scrollY="{$wscrollY}"
-    on:scroll="{() => {
+    on:scroll="{(e) => {
         console.log('window onscroll');
         scrollEvent.set({
             type: 'scrolled',
@@ -159,7 +159,13 @@
             style:height="calc(100vh - {$topbarheight}px)"
             style:width="calc(100vw - {$sidebarwidth}px)"
             style:top="{$topbarheight}px"
-            on:click="{() => {
+            on:click|once|preventDefault="{() => {
+                lastBurgClickEvent.set({
+                    type: 'close',
+                    mobileMode: get(mobileMode),
+                });
+            }}"
+            on:touchstart|once|preventDefault="{() => {
                 lastBurgClickEvent.set({
                     type: 'close',
                     mobileMode: get(mobileMode),
@@ -180,7 +186,6 @@
         class:quick-transition="{$barColorState.speed == 'instant'}"
         bind:clientHeight="{$topbarheight}"
     >
-        <!-- class:delayed-transition="{$topBarTransitionDelayed}" -->
         <TopBarIcon
             push="{() => {
                 if ($sideBarState.open) {
@@ -278,7 +283,18 @@
                 }
             }}"
         >
-            <nav class="sidenav">
+            <nav
+                class="sidenav"
+                bind:this="{sidenav}"
+                on:touchmove|nonpassive="{(e) => {
+                    if (!sidenav) return;
+                    if (
+                        sidenav.scrollHeight <= sidenav.clientHeight
+                    ) {
+                        e.preventDefault();
+                    }
+                }}"
+            >
                 <ul>
                     <li>
                         <SideBarItem
@@ -530,11 +546,11 @@
     :global(button, a) {
         -webkit-tap-highlight-color: transparent;
     }
-    :global(button){
+    :global(button) {
         cursor: pointer;
         touch-action: none;
     }
-    :global(a){
+    :global(a) {
         text-decoration: none;
     }
     :global(a:focus, a:active) {
