@@ -21,7 +21,7 @@
         mobileEvent,
         mobileMode,
         modBase,
-        navSelect,
+        topShelfState,
         scrollEvent,
         settingsIconState,
         shadowState,
@@ -62,6 +62,7 @@
             lastBurgClickEvent.set({
                 type: "close",
                 mobileMode: get(mobileMode),
+                topShelfState: get(topShelfState)
             });
         }
         window.scrollTo(0, 1);
@@ -136,7 +137,7 @@
 <svelte:window
     bind:scrollY="{$wscrollY}"
     on:scroll="{(e) => {
-        console.log('window onscroll');
+        // console.log('window onscroll');
         scrollEvent.set({
             type: 'scrolled',
             mobileMode: get(mobileMode),
@@ -144,7 +145,7 @@
         });
     }}"
     on:resize="{(e) => {
-        console.log('window onresize');
+        // console.log('window onresize');
         maybeMobileEvent();
     }}"
 />
@@ -163,12 +164,14 @@
                 lastBurgClickEvent.set({
                     type: 'close',
                     mobileMode: get(mobileMode),
+                topShelfState: get(topShelfState),
                 });
             }}"
             on:touchstart|once|preventDefault="{() => {
                 lastBurgClickEvent.set({
                     type: 'close',
                     mobileMode: get(mobileMode),
+                    topShelfState: get(topShelfState),
                 });
             }}"
             aria-hidden="true"
@@ -192,11 +195,13 @@
                     lastBurgClickEvent.set({
                         type: 'close',
                         mobileMode: get(mobileMode),
+                        topShelfState: get(topShelfState),
                     });
                 } else {
                     lastBurgClickEvent.set({
                         type: 'open',
                         mobileMode: get(mobileMode),
+                        topShelfState: get(topShelfState),
                     });
                 }
             }}"
@@ -213,16 +218,16 @@
         <!-- {$mobileMode && $sideBarState} -->
         <TopBarIcon
             push="{() => {
-                if ($navSelect.sel != 'contact') {
+                if ($topShelfState.sel != 'contact') {
                     lastTopShelfEvent.set({
                         type: 'opencontact',
-                        old: $navSelect,
+                        old: $topShelfState,
                         mobileMode: get(mobileMode),
                     });
                 } else {
                     lastTopShelfEvent.set({
                         type: 'close',
-                        old: $navSelect,
+                        old: $topShelfState,
                         mobileMode: get(mobileMode),
                     });
                 }
@@ -231,22 +236,22 @@
         >
             <Hand
                 padding="{5}"
-                lilShrink="{$navSelect.sel == 'contact'}"
+                lilShrink="{$topShelfState.sel == 'contact'}"
                 gone="{!$showJsButtons}"
             />
         </TopBarIcon>
         <TopBarIcon
             push="{() => {
-                if ($navSelect.sel != 'settings') {
+                if ($topShelfState.sel != 'settings') {
                     lastTopShelfEvent.set({
                         type: 'opensettings',
-                        old: $navSelect,
+                        old: $topShelfState,
                         mobileMode: $mobileMode,
                     });
                 } else {
                     lastTopShelfEvent.set({
                         type: 'close',
-                        old: $navSelect,
+                        old: $topShelfState,
                         mobileMode: $mobileMode,
                     });
                 }
@@ -254,7 +259,7 @@
             state="{$settingsIconState}"
         >
             <Gear
-                lilShrink="{$navSelect.sel == 'settings'}"
+                lilShrink="{$topShelfState.sel == 'settings'}"
                 padding="{5}"
                 gone="{!$showJsButtons}"
             />
@@ -314,8 +319,8 @@
             </nav>
         </div>
     {/if}
-    {#key $navSelect.sel}
-        {#if $navSelect.sel != "none"}
+    {#key $topShelfState.sel}
+        {#if $topShelfState.sel != "none"}
             <div
                 class="topnav brutal-border"
                 style:top="{$topbarheight + 2}px"
@@ -326,19 +331,19 @@
                     duration: DEFAULT_MENU_SLIDE_DURATION,
                 }}"
                 out:slide|global="{{
-                    duration: $navSelect.outSpeed,
+                    duration: $topShelfState.outSpeed,
                 }}"
                 on:outroend="{() => {
-                    if ($navSelect.sel == 'none') {
+                    if ($topShelfState.sel == 'none') {
                         $topNavHeight = 0;
                     }
                 }}"
             >
-                {#if $navSelect.sel == "settings"}
+                {#if $topShelfState.sel == "settings"}
                     <div class="top-nav-selection">
                         <Settings />
                     </div>
-                {:else if $navSelect.sel == "contact"}
+                {:else if $topShelfState.sel == "contact"}
                     <div class="top-nav-selection">
                         <Contact />
                     </div>

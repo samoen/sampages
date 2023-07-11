@@ -7,24 +7,25 @@ export const DEFAULT_COLOR_TRANSITION_DURATION = 600
 
 export const screenWidth = writable(0)
 
-export type MobileEvent = { type: 'wentMobile' | 'leftMobile', sidebar: SidebarState } | { type: 'done' }
+export type MobileEvent = { type: 'wentMobile' | 'leftMobile', sidebar: SidebarState } | 'done'
 export const mobileEvent = writable<MobileEvent>({ type: 'wentMobile', sidebar: { open: false, speed: 0 } })
 mobileEvent.subscribe(val => {
-  if (val.type != 'done') {
-    console.log('mobile event done')
-    mobileEvent.set({ type: 'done' })
+  if (val != 'done') {
+    mobileEvent.set('done')
   }
 })
 
 export const mobileMode = derived(
   [mobileEvent],
   ([$mobileEvent], set, update) => {
-    if ($mobileEvent.type == 'wentMobile') {
-      console.log('setting mobile mode true because mobileEvent wentMobile')
-      set(true)
-    } else if ($mobileEvent.type == 'leftMobile') {
-      console.log('setting mobile mode false because mobileEvent leftMobile')
-      set(false)
+    if($mobileEvent != 'done'){
+      if ($mobileEvent.type == 'wentMobile') {
+        console.log('setting mobile mode true because mobileEvent wentMobile')
+        set(true)
+      } else if ($mobileEvent.type == 'leftMobile') {
+        console.log('setting mobile mode false because mobileEvent leftMobile')
+        set(false)
+      }
     }
     return () => { }
   },
@@ -65,9 +66,16 @@ type Lang = 'EN' | 'ES'
 export const selectedLang = writable<Lang>('EN')
 
 export const topNavHeight = writable<number>();
-export type BurgerClickEvent = { type: 'open' | 'close', mobileMode: boolean } | 'done'
+export type BurgerClickEvent = { type: 'open' | 'close', mobileMode: boolean, topShelfState:TopShelfState } | 'done'
 export const lastBurgClickEvent = writable<BurgerClickEvent>('done')
-export const lastTopShelfEvent = writable<{ type: 'opensettings' | 'opencontact' | 'close', old: Topnavselect, mobileMode: boolean } | 'done'>('done')
+lastBurgClickEvent.subscribe(val => {
+  if (val != 'done') {
+    lastBurgClickEvent.set('done')
+  }
+})
+
+
+export const lastTopShelfEvent = writable<{ type: 'opensettings' | 'opencontact' | 'close', old: TopShelfState, mobileMode: boolean } | 'done'>('done')
 lastTopShelfEvent.subscribe(val => {
   if (val != 'done') {
     lastTopShelfEvent.set('done')
@@ -95,7 +103,6 @@ export const sideBarState: Readable<SidebarState> =
             return { open: true, speed: DEFAULT_MENU_SLIDE_DURATION }
           }
         })
-        lastBurgClickEvent.set('done')
         return () => { }
       }
 
@@ -120,12 +127,11 @@ export const sideBarState: Readable<SidebarState> =
     { open: false, speed: 0 }
   )
 
-export type TopShelfState = 'settings' | 'contact' | 'none'
-export type Topnavselect = { sel: TopShelfState, outSpeed?: number }
-export var navSelect: Readable<Topnavselect> =
+export type TopShelfState = { sel: 'settings' | 'contact' | 'none', outSpeed?: number }
+export var topShelfState: Readable<TopShelfState> =
   derived<
     [typeof lastTopShelfEvent, typeof lastBurgClickEvent, typeof mobileEvent],
-    Topnavselect>
+    TopShelfState>
     ([lastTopShelfEvent, lastBurgClickEvent, mobileEvent],
       ([$lastTopShelfEvent, $lastBurgClickEvent, $mobileEvent], set, update) => {
         if ($lastTopShelfEvent != 'done') {
@@ -142,18 +148,19 @@ export var navSelect: Readable<Topnavselect> =
         }
 
         if ($lastBurgClickEvent != 'done') {
-          if ($lastBurgClickEvent.type == 'open' && $lastBurgClickEvent.mobileMode) {
-            console.log('closing shelf because opened side in mobile')
+          if ($lastBurgClickEvent.type == 'open' && $lastBurgClickEvent.mobileMode && $lastBurgClickEvent.topShelfState.sel != 'none') {
+            console.log('closing shelf because sidebar opened in mobile')
             set({ sel: 'none', outSpeed: 0 })
             return () => { }
           }
 
         }
-
-        if ($mobileEvent.type == 'wentMobile' && $mobileEvent.sidebar.open) {
-          console.log('closing shelf because went mobile while side open')
-          set({ sel: 'none', outSpeed: 0 })
-          return () => { }
+        if($mobileEvent != 'done'){
+          if ($mobileEvent.type == 'wentMobile' && $mobileEvent.sidebar.open) {
+            console.log('closing shelf because went mobile while side open')
+            set({ sel: 'none', outSpeed: 0 })
+            return () => { }
+          }
         }
 
         return () => { }
@@ -161,7 +168,7 @@ export var navSelect: Readable<Topnavselect> =
 
 export type TopBarColorState = { color: 'transparent' | 'solid' | 'blur', speed: 'instant' | 'slow' }
 export const barColorState: Readable<TopBarColorState> = derived(
-  [atTop, sideBarState, navSelect],
+  [atTop, sideBarState, topShelfState],
   ([$atTop, $sideBarState, $navSelect]) => {
     if ($sideBarState.open || $navSelect.sel != 'none') {
       return { color: 'solid', speed: 'instant' } satisfies TopBarColorState
@@ -188,7 +195,7 @@ export const burgIconState: Readable<TopBarIconState> =
       return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
     })
 export const contactIconState: Readable<TopBarIconState> =
-  derived([navSelect, barColorState], ([$ns, $bcs]) => {
+  derived([topShelfState, barColorState], ([$ns, $bcs]) => {
     if ($ns.sel == 'contact') {
       return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
     }
@@ -197,7 +204,7 @@ export const contactIconState: Readable<TopBarIconState> =
     }
     return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
   })
-export const settingsIconState: Readable<TopBarIconState> = derived([navSelect, barColorState], ([$ns, $bcs]) => {
+export const settingsIconState: Readable<TopBarIconState> = derived([topShelfState, barColorState], ([$ns, $bcs]) => {
   if ($ns.sel == 'settings') {
     return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
   }
@@ -239,21 +246,23 @@ export const shadowState: Readable<boolean> =
       //     return () => { }
       //   }
       // }
-      if ($mobileEvent.type == 'wentMobile' && $mobileEvent.sidebar?.open) {
-        console.log('showing shadow because went mobile while sidebar open')
-        set(true)
-        return () => { }
-      }
-      if ($mobileEvent.type == 'leftMobile' && $mobileEvent.sidebar?.open) {
-        console.log('removing shadow because left mobile while sidebar open')
-        set(false)
-        return () => { }
+      if($mobileEvent != 'done'){
+        if ($mobileEvent.type == 'wentMobile' && $mobileEvent.sidebar?.open) {
+          console.log('showing shadow because went mobile while sidebar open')
+          set(true)
+          return () => { }
+        }
+        if ($mobileEvent.type == 'leftMobile' && $mobileEvent.sidebar?.open) {
+          console.log('removing shadow because left mobile while sidebar open')
+          set(false)
+          return () => { }
+        }
       }
       return () => { }
     }, false)
 
 export const splashMarginTop = derived(
-  [navSelect, sideBarState, mobileMode],
+  [topShelfState, sideBarState, mobileMode],
   ([$navSelect, $sideBarState, $mobileMode]) => {
     if ($sideBarState.open && !$mobileMode) {
       return { marg: get(topbarheight) + 20, pad: 15 }
