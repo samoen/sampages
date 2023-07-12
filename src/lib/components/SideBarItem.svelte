@@ -17,8 +17,9 @@ class:grow="{$page.url.pathname ==`${path}`}"
 class:brutal-border="{$page.url.pathname != `${path}`}"
 on:click="{
     (e)=>{
-        if($sideBarState.state != 'fullOpen'){
+        if($sideBarState.state != 'fullOpen' || $page.url.pathname ==`${path}`){
             e.preventDefault()
+            return
         }
         if ($mobileMode && $sideBarState.state == 'fullOpen') {
             lastBurgClickEvent.set({

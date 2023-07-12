@@ -233,7 +233,7 @@
                 gone="{!$showJsButtons}"
             />
         </TopBarIcon>
-        <span class="barp">SAM OEN</span>
+        <span class="barp noselect">SAM OEN</span>
         <!-- {$mobileMode && $sideBarState} -->
         <TopBarIcon
             push="{() => {
@@ -465,7 +465,6 @@
         transition: background-color 500ms ease-in-out 0ms,
             border-color 500ms ease-in-out 0ms,
             box-shadow 500ms ease-in-out 0ms;
-        /* user-select: none; */
     }
     .blurbar {
         background-color: transparent;
@@ -485,7 +484,6 @@
     .barp {
         display: block;
         white-space: nowrap;
-        user-select: none;
         font-size: 1.4rem;
         font-weight: bold;
         color: var(--colortext);
@@ -604,7 +602,6 @@
     }
     :global(button) {
         cursor: pointer;
-        touch-action: none;
     }
     :global(a) {
         text-decoration: none;
@@ -612,12 +609,12 @@
     :global(a:focus, a:active) {
         outline: none;
     }
-
+    
     :global(p, span, h1, a, h2, h3) {
         color: var(--colortext);
         /* transition: color 1s; */
     }
-
+    
     :global(html) {
         transition: background-color 1s ease-in-out;
         box-sizing: border-box;
@@ -625,6 +622,11 @@
     }
 
     :global(*, *:before, *:after) {
+        user-select: text;
+        -moz-user-select: text;
+        -webkit-user-select: text;
+        -ms-user-select: text;
+        touch-action: manipulation;
         padding: 0;
         margin: 0;
         overscroll-behavior: contain;
@@ -632,7 +634,13 @@
         text-size-adjust: none;
         -webkit-text-size-adjust: none;
         font-family: "Brush Script MT", "Comic Sans MS", Verdana,
-            Arial, monospace;
+        Arial, monospace;
+    }
+    :global(button, button *, a, a *, .noselect) {
+        user-select: none !important;
+        -moz-user-select: none !important;
+        -webkit-user-select: none !important;
+        -ms-user-select: none !important;
     }
 
     :global(body) {
