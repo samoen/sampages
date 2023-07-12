@@ -12,7 +12,7 @@
     import SideBarItem from "$lib/components/SideBarItem.svelte";
     import TopBarIcon from "$lib/components/TopBarIcon.svelte";
     import {
-        DEFAULT_MENU_SLIDE_DURATION,
+    SHELF_IN_DURATION,
         barColorState,
         burgIconState,
         contactClickEvent,
@@ -24,7 +24,6 @@
         mobileEvent,
         mobileMode,
         modBase,
-        scrollEvent,
         settingsClickEvent,
         settingsHeight,
         settingsIconState,
@@ -38,7 +37,7 @@
         themeMode,
         themes,
         topbarheight,
-        wscrollY,
+        wscrollY
     } from "$lib/stores";
     import { onMount } from "svelte";
     import { backIn, backOut, bounceOut } from "svelte/easing";
@@ -77,11 +76,15 @@
             mobileEvent.set({
                 type: "wentMobile",
                 sidebar: get(sideBarState),
+                contactMenuState: $contactMenuState,
+                settingsMenuState: $settingsMenuState,
             });
         } else if (newWindowWidth >= 600 && lastWindowWidth < 600) {
             mobileEvent.set({
                 type: "leftMobile",
                 sidebar: get(sideBarState),
+                contactMenuState: $contactMenuState,
+                settingsMenuState: $settingsMenuState,
             });
         }
         lastWindowWidth = window.innerWidth;
@@ -140,11 +143,13 @@
     bind:scrollY="{$wscrollY}"
     on:scroll="{(e) => {
         // console.log('window onscroll');
-        scrollEvent.set({
-            type: 'scrolled',
-            mobileMode: get(mobileMode),
-            sidebar: get(sideBarState),
-        });
+        // scrollEvent.set({
+        //     type: 'scrolled',
+        //     mobileMode: get(mobileMode),
+        //     sidebar: get(sideBarState),
+        //     contactMenuState: $contactMenuState,
+        //     settingsMenuState: $settingsMenuState,
+        // });
     }}"
     on:resize="{(e) => {
         // console.log('window onresize');
@@ -280,30 +285,22 @@
             out:slide="{{
                 delay: 0,
                 duration: $sideBarState.speed,
-                // duration:0,
                 axis: 'x',
-                easing: backIn,
+                // easing: backIn,
             }}"
             in:slide="{{
                 delay: 0,
                 duration: $sideBarState.speed,
-                // duration:0,
                 axis: 'x',
                 easing: backOut,
             }}"
             on:outroend="{() => {
-                // if (!$sideBarState.open) {
                 $sidebarwidth = 0;
-                // }
                 sidebarAnimationFinishEvent.set({
                     sidebarState: $sideBarState,
                 });
-
-                // $sideBarState.animating = false
             }}"
             on:introend="{() => {
-                // $sideBarState.animating = false
-                // console.log('introend')
                 sidebarAnimationFinishEvent.set({
                     sidebarState: $sideBarState,
                 });
@@ -365,7 +362,7 @@
             style:left="{$mobileMode ? 3 : $sidebarwidth + 3}px"
             style:max-height="calc(100vh - {$topbarheight + 8}px)"
             in:slide|global="{{
-                duration: DEFAULT_MENU_SLIDE_DURATION,
+                duration: SHELF_IN_DURATION,
                 easing: bounceOut
             }}"
             out:slide|global="{{
@@ -395,7 +392,7 @@
             style:left="{$mobileMode ? 3 : $sidebarwidth + 3}px"
             style:max-height="calc(100vh - {$topbarheight + 8}px)"
             in:slide|global="{{
-                duration: DEFAULT_MENU_SLIDE_DURATION,
+                duration: SHELF_IN_DURATION,
                 easing: bounceOut
             }}"
             out:slide|global="{{
@@ -633,8 +630,8 @@
         box-sizing: border-box;
         text-size-adjust: none;
         -webkit-text-size-adjust: none;
-        font-family: "Brush Script MT", "Comic Sans MS", Verdana,
-        Arial, monospace;
+        /* font-family: "Brush Script MT", "Comic Sans MS", Verdana, Arial, monospace; */
+        font-family: Verdana, Arial, monospace;
     }
     :global(button, button *, a, a *, .noselect) {
         user-select: none !important;

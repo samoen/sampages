@@ -7,6 +7,7 @@
 </script>
 
 <button
+    type="button"
     class:inset-brutal="{state.color == 'inset'}"
     class="baricon"
     class:transparent="{state.color == 'transparent'}"
@@ -40,7 +41,7 @@
         border: 2px solid transparent;
         border-radius: 9px;
     }
-    
+
     .gone {
         color: transparent;
     }

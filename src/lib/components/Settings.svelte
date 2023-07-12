@@ -2,11 +2,7 @@
     import Esflag from "$lib/assets/Esflag.svelte";
 
     import Ukflag from "$lib/assets/Ukflag.svelte";
-    import {
-        selectedLang,
-        themeMode,
-        themes
-    } from "$lib/stores";
+    import { selectedLang, themeMode, themes } from "$lib/stores";
 </script>
 
 <div class="wrapper">
@@ -15,22 +11,25 @@
     <div class="langs">
         <button
             class="flag brutal-border"
+            type="button"
             on:click="{() => ($selectedLang = 'EN')}"
         >
             <Ukflag />
         </button>
         <button
             class="flag brutal-border"
+            type="button"
             on:click="{() => ($selectedLang = 'ES')}"
         >
             <Esflag />
         </button>
     </div>
-    
+
     <h3>Color Theme</h3>
     <div class="themes">
         <button
             class="themePick cream"
+            type="button"
             class:insetCream="{$themeMode == themes.light}"
             class:grow="{$themeMode == themes.light}"
             class:borderCream="{$themeMode != themes.light}"
@@ -43,6 +42,7 @@
             </div>
         </button>
         <button
+            type="button"
             class="themePick night"
             class:insetNight="{$themeMode == themes.dark}"
             class:grow="{$themeMode == themes.dark}"
@@ -51,9 +51,12 @@
                 themeMode.set(themes.dark);
             }}"
         >
-            <div class:shrink="{$themeMode == themes.dark}">Night</div>
+            <div class:shrink="{$themeMode == themes.dark}">
+                Night
+            </div>
         </button>
         <button
+            type="button"
             class="themePick anger"
             class:insetRed="{$themeMode == themes.red}"
             class:grow="{$themeMode == themes.red}"
@@ -72,12 +75,12 @@
         min-height: 40px;
         min-width: 40px;
     } */
-    .flag{
-        height:35px;
-        width:50px;
+    .flag {
+        height: 35px;
+        width: 50px;
         /* padding:10px; */
     }
-    
+
     .wrapper {
         /* overflow:hidden; */
         /* padding:10px; */
@@ -152,7 +155,7 @@
     .langs {
         display: flex;
         gap: 10px;
-        padding-left:8px;
+        padding-left: 8px;
         margin-bottom: 10px;
         /* background-color: aqua; */
     }
@@ -160,9 +163,10 @@
         /* background-color: aqua; */
         display: flex;
         gap: 10px;
-        padding-left:10px;
+        padding-left: 10px;
     }
-    h2, h3 {
+    h2,
+    h3 {
         margin-bottom: 0.4em;
     }
 </style>

@@ -1,13 +1,16 @@
 import { base } from "$app/paths";
 import { derived, get, writable, type Readable } from "svelte/store";
 
-export const DEFAULT_MENU_SLIDE_DURATION: number = 400;
-export const WAIT_FOR_MENU_SLIDE = DEFAULT_MENU_SLIDE_DURATION - 200;
+const SIDEBAR_IN_DURATION = 450;
+const SIDEBAR_OUT_DURATION = 400;
+export const SHELF_IN_DURATION = 700;
+const SHELF_OUT_DURATION = 500;
+
 export const DEFAULT_COLOR_TRANSITION_DURATION = 600
 
 export const screenWidth = writable(0)
 
-export type MobileEvent = { type: 'wentMobile' | 'leftMobile', sidebar: SidebarState } | 'done'
+export type MobileEvent = { type: 'wentMobile' | 'leftMobile', sidebar: SidebarState, contactMenuState: ContactMenuState, settingsMenuState: SettingsMenuState } | 'done'
 export const mobileEvent = writable<MobileEvent>('done')
 mobileEvent.subscribe(val => {
   if (val != 'done') {
@@ -39,13 +42,13 @@ export const wscrollY = writable(0)
 export const atTop = derived(wscrollY, ($s) => {
   return $s < 35
 })
-export type ScrollEvent = { type: 'scrolled', mobileMode: boolean, sidebar: SidebarState } | 'done'
-export const scrollEvent = writable<ScrollEvent>('done')
-scrollEvent.subscribe((val) => {
-  if (val != 'done') {
-    scrollEvent.set('done')
-  }
-})
+// export type ScrollEvent = { type: 'scrolled', mobileMode: boolean, sidebarState: SidebarState } | 'done'
+// export const scrollEvent = writable<ScrollEvent>('done')
+// scrollEvent.subscribe((val) => {
+//   if (val != 'done') {
+//     scrollEvent.set('done')
+//   }
+// })
 
 export const themes = {
   light: 'light',
@@ -59,7 +62,6 @@ export const themeMode = writable<Theme>(themes.light)
 export const topBarTransitionQuick = writable(false)
 
 export const showJsButtons = writable(false)
-export const topNavOutDuration = writable(DEFAULT_MENU_SLIDE_DURATION)
 
 type Lang = 'EN' | 'ES'
 export const selectedLang = writable<Lang>('EN')
@@ -122,12 +124,11 @@ export const sideBarState: Readable<SidebarState> =
       typeof sidebarAnimationFinishEvent,
       typeof contactClickEvent,
       typeof settingsClickEvent,
-      typeof scrollEvent,
     ],
     SidebarState
   >(
-    [lastBurgClickEvent, sidebarAnimationFinishEvent, contactClickEvent, settingsClickEvent, scrollEvent],
-    ([$lastBurgClickEvent, $sidebarAnimationFinishEvent, $contactClickEvent, $settingsClickEvent, $scrollEvent], set, update) => {
+    [lastBurgClickEvent, sidebarAnimationFinishEvent, contactClickEvent, settingsClickEvent],
+    ([$lastBurgClickEvent, $sidebarAnimationFinishEvent, $contactClickEvent, $settingsClickEvent], set, update) => {
       if ($sidebarAnimationFinishEvent != 'done') {
         set({ state: $sidebarAnimationFinishEvent.sidebarState.state == "comingIn" ? 'fullOpen' : 'fullClosed', speed: 0 })
         return () => { }
@@ -142,11 +143,11 @@ export const sideBarState: Readable<SidebarState> =
           console.log('burglick and top ready')
           if ($lastBurgClickEvent.sideBarState.state == 'fullOpen') {
             console.log('closing sidebar because burger clicked while sidebar open')
-            set({ state: 'goingOut', speed: DEFAULT_MENU_SLIDE_DURATION })
+            set({ state: 'goingOut', speed: SIDEBAR_OUT_DURATION })
           }
           if ($lastBurgClickEvent.sideBarState.state == 'fullClosed') {
             console.log('opening sidebar because burger clicked while sidebar closed')
-            set({ state: 'comingIn', speed: DEFAULT_MENU_SLIDE_DURATION })
+            set({ state: 'comingIn', speed: SIDEBAR_IN_DURATION })
           }
         }
         // lastBurgClickEvent.set('animating')
@@ -210,7 +211,7 @@ export const contactMenuState: Readable<ContactMenuState> =
               set({ menu: 'comingIn', outSpeed: 0 })
             }
           } else if ($contactClickEvent.contactMenuState.menu == 'fullOpen') {
-            set({ menu: 'goingOut', outSpeed: DEFAULT_MENU_SLIDE_DURATION })
+            set({ menu: 'goingOut', outSpeed: SHELF_OUT_DURATION })
           }
           return () => { }
         }
@@ -232,10 +233,14 @@ export const contactMenuState: Readable<ContactMenuState> =
 
         }
         if ($mobileEvent != 'done') {
-          if ($mobileEvent.type == 'wentMobile' && $mobileEvent.sidebar.state == 'fullOpen') {
-            console.log('closing shelf because went mobile while side open')
-            set({ menu: 'goingOut', outSpeed: 0 })
-            return () => { }
+          if ($mobileEvent.type == 'wentMobile') {
+            if ($mobileEvent.sidebar.state != 'fullClosed') {
+              if ($mobileEvent.contactMenuState.menu == 'fullOpen') {
+                set({ menu: 'goingOut', outSpeed: 0 })
+                console.log('closing contact because went mobile while side open')
+                return () => { }
+              }
+            }
           }
         }
 
@@ -269,7 +274,7 @@ export const settingsMenuState: Readable<SettingsMenuState> =
               set({ menu: 'comingIn', outSpeed: 0 })
             }
           } else if ($settingsClickEvent.settingsMenuState.menu == 'fullOpen') {
-            set({ menu: 'goingOut', outSpeed: DEFAULT_MENU_SLIDE_DURATION })
+            set({ menu: 'goingOut', outSpeed: SHELF_OUT_DURATION })
           }
           return () => { }
         }
@@ -287,15 +292,17 @@ export const settingsMenuState: Readable<SettingsMenuState> =
           if ($lastBurgClickEvent.sideBarState.state == 'fullClosed' && $lastBurgClickEvent.mobileMode && $lastBurgClickEvent.settingsMenuState.menu == 'fullOpen') {
             console.log('closing settings because sidebar opened in mobile')
             set({ menu: "goingOut", outSpeed: 0 })
-            return () => { }
           }
 
         }
         if ($mobileEvent != 'done') {
-          if ($mobileEvent.type == 'wentMobile' && $mobileEvent.sidebar.state == 'fullOpen') {
-            console.log('closing shelf because went mobile while side open')
-            set({ menu: 'goingOut', outSpeed: 0 })
-            return () => { }
+          if($mobileEvent.type == 'wentMobile'){
+            if ($mobileEvent.sidebar.state != 'fullClosed') {
+              if ($mobileEvent.settingsMenuState.menu == 'comingIn' || $mobileEvent.settingsMenuState.menu == 'fullOpen') {
+                console.log('closing settings because went mobile while side open')
+                set({ menu: 'goingOut', outSpeed: 0 })
+              }
+            }
           }
         }
 

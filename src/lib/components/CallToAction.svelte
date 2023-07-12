@@ -15,6 +15,7 @@
 
 {#if falling}
     <button
+        type="button"
         style:left="{butx}px"
         style:top="{buty}px"
         class:trans="{fading}"
@@ -45,6 +46,7 @@
                 </p>
             </div>
             <button
+                type="button"
                 class="press-me"
                 bind:this="{gagbut}"
                 on:click="{() => {

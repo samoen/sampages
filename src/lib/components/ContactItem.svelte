@@ -30,6 +30,7 @@
     .contactItem{
         padding-right:5px;
         padding-left:2px;
+        padding-top: 2px;
         background-color: var(--colorsecondary);
         display: flex;
         flex-wrap: wrap;
