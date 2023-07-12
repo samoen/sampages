@@ -15,26 +15,33 @@
         DEFAULT_MENU_SLIDE_DURATION,
         barColorState,
         burgIconState,
+        contactClickEvent,
+        contactHeight,
         contactIconState,
+        contactMenuAnimationFinishEvent,
+        contactMenuState,
         lastBurgClickEvent,
-        lastTopShelfEvent,
         mobileEvent,
         mobileMode,
         modBase,
-        topShelfState,
         scrollEvent,
+        settingsClickEvent,
+        settingsHeight,
         settingsIconState,
+        settingsMenuAnimationFinishEvent,
+        settingsMenuState,
         shadowState,
         showJsButtons,
         sideBarState,
+        sidebarAnimationFinishEvent,
         sidebarwidth,
         themeMode,
         themes,
-        topNavHeight,
         topbarheight,
         wscrollY,
     } from "$lib/stores";
     import { onMount } from "svelte";
+    import { backIn, backOut, bounceOut } from "svelte/easing";
     import { get } from "svelte/store";
     import { fade, slide } from "svelte/transition";
 
@@ -58,13 +65,8 @@
 
     afterNavigate((e) => {
         console.log("afterNavigate");
-        if ($mobileMode && $sideBarState.open) {
-            lastBurgClickEvent.set({
-                type: "close",
-                mobileMode: get(mobileMode),
-                topShelfState: get(topShelfState),
-            });
-        }
+
+        // bug? svelte tries to maintain window scroll between routes
         window.scrollTo(0, 1);
     });
 
@@ -159,7 +161,6 @@
             class="shadow"
             transition:fade
             on:wheel="{(e) => {
-                console.log('heyo');
                 e.preventDefault();
             }}"
         ></div>
@@ -170,18 +171,22 @@
             style:height="calc(100vh - {$topbarheight}px)"
             style:width="calc(100vw - {$sidebarwidth}px)"
             style:top="{$topbarheight}px"
-            on:click|once|preventDefault="{() => {
+            on:click|preventDefault="{() => {
                 lastBurgClickEvent.set({
-                    type: 'close',
+                    type: 'burg',
                     mobileMode: get(mobileMode),
-                    topShelfState: get(topShelfState),
+                    contactMenuState: get(contactMenuState),
+                    settingsMenuState: get(settingsMenuState),
+                    sideBarState: get(sideBarState),
                 });
             }}"
-            on:touchstart|once|preventDefault="{() => {
+            on:touchstart|preventDefault="{() => {
                 lastBurgClickEvent.set({
-                    type: 'close',
+                    type: 'burg',
                     mobileMode: get(mobileMode),
-                    topShelfState: get(topShelfState),
+                    contactMenuState: get(contactMenuState),
+                    settingsMenuState: get(settingsMenuState),
+                    sideBarState: get(sideBarState),
                 });
             }}"
             aria-hidden="true"
@@ -210,26 +215,21 @@
     >
         <TopBarIcon
             push="{() => {
-                if ($sideBarState.open) {
-                    lastBurgClickEvent.set({
-                        type: 'close',
-                        mobileMode: get(mobileMode),
-                        topShelfState: get(topShelfState),
-                    });
-                } else {
-                    lastBurgClickEvent.set({
-                        type: 'open',
-                        mobileMode: get(mobileMode),
-                        topShelfState: get(topShelfState),
-                    });
-                }
+                lastBurgClickEvent.set({
+                    type: 'burg',
+                    mobileMode: get(mobileMode),
+                    contactMenuState: get(contactMenuState),
+                    settingsMenuState: get(settingsMenuState),
+                    sideBarState: get(sideBarState),
+                });
             }}"
             state="{$burgIconState}"
         >
             <Hamburger
                 size="{1}"
                 padding="{5}"
-                lilShrink="{$sideBarState.open}"
+                lilShrink="{$sideBarState.state == 'fullOpen' ||
+                    $sideBarState.state == 'comingIn'}"
                 gone="{!$showJsButtons}"
             />
         </TopBarIcon>
@@ -237,54 +237,42 @@
         <!-- {$mobileMode && $sideBarState} -->
         <TopBarIcon
             push="{() => {
-                if ($topShelfState.sel != 'contact') {
-                    lastTopShelfEvent.set({
-                        type: 'opencontact',
-                        old: $topShelfState,
-                        mobileMode: get(mobileMode),
-                    });
-                } else {
-                    lastTopShelfEvent.set({
-                        type: 'close',
-                        old: $topShelfState,
-                        mobileMode: get(mobileMode),
-                    });
-                }
+                contactClickEvent.set({
+                    contactMenuState: $contactMenuState,
+                    settingsMenuState: $settingsMenuState,
+                    sideBarState: get(sideBarState),
+                    mobileMode: get(mobileMode),
+                });
             }}"
             state="{$contactIconState}"
         >
             <Hand
                 padding="{5}"
-                lilShrink="{$topShelfState.sel == 'contact'}"
+                lilShrink="{$contactMenuState.menu == 'comingIn' ||
+                    $contactMenuState.menu == 'fullOpen'}"
                 gone="{!$showJsButtons}"
             />
         </TopBarIcon>
         <TopBarIcon
             push="{() => {
-                if ($topShelfState.sel != 'settings') {
-                    lastTopShelfEvent.set({
-                        type: 'opensettings',
-                        old: $topShelfState,
-                        mobileMode: $mobileMode,
-                    });
-                } else {
-                    lastTopShelfEvent.set({
-                        type: 'close',
-                        old: $topShelfState,
-                        mobileMode: $mobileMode,
-                    });
-                }
+                settingsClickEvent.set({
+                    contactMenuState: $contactMenuState,
+                    settingsMenuState: $settingsMenuState,
+                    sideBarState: get(sideBarState),
+                    mobileMode: get(mobileMode),
+                });
             }}"
             state="{$settingsIconState}"
         >
             <Gear
-                lilShrink="{$topShelfState.sel == 'settings'}"
+                lilShrink="{$settingsMenuState.menu == 'comingIn' ||
+                    $settingsMenuState.menu == 'fullOpen'}"
                 padding="{5}"
                 gone="{!$showJsButtons}"
             />
         </TopBarIcon>
     </div>
-    {#if $sideBarState.open}
+    {#if $sideBarState.state == "fullOpen" || $sideBarState.state == "comingIn"}
         <div
             class="sidebar brutal-border"
             bind:offsetWidth="{$sidebarwidth}"
@@ -294,17 +282,31 @@
                 duration: $sideBarState.speed,
                 // duration:0,
                 axis: 'x',
+                easing: backIn,
             }}"
             in:slide="{{
                 delay: 0,
                 duration: $sideBarState.speed,
                 // duration:0,
                 axis: 'x',
+                easing: backOut,
             }}"
             on:outroend="{() => {
-                if (!$sideBarState.open) {
-                    $sidebarwidth = 0;
-                }
+                // if (!$sideBarState.open) {
+                $sidebarwidth = 0;
+                // }
+                sidebarAnimationFinishEvent.set({
+                    sidebarState: $sideBarState,
+                });
+
+                // $sideBarState.animating = false
+            }}"
+            on:introend="{() => {
+                // $sideBarState.animating = false
+                // console.log('introend')
+                sidebarAnimationFinishEvent.set({
+                    sidebarState: $sideBarState,
+                });
             }}"
             on:wheel|nonpassive="{(e) => {
                 if (!sidenav) return;
@@ -355,43 +357,73 @@
             </nav>
         </div>
     {/if}
-    {#key $topShelfState.sel}
-        {#if $topShelfState.sel != "none"}
-            <div
-                class="topnav brutal-border"
-                style:top="{$topbarheight + 2}px"
-                style:left="{$mobileMode ? 3 : $sidebarwidth + 3}px"
-                style:max-height="calc(100vh - {$topbarheight + 8}px)"
-                bind:clientHeight="{$topNavHeight}"
-                in:slide|global="{{
-                    duration: DEFAULT_MENU_SLIDE_DURATION,
-                }}"
-                out:slide|global="{{
-                    duration: $topShelfState.outSpeed,
-                }}"
-                on:outroend="{() => {
-                    if ($topShelfState.sel == 'none') {
-                        $topNavHeight = 0;
-                    }
-                }}"
-            >
-                {#if $topShelfState.sel == "settings"}
-                    <div class="top-nav-selection">
-                        <Settings />
-                    </div>
-                {:else if $topShelfState.sel == "contact"}
-                    <div class="top-nav-selection">
-                        <Contact />
-                    </div>
-                {/if}
-            </div>
-        {/if}
-    {/key}
+    {#if $contactMenuState.menu == "fullOpen" || $contactMenuState.menu == "comingIn"}
+        <div
+            class="topnav brutal-border"
+            bind:clientHeight="{$contactHeight}"
+            style:top="{$topbarheight + 2}px"
+            style:left="{$mobileMode ? 3 : $sidebarwidth + 3}px"
+            style:max-height="calc(100vh - {$topbarheight + 8}px)"
+            in:slide|global="{{
+                duration: DEFAULT_MENU_SLIDE_DURATION,
+                easing: bounceOut
+            }}"
+            out:slide|global="{{
+                duration: $contactMenuState.outSpeed,
+                easing:backIn,
+            }}"
+            on:outroend="{() => {
+                $contactHeight = 0;
+                contactMenuAnimationFinishEvent.set({
+                    contactMenuState: $contactMenuState,
+                });
+            }}"
+            on:introend="{() => {
+                contactMenuAnimationFinishEvent.set({
+                    contactMenuState: $contactMenuState,
+                });
+            }}"
+        >
+            <Contact />
+        </div>
+    {/if}
+    {#if $settingsMenuState.menu == "fullOpen" || $settingsMenuState.menu == "comingIn"}
+        <div
+            class="topnav brutal-border"
+            bind:clientHeight="{$settingsHeight}"
+            style:top="{$topbarheight + 2}px"
+            style:left="{$mobileMode ? 3 : $sidebarwidth + 3}px"
+            style:max-height="calc(100vh - {$topbarheight + 8}px)"
+            in:slide|global="{{
+                duration: DEFAULT_MENU_SLIDE_DURATION,
+                easing: bounceOut
+            }}"
+            out:slide|global="{{
+                duration: $settingsMenuState.outSpeed,
+                easing: backIn
+            }}"
+            on:outroend="{() => {
+                $settingsHeight = 0;
+                settingsMenuAnimationFinishEvent.set({
+                    settingsMenuState: $settingsMenuState,
+                });
+            }}"
+            on:introend="{() => {
+                settingsMenuAnimationFinishEvent.set({
+                    settingsMenuState: $settingsMenuState,
+                });
+            }}"
+        >
+            <Settings />
+        </div>
+    {/if}
     {#key $page.url.pathname}
         <div
             class="slotandfoot"
             in:fade="{{ duration: 500, delay: 0 }}"
-            style:padding-top="{$topNavHeight}px"
+            style:padding-top="{$contactHeight > $settingsHeight
+                ? $contactHeight
+                : $settingsHeight}px"
             style:padding-left="{$mobileMode ? 0 : $sidebarwidth}px"
         >
             <slot />
@@ -471,12 +503,6 @@
         z-index: 3;
         background-color: var(--coloritem);
         padding: 10px;
-    }
-    .top-nav-selection {
-        /* overflow: hidden; */
-        /* position: absolute; */
-        /* grid-row: 1 / 1; */
-        /* grid-column: 1 / 1; */
     }
 
     .sidebar {

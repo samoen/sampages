@@ -48,7 +48,7 @@
                 class="press-me"
                 bind:this="{gagbut}"
                 on:click="{() => {
-                    if(!gagbut) return;
+                    if (!gagbut) return;
                     let r = gagbut.getBoundingClientRect();
                     butx = r.left;
                     buty = r.top + scrollY;
@@ -152,7 +152,7 @@
     .min-height-transition {
         transition: min-height 1s ease-in-out;
     }
-    .gagintro{
+    .gagintro {
         margin-bottom: 10px;
     }
     .gagstart {
@@ -209,7 +209,7 @@
         min-height: var(--gag-msgs-height);
         height: var(--gag-msgs-height);
     }
-    
+
     .grid1 {
         grid-row: 1 / 1;
         grid-column: 1 / 1;

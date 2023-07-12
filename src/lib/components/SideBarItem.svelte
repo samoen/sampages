@@ -1,8 +1,9 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import Hand from "$lib/assets/Hand.svelte";
-    import { modBase } from "$lib/stores";
-    import type { ComponentType, SvelteComponent } from "svelte";
+    import { contactMenuState, lastBurgClickEvent, mobileMode, modBase, settingsMenuState, sideBarState } from "$lib/stores";
+    import type { ComponentType } from "svelte";
+    import { get } from "svelte/store";
 
     export let txt : string = "placeholder"
     export let icon : ComponentType = Hand
@@ -14,6 +15,22 @@ href="{path}"
 class:inset-brutal="{$page.url.pathname ==`${path}`}"
 class:grow="{$page.url.pathname ==`${path}`}"
 class:brutal-border="{$page.url.pathname != `${path}`}"
+on:click="{
+    (e)=>{
+        if($sideBarState.state != 'fullOpen'){
+            e.preventDefault()
+        }
+        if ($mobileMode && $sideBarState.state == 'fullOpen') {
+            lastBurgClickEvent.set({
+                type: "burg",
+                mobileMode: get(mobileMode),
+                contactMenuState: get(contactMenuState),
+                settingsMenuState: get(settingsMenuState),
+                sideBarState: get(sideBarState)
+            });
+        }
+    }
+}"
 >
 <div
     class="sideitem"
