@@ -1,5 +1,5 @@
 import { base } from "$app/paths";
-import { derived, get, writable, type Readable } from "svelte/store";
+import { derived, writable, type Readable } from "svelte/store";
 
 const SIDEBAR_IN_DURATION = 450;
 const SIDEBAR_OUT_DURATION = 400;
@@ -10,23 +10,23 @@ export const DEFAULT_COLOR_TRANSITION_DURATION = 600
 
 export const screenWidth = writable(0)
 
-export type MobileEvent = { type: 'wentMobile' | 'leftMobile', sidebar: SidebarState, contactMenuState: ContactMenuState, settingsMenuState: SettingsMenuState } | 'done'
-export const mobileEvent = writable<MobileEvent>('done')
-mobileEvent.subscribe(val => {
+export type resizeEvent = { type: 'wentMobile' | 'leftMobile', sidebar: SidebarState, contactMenuState: ContactMenuState, settingsMenuState: SettingsMenuState } | 'done'
+export const resizeEvent = writable<resizeEvent>('done')
+resizeEvent.subscribe(val => {
   if (val != 'done') {
-    mobileEvent.set('done')
+    resizeEvent.set('done')
   }
 })
 
-export const mobileMode = derived(
-  [mobileEvent],
-  ([$mobileEvent], set, update) => {
-    if ($mobileEvent != 'done') {
-      if ($mobileEvent.type == 'wentMobile') {
-        console.log('setting mobile mode true because mobileEvent wentMobile')
+export const narrowScreenState = derived(
+  [resizeEvent],
+  ([$resizeEvent], set, update) => {
+    if ($resizeEvent != 'done') {
+      if ($resizeEvent.type == 'wentMobile') {
+        console.log('setting mobile mode true because resizeEvent wentMobile')
         set(true)
-      } else if ($mobileEvent.type == 'leftMobile') {
-        console.log('setting mobile mode false because mobileEvent leftMobile')
+      } else if ($resizeEvent.type == 'leftMobile') {
+        console.log('setting mobile mode false because resizeEvent leftMobile')
         set(false)
       }
     }
@@ -42,13 +42,6 @@ export const wscrollY = writable(0)
 export const atTop = derived(wscrollY, ($s) => {
   return $s < 35
 })
-// export type ScrollEvent = { type: 'scrolled', mobileMode: boolean, sidebarState: SidebarState } | 'done'
-// export const scrollEvent = writable<ScrollEvent>('done')
-// scrollEvent.subscribe((val) => {
-//   if (val != 'done') {
-//     scrollEvent.set('done')
-//   }
-// })
 
 export const themes = {
   light: 'light',
@@ -70,7 +63,7 @@ export const contactHeight = writable<number>(0);
 export const settingsHeight = writable<number>(0);
 export type BurgerClickEvent = {
   type: 'burg',
-  mobileMode: boolean,
+  narrowScreenState: boolean,
   contactMenuState: ContactMenuState,
   settingsMenuState: SettingsMenuState,
   sideBarState: SidebarState,
@@ -101,13 +94,13 @@ settingsMenuAnimationFinishEvent.subscribe(val => {
   }
 })
 
-export const contactClickEvent = writable<{ contactMenuState: ContactMenuState, settingsMenuState: SettingsMenuState, sideBarState: SidebarState, mobileMode: boolean } | 'done'>('done')
+export const contactClickEvent = writable<{ contactMenuState: ContactMenuState, settingsMenuState: SettingsMenuState, sideBarState: SidebarState, narrowScreenState: boolean } | 'done'>('done')
 contactClickEvent.subscribe(val => {
   if (val != 'done') {
     contactClickEvent.set('done')
   }
 })
-export const settingsClickEvent = writable<{ settingsMenuState: SettingsMenuState, contactMenuState: ContactMenuState, sideBarState: SidebarState, mobileMode: boolean } | 'done'>('done')
+export const settingsClickEvent = writable<{ settingsMenuState: SettingsMenuState, contactMenuState: ContactMenuState, sideBarState: SidebarState, narrowScreenState: boolean } | 'done'>('done')
 settingsClickEvent.subscribe(val => {
   if (val != 'done') {
     settingsClickEvent.set('done')
@@ -140,7 +133,6 @@ export const sideBarState: Readable<SidebarState> =
           ($lastBurgClickEvent.contactMenuState.menu == 'fullOpen' ||
             $lastBurgClickEvent.contactMenuState.menu == 'fullClosed')
         ) {
-          console.log('burglick and top ready')
           if ($lastBurgClickEvent.sideBarState.state == 'fullOpen') {
             console.log('closing sidebar because burger clicked while sidebar open')
             set({ state: 'goingOut', speed: SIDEBAR_OUT_DURATION })
@@ -159,7 +151,7 @@ export const sideBarState: Readable<SidebarState> =
         if (
           ($contactClickEvent.contactMenuState.menu == 'fullClosed') &&
           $contactClickEvent.sideBarState.state == 'fullOpen' &&
-          $contactClickEvent.mobileMode
+          $contactClickEvent.narrowScreenState
         ) {
           console.log('closing sidebar because top shelf opened in mobile')
           set({ state: 'goingOut', speed: 0 })
@@ -172,7 +164,7 @@ export const sideBarState: Readable<SidebarState> =
         if (
           ($settingsClickEvent.settingsMenuState.menu == 'fullClosed') &&
           $settingsClickEvent.sideBarState.state == 'fullOpen' &&
-          $settingsClickEvent.mobileMode
+          $settingsClickEvent.narrowScreenState
         ) {
           console.log('closing sidebar because top shelf opened in mobile')
           set({ state: 'goingOut', speed: 0 })
@@ -188,10 +180,10 @@ export const sideBarState: Readable<SidebarState> =
 export type ContactMenuState = { menu: MenuState, outSpeed?: number }
 export const contactMenuState: Readable<ContactMenuState> =
   derived<
-    [typeof contactClickEvent, typeof settingsClickEvent, typeof lastBurgClickEvent, typeof contactMenuAnimationFinishEvent, typeof mobileEvent],
+    [typeof contactClickEvent, typeof settingsClickEvent, typeof lastBurgClickEvent, typeof contactMenuAnimationFinishEvent, typeof resizeEvent],
     ContactMenuState>
-    ([contactClickEvent, settingsClickEvent, lastBurgClickEvent, contactMenuAnimationFinishEvent, mobileEvent],
-      ([$contactClickEvent, $settingsClickEvent, $lastBurgClickEvent, $contactMenuAnimationFinishEvent, $mobileEvent], set, update) => {
+    ([contactClickEvent, settingsClickEvent, lastBurgClickEvent, contactMenuAnimationFinishEvent, resizeEvent],
+      ([$contactClickEvent, $settingsClickEvent, $lastBurgClickEvent, $contactMenuAnimationFinishEvent, $resizeEvent], set, update) => {
         if ($contactMenuAnimationFinishEvent != 'done') {
           if ($contactMenuAnimationFinishEvent.contactMenuState.menu == "comingIn") {
             set({ menu: 'fullOpen', outSpeed: 0 })
@@ -225,17 +217,17 @@ export const contactMenuState: Readable<ContactMenuState> =
         }
 
         if ($lastBurgClickEvent != 'done') {
-          if ($lastBurgClickEvent.sideBarState.state == 'fullClosed' && $lastBurgClickEvent.mobileMode && $lastBurgClickEvent.contactMenuState.menu == 'fullOpen') {
+          if ($lastBurgClickEvent.sideBarState.state == 'fullClosed' && $lastBurgClickEvent.narrowScreenState && $lastBurgClickEvent.contactMenuState.menu == 'fullOpen') {
             console.log('closing contact because sidebar opened in mobile')
             set({ menu: "goingOut", outSpeed: 0 })
             return () => { }
           }
 
         }
-        if ($mobileEvent != 'done') {
-          if ($mobileEvent.type == 'wentMobile') {
-            if ($mobileEvent.sidebar.state != 'fullClosed') {
-              if ($mobileEvent.contactMenuState.menu == 'fullOpen') {
+        if ($resizeEvent != 'done') {
+          if ($resizeEvent.type == 'wentMobile') {
+            if ($resizeEvent.sidebar.state != 'fullClosed') {
+              if ($resizeEvent.contactMenuState.menu == 'fullOpen') {
                 set({ menu: 'goingOut', outSpeed: 0 })
                 console.log('closing contact because went mobile while side open')
                 return () => { }
@@ -251,10 +243,10 @@ export type SettingsMenuState = { menu: MenuState, outSpeed?: number }
 
 export const settingsMenuState: Readable<SettingsMenuState> =
   derived<
-    [typeof settingsClickEvent, typeof contactClickEvent, typeof lastBurgClickEvent, typeof settingsMenuAnimationFinishEvent, typeof mobileEvent],
+    [typeof settingsClickEvent, typeof contactClickEvent, typeof lastBurgClickEvent, typeof settingsMenuAnimationFinishEvent, typeof resizeEvent],
     SettingsMenuState>
-    ([settingsClickEvent, contactClickEvent, lastBurgClickEvent, settingsMenuAnimationFinishEvent, mobileEvent],
-      ([$settingsClickEvent, $contactClickEvent, $lastBurgClickEvent, $settingsMenuAnimationFinishEvent, $mobileEvent], set, update) => {
+    ([settingsClickEvent, contactClickEvent, lastBurgClickEvent, settingsMenuAnimationFinishEvent, resizeEvent],
+      ([$settingsClickEvent, $contactClickEvent, $lastBurgClickEvent, $settingsMenuAnimationFinishEvent, $resizeEvent], set, update) => {
         if ($settingsMenuAnimationFinishEvent != 'done') {
           if ($settingsMenuAnimationFinishEvent.settingsMenuState.menu == "comingIn") {
             set({ menu: 'fullOpen', outSpeed: 0 })
@@ -289,16 +281,16 @@ export const settingsMenuState: Readable<SettingsMenuState> =
 
 
         if ($lastBurgClickEvent != 'done') {
-          if ($lastBurgClickEvent.sideBarState.state == 'fullClosed' && $lastBurgClickEvent.mobileMode && $lastBurgClickEvent.settingsMenuState.menu == 'fullOpen') {
+          if ($lastBurgClickEvent.sideBarState.state == 'fullClosed' && $lastBurgClickEvent.narrowScreenState && $lastBurgClickEvent.settingsMenuState.menu == 'fullOpen') {
             console.log('closing settings because sidebar opened in mobile')
             set({ menu: "goingOut", outSpeed: 0 })
           }
 
         }
-        if ($mobileEvent != 'done') {
-          if($mobileEvent.type == 'wentMobile'){
-            if ($mobileEvent.sidebar.state != 'fullClosed') {
-              if ($mobileEvent.settingsMenuState.menu == 'comingIn' || $mobileEvent.settingsMenuState.menu == 'fullOpen') {
+        if ($resizeEvent != 'done') {
+          if($resizeEvent.type == 'wentMobile'){
+            if ($resizeEvent.sidebar.state != 'fullClosed') {
+              if ($resizeEvent.settingsMenuState.menu == 'comingIn' || $resizeEvent.settingsMenuState.menu == 'fullOpen') {
                 console.log('closing settings because went mobile while side open')
                 set({ menu: 'goingOut', outSpeed: 0 })
               }
@@ -310,7 +302,7 @@ export const settingsMenuState: Readable<SettingsMenuState> =
       }, { menu: 'fullClosed', outSpeed: 0 })
 
 export type TopBarColorState = { color: 'transparent' | 'solid' | 'blur', speed: 'instant' | 'slow' }
-export const barColorState: Readable<TopBarColorState> = derived(
+export const topbarColorState: Readable<TopBarColorState> = derived(
   [atTop, sideBarState, contactMenuState, settingsMenuState],
   ([$atTop, $sideBarState, $contactMenuState, $settingsMenuState]) => {
     if ($sideBarState.state == 'fullOpen' ||
@@ -335,43 +327,56 @@ export type TopBarIconColor = 'solid' | 'transparent' | 'inset'
 export type TransitionSpeed = 'instant' | 'slow'
 export type TopBarIconState = { color: TopBarIconColor, transition: TransitionSpeed }
 export const burgIconState: Readable<TopBarIconState> =
-  derived(
-    [sideBarState, barColorState],
-    ([$sideBarState, $bcs]) => {
+  derived<[typeof sideBarState,typeof topbarColorState],TopBarIconState>(
+    [sideBarState, topbarColorState],
+    ([$sideBarState, $topbarColorState], set, update) => {
       if ($sideBarState.state == 'fullOpen' || $sideBarState.state == 'comingIn') {
-        return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
+        set({ color: 'inset', transition: 'instant' })
+        return ()=>{}
       }
-      if ($bcs.color == 'blur') {
-        return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
+      if ($topbarColorState.color == 'blur') {
+        set({ color: 'solid', transition: 'slow' })
+        return ()=>{}
       }
-      return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
+      set({ color: 'transparent', transition: 'slow' })
+      return ()=>{}
     })
 
 export const contactIconState: Readable<TopBarIconState> =
-  derived([contactMenuState, barColorState], ([$contactMenuState, $bcs]) => {
+  derived<[typeof contactMenuState, typeof topbarColorState], TopBarIconState>(
+    [contactMenuState, topbarColorState],
+     ([$contactMenuState, $topbarColorState], set, update) => {
     if ($contactMenuState.menu == 'fullOpen' || $contactMenuState.menu == 'comingIn') {
-      return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
+      set({ color: 'inset', transition: 'instant' })
+      return ()=>{}
     }
-    if ($bcs.color == 'blur') {
-      return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
+    if ($topbarColorState.color == 'blur') {
+      set({ color: 'solid', transition: 'slow' })
+      return ()=>{}
     }
-    return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
+    set({ color: 'transparent', transition: 'slow' })
+    return ()=>{}
   })
 
-export const settingsIconState: Readable<TopBarIconState> = derived([settingsMenuState, barColorState],
-  ([$settingsMenuState, $bcs]) => {
+export const settingsIconState: Readable<TopBarIconState> = 
+  derived<[typeof settingsMenuState, typeof topbarColorState],TopBarIconState>(
+  [settingsMenuState, topbarColorState],
+  ([$settingsMenuState, $bcs],set,update) => {
     if ($settingsMenuState.menu == 'fullOpen' || $settingsMenuState.menu == 'comingIn') {
-      return { color: 'inset', transition: 'instant' } satisfies TopBarIconState
+      set({ color: 'inset', transition: 'instant' })
+      return ()=>{}
     }
     if ($bcs.color == 'blur') {
-      return { color: 'solid', transition: 'slow' } satisfies TopBarIconState
+      set({ color: 'solid', transition: 'slow' })
+      return ()=>{}
     }
-    return { color: 'transparent', transition: 'slow' } satisfies TopBarIconState
+    set({ color: 'transparent', transition: 'slow' })
+    return ()=>{}
   })
 
-export const shadowState: Readable<boolean> = derived([sideBarState, mobileMode], ([$sideBarState, $mobileMode], set, update) => {
+export const shadowState: Readable<boolean> = derived([sideBarState, narrowScreenState], ([$sideBarState, $narrowScreenState], set, update) => {
   if ($sideBarState.state == 'fullOpen' || $sideBarState.state == 'comingIn') {
-    if ($mobileMode) {
+    if ($narrowScreenState) {
       set(true)
       return () => { }
     }
@@ -381,12 +386,11 @@ export const shadowState: Readable<boolean> = derived([sideBarState, mobileMode]
 })
 
 export const splashMarginTop = derived(
-  [contactMenuState, settingsMenuState, sideBarState, mobileMode],
-  ([$contactMenuState, $settingsMenuState, $sideBarState, $mobileMode]) => {
-    if (($sideBarState.state == 'fullOpen' || $sideBarState.state == 'comingIn') && !$mobileMode) {
-      return { marg: get(topbarheight) + 20, pad: 15 }
+  [contactMenuState, settingsMenuState, sideBarState, narrowScreenState, topbarheight],
+  ([$contactMenuState, $settingsMenuState, $sideBarState, $narrowScreenState, $topbarheight]) => {
+    if (($sideBarState.state == 'fullOpen' || $sideBarState.state == 'comingIn') && !$narrowScreenState) {
+      return { marg: $topbarheight + 20, pad: 15 }
     }
-    console.log($contactMenuState)
     if (
       $contactMenuState.menu == 'fullOpen' ||
       $contactMenuState.menu == 'comingIn' ||
@@ -394,8 +398,7 @@ export const splashMarginTop = derived(
       $settingsMenuState.menu == 'comingIn'
 
     ) {
-      console.log('yes ' + get(topbarheight))
-      return { marg: get(topbarheight) + 20, pad: 15 }
+      return { marg: $topbarheight + 20, pad: 15 }
     }
     return { marg: 3, pad: 65 };
   })

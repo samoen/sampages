@@ -13,7 +13,7 @@
     import TopBarIcon from "$lib/components/TopBarIcon.svelte";
     import {
     SHELF_IN_DURATION,
-        barColorState,
+        topbarColorState,
         burgIconState,
         contactClickEvent,
         contactHeight,
@@ -21,8 +21,8 @@
         contactMenuAnimationFinishEvent,
         contactMenuState,
         lastBurgClickEvent,
-        mobileEvent,
-        mobileMode,
+        resizeEvent,
+        narrowScreenState,
         modBase,
         settingsClickEvent,
         settingsHeight,
@@ -58,31 +58,30 @@
         }
         showJsButtons.set(true);
         // lastWindowWidth = window.innerWidth;
-        maybeMobileEvent();
+        mayberesizeEvent();
         // mounted = true;
     });
 
-    afterNavigate((e) => {
-        console.log("afterNavigate");
-
+    // afterNavigate((e) => {
+        // console.log("afterNavigate");
         // bug? svelte tries to maintain window scroll between routes
-        window.scrollTo(0, 1);
-    });
+        // window.scrollTo(0, 1);
+    // });
 
     let lastWindowWidth = 0;
-    function maybeMobileEvent() {
+    function mayberesizeEvent() {
         let newWindowWidth = window.innerWidth;
         if (newWindowWidth < 600 && lastWindowWidth >= 600) {
-            mobileEvent.set({
+            resizeEvent.set({
                 type: "wentMobile",
-                sidebar: get(sideBarState),
+                sidebar: $sideBarState,
                 contactMenuState: $contactMenuState,
                 settingsMenuState: $settingsMenuState,
             });
         } else if (newWindowWidth >= 600 && lastWindowWidth < 600) {
-            mobileEvent.set({
+            resizeEvent.set({
                 type: "leftMobile",
-                sidebar: get(sideBarState),
+                sidebar: $sideBarState,
                 contactMenuState: $contactMenuState,
                 settingsMenuState: $settingsMenuState,
             });
@@ -141,19 +140,8 @@
 <!-- bind:innerWidth="{$screenWidth}" -->
 <svelte:window
     bind:scrollY="{$wscrollY}"
-    on:scroll="{(e) => {
-        // console.log('window onscroll');
-        // scrollEvent.set({
-        //     type: 'scrolled',
-        //     mobileMode: get(mobileMode),
-        //     sidebar: get(sideBarState),
-        //     contactMenuState: $contactMenuState,
-        //     settingsMenuState: $settingsMenuState,
-        // });
-    }}"
     on:resize="{(e) => {
-        // console.log('window onresize');
-        maybeMobileEvent();
+        mayberesizeEvent();
     }}"
     on:wheel="{(e) => {
         // console.log(e.target);
@@ -179,19 +167,19 @@
             on:click|preventDefault="{() => {
                 lastBurgClickEvent.set({
                     type: 'burg',
-                    mobileMode: get(mobileMode),
-                    contactMenuState: get(contactMenuState),
-                    settingsMenuState: get(settingsMenuState),
-                    sideBarState: get(sideBarState),
+                    narrowScreenState: $narrowScreenState,
+                    contactMenuState: $contactMenuState,
+                    settingsMenuState: $settingsMenuState,
+                    sideBarState: $sideBarState,
                 });
             }}"
             on:touchstart|preventDefault="{() => {
                 lastBurgClickEvent.set({
                     type: 'burg',
-                    mobileMode: get(mobileMode),
-                    contactMenuState: get(contactMenuState),
-                    settingsMenuState: get(settingsMenuState),
-                    sideBarState: get(sideBarState),
+                    narrowScreenState: $narrowScreenState,
+                    contactMenuState: $contactMenuState,
+                    settingsMenuState: $settingsMenuState,
+                    sideBarState: $sideBarState,
                 });
             }}"
             aria-hidden="true"
@@ -204,12 +192,12 @@
 
     <div
         class="topbar"
-        class:transpar="{$barColorState.color == 'transparent'}"
-        class:solidbar="{$barColorState.color == 'solid'}"
-        class:brutal-border="{$barColorState.color == 'solid' ||
-            $barColorState.color == 'blur'}"
-        class:blurbar="{$barColorState.color == 'blur'}"
-        class:quick-transition="{$barColorState.speed == 'instant'}"
+        class:transpar="{$topbarColorState.color == 'transparent'}"
+        class:solidbar="{$topbarColorState.color == 'solid'}"
+        class:brutal-border="{$topbarColorState.color == 'solid' ||
+            $topbarColorState.color == 'blur'}"
+        class:blurbar="{$topbarColorState.color == 'blur'}"
+        class:quick-transition="{$topbarColorState.speed == 'instant'}"
         bind:clientHeight="{$topbarheight}"
         on:touchmove|nonpassive="{(e) => {
             e.preventDefault();
@@ -222,10 +210,10 @@
             push="{() => {
                 lastBurgClickEvent.set({
                     type: 'burg',
-                    mobileMode: get(mobileMode),
-                    contactMenuState: get(contactMenuState),
-                    settingsMenuState: get(settingsMenuState),
-                    sideBarState: get(sideBarState),
+                    narrowScreenState: $narrowScreenState,
+                    contactMenuState: $contactMenuState,
+                    settingsMenuState: $settingsMenuState,
+                    sideBarState: $sideBarState,
                 });
             }}"
             state="{$burgIconState}"
@@ -239,14 +227,14 @@
             />
         </TopBarIcon>
         <span class="barp noselect">SAM OEN</span>
-        <!-- {$mobileMode && $sideBarState} -->
+        <!-- {$narrowScreenState && $sideBarState} -->
         <TopBarIcon
             push="{() => {
                 contactClickEvent.set({
                     contactMenuState: $contactMenuState,
                     settingsMenuState: $settingsMenuState,
-                    sideBarState: get(sideBarState),
-                    mobileMode: get(mobileMode),
+                    sideBarState: $sideBarState,
+                    narrowScreenState: $narrowScreenState,
                 });
             }}"
             state="{$contactIconState}"
@@ -263,8 +251,8 @@
                 settingsClickEvent.set({
                     contactMenuState: $contactMenuState,
                     settingsMenuState: $settingsMenuState,
-                    sideBarState: get(sideBarState),
-                    mobileMode: get(mobileMode),
+                    sideBarState: $sideBarState,
+                    narrowScreenState: $narrowScreenState,
                 });
             }}"
             state="{$settingsIconState}"
@@ -324,12 +312,11 @@
                     }
                 }}"
                 on:wheel|nonpassive="{(e) => {
-                    console.log('navwheel ');
                     if (!sidenav) return;
                     if (
                         sidenav.scrollHeight <=
                             sidenav.clientHeight &&
-                        $mobileMode
+                        $narrowScreenState
                     ) {
                         e.preventDefault();
                     }
@@ -359,7 +346,7 @@
             class="topnav brutal-border"
             bind:clientHeight="{$contactHeight}"
             style:top="{$topbarheight + 2}px"
-            style:left="{$mobileMode ? 3 : $sidebarwidth + 3}px"
+            style:left="{$narrowScreenState ? 3 : $sidebarwidth + 3}px"
             style:max-height="calc(100vh - {$topbarheight + 8}px)"
             in:slide|global="{{
                 duration: SHELF_IN_DURATION,
@@ -389,7 +376,7 @@
             class="topnav brutal-border"
             bind:clientHeight="{$settingsHeight}"
             style:top="{$topbarheight + 2}px"
-            style:left="{$mobileMode ? 3 : $sidebarwidth + 3}px"
+            style:left="{$narrowScreenState ? 3 : $sidebarwidth + 3}px"
             style:max-height="calc(100vh - {$topbarheight + 8}px)"
             in:slide|global="{{
                 duration: SHELF_IN_DURATION,
@@ -421,7 +408,7 @@
             style:padding-top="{$contactHeight > $settingsHeight
                 ? $contactHeight
                 : $settingsHeight}px"
-            style:padding-left="{$mobileMode ? 0 : $sidebarwidth}px"
+            style:padding-left="{$narrowScreenState ? 0 : $sidebarwidth}px"
         >
             <slot />
             <footer>

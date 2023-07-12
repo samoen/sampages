@@ -1,7 +1,7 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import Hand from "$lib/assets/Hand.svelte";
-    import { contactMenuState, lastBurgClickEvent, mobileMode, modBase, settingsMenuState, sideBarState } from "$lib/stores";
+    import { contactMenuState, lastBurgClickEvent, narrowScreenState, modBase, settingsMenuState, sideBarState } from "$lib/stores";
     import type { ComponentType } from "svelte";
     import { get } from "svelte/store";
 
@@ -21,13 +21,13 @@ on:click="{
             e.preventDefault()
             return
         }
-        if ($mobileMode && $sideBarState.state == 'fullOpen') {
+        if ($narrowScreenState && $sideBarState.state == 'fullOpen') {
             lastBurgClickEvent.set({
                 type: "burg",
-                mobileMode: get(mobileMode),
-                contactMenuState: get(contactMenuState),
-                settingsMenuState: get(settingsMenuState),
-                sideBarState: get(sideBarState)
+                narrowScreenState: $narrowScreenState,
+                contactMenuState: $contactMenuState,
+                settingsMenuState: $settingsMenuState,
+                sideBarState: $sideBarState
             });
         }
     }
