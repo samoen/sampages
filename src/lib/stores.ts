@@ -321,7 +321,7 @@ export const shadowState: Readable<boolean> = derived([sideBarState, narrowScree
 export const splashMarginTop = derived(
   [contactMenuState, settingsMenuState, sideBarState, narrowScreenState, topbarheight],
   ([$contactMenuState, $settingsMenuState, $sideBarState, $narrowScreenState, $topbarheight]) => {
-    if (($sideBarState.state == 'fullOpen' || $sideBarState.state == 'comingIn') && !$narrowScreenState) {
+    if (($sideBarState.state == 'fullOpen' || $sideBarState.state == 'comingIn') && $narrowScreenState != 'narrow') {
       return { marg: $topbarheight + 20, pad: 15 }
     }
     if (

@@ -32,7 +32,10 @@
         topbarColorState,
         topbarheight,
         uIEvent,
-        wscrollY
+        wscrollY,
+
+        type UiEventKind
+
     } from "$lib/stores";
     import { onMount } from "svelte";
     import { backIn, backOut, bounceOut } from "svelte/easing";
@@ -50,7 +53,7 @@
             }
         }
         showJsButtons.set(true);
-        mayberesizeEvent();
+        // sendEvent('resize');
     });
 
     // afterNavigate((e) => {
@@ -60,26 +63,26 @@
     // });
 
     // let lastWindowWidth = 0;
-    function mayberesizeEvent() {
-        // let newWindowWidth = window.innerWidth;
-        // if (newWindowWidth < 600 && lastWindowWidth >= 600) {
+    // function mayberesizeEvent() {
+    //         uIEvent.set({
+    //             kind:'resize',
+    //             narrowScreenState: $narrowScreenState,
+    //             sidebarState: $sideBarState,
+    //             contactMenuState: $contactMenuState,
+    //             settingsMenuState: $settingsMenuState,
+    //             screenWidth: $screenWidth,
+    //         });
+    //     }
+        function sendEvent(kind: UiEventKind){
             uIEvent.set({
-                kind:'resize',
+                kind: kind,
                 narrowScreenState: $narrowScreenState,
                 sidebarState: $sideBarState,
                 contactMenuState: $contactMenuState,
                 settingsMenuState: $settingsMenuState,
                 screenWidth: $screenWidth,
             });
-        // } else if (newWindowWidth >= 600 && lastWindowWidth < 600) {
-            // resizeEvent.set({
-                // type: "leftMobile",
-                // sidebar: $sideBarState,
-                // contactMenuState: $contactMenuState,
-                // settingsMenuState: $settingsMenuState,
-            // });
-        // }
-        // lastWindowWidth = window.innerWidth;
+
     }
 
     // let preloadedImages = [xbig, biggy];
@@ -134,7 +137,7 @@
     bind:innerWidth="{$screenWidth}"
     bind:scrollY="{$wscrollY}"
     on:resize="{(e) => {
-        mayberesizeEvent();
+        sendEvent('resize')
     }}"
     on:wheel="{(e) => {
         // console.log(e.target);
@@ -158,14 +161,7 @@
             style:width="calc(100vw - {$sidebarwidth}px)"
             style:top="{$topbarheight}px"
             on:click|preventDefault="{() => {
-                uIEvent.set({
-                    kind: 'burgerClicked',
-                    screenWidth:$screenWidth,
-                    contactMenuState: $contactMenuState,
-                    settingsMenuState: $settingsMenuState,
-                    sidebarState: $sideBarState,
-                    narrowScreenState: $narrowScreenState,
-                });
+                sendEvent('burgerClicked')
             }}"
             on:touchstart|preventDefault="{() => {
                 uIEvent.set({
@@ -203,14 +199,7 @@
     >
         <TopBarIcon
             push="{() => {
-                uIEvent.set({
-                    kind: 'burgerClicked',
-                    screenWidth:$screenWidth,
-                    contactMenuState: $contactMenuState,
-                    settingsMenuState: $settingsMenuState,
-                    sidebarState: $sideBarState,
-                    narrowScreenState: $narrowScreenState,
-                });
+                sendEvent('burgerClicked')
             }}"
             state="{$burgIconState}"
         >
@@ -226,14 +215,7 @@
         <!-- {$narrowScreenState && $sideBarState} -->
         <TopBarIcon
             push="{() => {
-                uIEvent.set({
-                    kind:'contactClicked',
-                    screenWidth:$screenWidth,
-                    contactMenuState: $contactMenuState,
-                    settingsMenuState: $settingsMenuState,
-                    sidebarState: $sideBarState,
-                    narrowScreenState: $narrowScreenState,
-                });
+                sendEvent('contactClicked')
             }}"
             state="{$contactIconState}"
         >
@@ -246,14 +228,7 @@
         </TopBarIcon>
         <TopBarIcon
             push="{() => {
-                uIEvent.set({
-                    kind:'settingsClicked',
-                    contactMenuState: $contactMenuState,
-                    settingsMenuState: $settingsMenuState,
-                    sidebarState: $sideBarState,
-                    narrowScreenState: $narrowScreenState,
-                    screenWidth: $screenWidth,
-                });
+                sendEvent('settingsClicked')
             }}"
             state="{$settingsIconState}"
         >
@@ -284,24 +259,10 @@
             }}"
             on:outroend="{() => {
                 $sidebarwidth = 0;
-                uIEvent.set({
-                    kind:'sidebarAnimationFinish',
-                    screenWidth:$screenWidth,
-                    contactMenuState: $contactMenuState,
-                    settingsMenuState: $settingsMenuState,
-                    sidebarState: $sideBarState,
-                    narrowScreenState: $narrowScreenState,
-                });
+                sendEvent('sidebarAnimationFinish')
             }}"
             on:introend="{() => {
-                uIEvent.set({
-                    kind:'sidebarAnimationFinish',
-                    screenWidth:$screenWidth,
-                    contactMenuState: $contactMenuState,
-                    settingsMenuState: $settingsMenuState,
-                    sidebarState: $sideBarState,
-                    narrowScreenState: $narrowScreenState,
-                });
+                sendEvent('sidebarAnimationFinish')
             }}"
             on:wheel|nonpassive="{(e) => {
                 if (!sidenav) return;
@@ -368,24 +329,10 @@
             }}"
             on:outroend="{() => {
                 $contactHeight = 0;
-                uIEvent.set({
-                    kind:'contactAnimationFinish',
-                    screenWidth:$screenWidth,
-                    contactMenuState: $contactMenuState,
-                    settingsMenuState: $settingsMenuState,
-                    sidebarState: $sideBarState,
-                    narrowScreenState: $narrowScreenState,
-                });
+                sendEvent('contactAnimationFinish')
             }}"
             on:introend="{() => {
-                uIEvent.set({
-                    kind:'contactAnimationFinish',
-                    screenWidth:$screenWidth,
-                    contactMenuState: $contactMenuState,
-                    settingsMenuState: $settingsMenuState,
-                    sidebarState: $sideBarState,
-                    narrowScreenState: $narrowScreenState,
-                });
+                sendEvent('contactAnimationFinish')
             }}"
         >
             <Contact />
@@ -408,24 +355,10 @@
             }}"
             on:outroend="{() => {
                 $settingsHeight = 0;
-                uIEvent.set({
-                    kind:'settingsAnimationFinish',
-                    screenWidth:$screenWidth,
-                    contactMenuState: $contactMenuState,
-                    settingsMenuState: $settingsMenuState,
-                    sidebarState: $sideBarState,
-                    narrowScreenState: $narrowScreenState,
-                });
+                sendEvent('settingsAnimationFinish')
             }}"
             on:introend="{() => {
-                uIEvent.set({
-                    kind:'settingsAnimationFinish',
-                    screenWidth:$screenWidth,
-                    contactMenuState: $contactMenuState,
-                    settingsMenuState: $settingsMenuState,
-                    sidebarState: $sideBarState,
-                    narrowScreenState: $narrowScreenState,
-                });
+                sendEvent('settingsAnimationFinish')
             }}"
         >
             <Settings />
