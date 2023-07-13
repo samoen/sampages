@@ -1,7 +1,7 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import Hand from "$lib/assets/Hand.svelte";
-    import { contactMenuState, lastBurgClickEvent, narrowScreenState, modBase, settingsMenuState, sideBarState } from "$lib/stores";
+    import { contactMenuState, narrowScreenState, modBase, settingsMenuState, sideBarState, uIEvent, screenWidth } from "$lib/stores";
     import type { ComponentType } from "svelte";
     import { get } from "svelte/store";
 
@@ -21,13 +21,14 @@ on:click="{
             e.preventDefault()
             return
         }
-        if ($narrowScreenState && $sideBarState.state == 'fullOpen') {
-            lastBurgClickEvent.set({
-                type: "burg",
+        if ($narrowScreenState == 'narrow' && $sideBarState.state == 'fullOpen') {
+            uIEvent.set({
+                kind: "burgerClicked",
                 narrowScreenState: $narrowScreenState,
                 contactMenuState: $contactMenuState,
                 settingsMenuState: $settingsMenuState,
-                sideBarState: $sideBarState
+                sidebarState: $sideBarState,
+                screenWidth: $screenWidth,
             });
         }
     }
