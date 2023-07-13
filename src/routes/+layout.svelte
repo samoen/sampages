@@ -37,7 +37,10 @@
         themeMode,
         themes,
         topbarheight,
-        wscrollY
+        wscrollY,
+
+        screenWidth
+
     } from "$lib/stores";
     import { onMount } from "svelte";
     import { backIn, backOut, bounceOut } from "svelte/easing";
@@ -68,25 +71,26 @@
         // window.scrollTo(0, 1);
     // });
 
-    let lastWindowWidth = 0;
+    // let lastWindowWidth = 0;
     function mayberesizeEvent() {
-        let newWindowWidth = window.innerWidth;
-        if (newWindowWidth < 600 && lastWindowWidth >= 600) {
+        // let newWindowWidth = window.innerWidth;
+        // if (newWindowWidth < 600 && lastWindowWidth >= 600) {
             resizeEvent.set({
-                type: "wentMobile",
+                width: window.innerWidth,
                 sidebar: $sideBarState,
                 contactMenuState: $contactMenuState,
                 settingsMenuState: $settingsMenuState,
+                narrowScreenState: $narrowScreenState,
             });
-        } else if (newWindowWidth >= 600 && lastWindowWidth < 600) {
-            resizeEvent.set({
-                type: "leftMobile",
-                sidebar: $sideBarState,
-                contactMenuState: $contactMenuState,
-                settingsMenuState: $settingsMenuState,
-            });
-        }
-        lastWindowWidth = window.innerWidth;
+        // } else if (newWindowWidth >= 600 && lastWindowWidth < 600) {
+            // resizeEvent.set({
+                // type: "leftMobile",
+                // sidebar: $sideBarState,
+                // contactMenuState: $contactMenuState,
+                // settingsMenuState: $settingsMenuState,
+            // });
+        // }
+        // lastWindowWidth = window.innerWidth;
     }
 
     // let preloadedImages = [xbig, biggy];
@@ -137,8 +141,8 @@
     {/each} -->
 </svelte:head>
 
-<!-- bind:innerWidth="{$screenWidth}" -->
 <svelte:window
+    bind:innerWidth="{$screenWidth}"
     bind:scrollY="{$wscrollY}"
     on:resize="{(e) => {
         mayberesizeEvent();
@@ -316,7 +320,7 @@
                     if (
                         sidenav.scrollHeight <=
                             sidenav.clientHeight &&
-                        $narrowScreenState
+                        $narrowScreenState == 'narrow'
                     ) {
                         e.preventDefault();
                     }
@@ -346,7 +350,7 @@
             class="topnav brutal-border"
             bind:clientHeight="{$contactHeight}"
             style:top="{$topbarheight + 2}px"
-            style:left="{$narrowScreenState ? 3 : $sidebarwidth + 3}px"
+            style:left="{$narrowScreenState == 'narrow' ? 3 : $sidebarwidth + 3}px"
             style:max-height="calc(100vh - {$topbarheight + 8}px)"
             in:slide|global="{{
                 duration: SHELF_IN_DURATION,
@@ -376,7 +380,7 @@
             class="topnav brutal-border"
             bind:clientHeight="{$settingsHeight}"
             style:top="{$topbarheight + 2}px"
-            style:left="{$narrowScreenState ? 3 : $sidebarwidth + 3}px"
+            style:left="{$narrowScreenState == 'narrow' ? 3 : $sidebarwidth + 3}px"
             style:max-height="calc(100vh - {$topbarheight + 8}px)"
             in:slide|global="{{
                 duration: SHELF_IN_DURATION,
@@ -408,7 +412,7 @@
             style:padding-top="{$contactHeight > $settingsHeight
                 ? $contactHeight
                 : $settingsHeight}px"
-            style:padding-left="{$narrowScreenState ? 0 : $sidebarwidth}px"
+            style:padding-left="{$narrowScreenState == 'narrow' ? 0 : $sidebarwidth}px"
         >
             <slot />
             <footer>
