@@ -1,7 +1,7 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import Hand from "$lib/assets/Hand.svelte";
-    import { contactMenuState, narrowScreenState, modBase, settingsMenuState, sideBarState, uIEvent, screenWidth } from "$lib/stores";
+    import { modBase, topMenuState, sideBarState, uIEvent, screenWidth, narrow } from "$lib/stores";
     import type { ComponentType } from "svelte";
     import { get } from "svelte/store";
 
@@ -21,12 +21,11 @@ on:click="{
             e.preventDefault()
             return
         }
-        if ($narrowScreenState == 'narrow' && $sideBarState.state == 'fullOpen') {
+        if ($narrow == 'narrow' && $sideBarState.state == 'fullOpen') {
             uIEvent.set({
                 kind: "burgerClicked",
-                narrowScreenState: $narrowScreenState,
-                contactMenuState: $contactMenuState,
-                settingsMenuState: $settingsMenuState,
+                narrow:$narrow,
+                topMenuState: $topMenuState,
                 sidebarState: $sideBarState,
                 screenWidth: $screenWidth,
             });

@@ -16,13 +16,11 @@
         burgIconState,
         contactHeight,
         contactIconState,
-        contactMenuState,
         modBase,
-        narrowScreenState,
         screenWidth,
         settingsHeight,
         settingsIconState,
-        settingsMenuState,
+        topMenuState,
         shadowState,
         showJsButtons,
         sideBarState,
@@ -34,7 +32,13 @@
         uIEvent,
         wscrollY,
 
-        type UiEventKind
+        type UiEventKind,
+
+        narrow,
+
+        shelfLeft
+
+
 
     } from "$lib/stores";
     import { onMount } from "svelte";
@@ -55,6 +59,11 @@
         showJsButtons.set(true);
         // sendEvent('resize');
     });
+    
+    narrow.subscribe(n=>{
+        // console.log('narrowsubfire: ' + n)
+        sendEvent('resize');
+    })
 
     // afterNavigate((e) => {
         // console.log("afterNavigate");
@@ -68,18 +77,29 @@
     //             kind:'resize',
     //             narrowScreenState: $narrowScreenState,
     //             sidebarState: $sideBarState,
-    //             contactMenuState: $contactMenuState,
+    //             topMenuState.contact: $topMenuState.contact,
     //             settingsMenuState: $settingsMenuState,
     //             screenWidth: $screenWidth,
     //         });
     //     }
         function sendEvent(kind: UiEventKind){
+            console.log('sending event' + kind)
             uIEvent.set({
                 kind: kind,
-                narrowScreenState: $narrowScreenState,
+                narrow:$narrow,
                 sidebarState: $sideBarState,
-                contactMenuState: $contactMenuState,
-                settingsMenuState: $settingsMenuState,
+                // topMenuState.contact: $topMenuState.contact,
+                topMenuState:  $topMenuState,
+                // topMenuState:{
+                //     settings:{
+                //         // menu: structuredClone($topMenuState.settings.menu),
+                //         menu: 'fullClosed',
+                //         outSpeed:0,
+                //         left:3,
+
+                //     },
+                //     contact:$topMenuState.contact,
+                // },
                 screenWidth: $screenWidth,
             });
 
@@ -137,7 +157,7 @@
     bind:innerWidth="{$screenWidth}"
     bind:scrollY="{$wscrollY}"
     on:resize="{(e) => {
-        sendEvent('resize')
+        // sendEvent('resize')
     }}"
     on:wheel="{(e) => {
         // console.log(e.target);
@@ -164,14 +184,7 @@
                 sendEvent('burgerClicked')
             }}"
             on:touchstart|preventDefault="{() => {
-                uIEvent.set({
-                    kind: 'burgerClicked',
-                    screenWidth:$screenWidth,
-                    contactMenuState: $contactMenuState,
-                    settingsMenuState: $settingsMenuState,
-                    sidebarState: $sideBarState,
-                    narrowScreenState: $narrowScreenState,
-                });
+                sendEvent('burgerClicked')
             }}"
             aria-hidden="true"
             on:keyup
@@ -221,20 +234,22 @@
         >
             <Hand
                 padding="{5}"
-                lilShrink="{$contactMenuState.menu == 'comingIn' ||
-                    $contactMenuState.menu == 'fullOpen'}"
+                lilShrink="{$topMenuState.contact.menu == 'comingIn' ||
+                    $topMenuState.contact.menu == 'fullOpen'}"
                 gone="{!$showJsButtons}"
             />
         </TopBarIcon>
         <TopBarIcon
             push="{() => {
+                // console.log('setclick: ')
+                // console.log($topMenuState.settings)
                 sendEvent('settingsClicked')
             }}"
             state="{$settingsIconState}"
         >
             <Gear
-                lilShrink="{$settingsMenuState.menu == 'comingIn' ||
-                    $settingsMenuState.menu == 'fullOpen'}"
+                lilShrink="{$topMenuState.settings.menu == 'comingIn' ||
+                    $topMenuState.settings.menu == 'fullOpen'}"
                 padding="{5}"
                 gone="{!$showJsButtons}"
             />
@@ -287,7 +302,7 @@
                     if (
                         sidenav.scrollHeight <=
                             sidenav.clientHeight &&
-                        $narrowScreenState == 'narrow'
+                        $narrow == 'narrow'
                     ) {
                         e.preventDefault();
                     }
@@ -312,19 +327,20 @@
             </nav>
         </div>
     {/if}
-    {#if $contactMenuState.menu == "fullOpen" || $contactMenuState.menu == "comingIn"}
+    {#if $topMenuState.contact.menu == "fullOpen" || $topMenuState.contact.menu == "comingIn"}
+    <!-- style:left="{$narrow == 'narrow' && $sideBarState.state == 'fullClosed' ? 3 : $sidebarwidth + 3}px" -->
         <div
             class="topnav brutal-border"
             bind:clientHeight="{$contactHeight}"
             style:top="{$topbarheight + 2}px"
-            style:left="{$narrowScreenState == 'narrow' ? 3 : $sidebarwidth + 3}px"
             style:max-height="calc(100vh - {$topbarheight + 8}px)"
+            style:left="{$shelfLeft}px"
             in:slide|global="{{
                 duration: SHELF_IN_DURATION,
                 easing: bounceOut
             }}"
             out:slide|global="{{
-                duration: $contactMenuState.outSpeed,
+                duration: $topMenuState.contact.outSpeed,
                 easing:backIn,
             }}"
             on:outroend="{() => {
@@ -338,19 +354,20 @@
             <Contact />
         </div>
     {/if}
-    {#if $settingsMenuState.menu == "fullOpen" || $settingsMenuState.menu == "comingIn"}
-        <div
-            class="topnav brutal-border"
-            bind:clientHeight="{$settingsHeight}"
+    {#if $topMenuState.settings.menu == "fullOpen" || $topMenuState.settings.menu == "comingIn"}
+    <!-- style:left="{$narrow == 'narrow' ? 3 : $sidebarwidth + 3}px" -->
+    <div
+    class="topnav brutal-border"
+    bind:clientHeight="{$settingsHeight}"
+            style:left="{$shelfLeft}px"
             style:top="{$topbarheight + 2}px"
-            style:left="{$narrowScreenState == 'narrow' ? 3 : $sidebarwidth + 3}px"
             style:max-height="calc(100vh - {$topbarheight + 8}px)"
             in:slide|global="{{
                 duration: SHELF_IN_DURATION,
                 easing: bounceOut
             }}"
             out:slide|global="{{
-                duration: $settingsMenuState.outSpeed,
+                duration: $topMenuState.settings.outSpeed,
                 easing: backIn
             }}"
             on:outroend="{() => {
@@ -371,7 +388,7 @@
             style:padding-top="{$contactHeight > $settingsHeight
                 ? $contactHeight
                 : $settingsHeight}px"
-            style:padding-left="{$narrowScreenState == 'narrow' ? 0 : $sidebarwidth}px"
+            style:padding-left="{$narrow == 'narrow' ? 0 : $sidebarwidth}px"
         >
             <slot />
             <footer>
