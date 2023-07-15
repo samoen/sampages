@@ -13,33 +13,33 @@
     import TopBarIcon from "$lib/components/TopBarIcon.svelte";
     import {
         SHELF_IN_DURATION,
+        SHELF_OUT_DURATION,
+        SIDEBAR_IN_DURATION,
+
+        SIDEBAR_OUT_DURATION,
         burgIconState,
         contactHeight,
         contactIconState,
+        contactMenuSpeed,
+        contactMenuState,
         modBase,
+        narrow,
         screenWidth,
         settingsHeight,
         settingsIconState,
-        topMenuState,
+        settingsMenuSpeed,
+        settingsMenuState,
         shadowState,
+        shelfLeft,
         showJsButtons,
+        sideBarSpeed,
         sideBarState,
         sidebarwidth,
         themeMode,
         themes,
         topbarColorState,
         topbarheight,
-        uIEvent,
-        wscrollY,
-
-        type UiEventKind,
-
-        narrow,
-
-        shelfLeft
-
-
-
+        wscrollY
     } from "$lib/stores";
     import { onMount } from "svelte";
     import { backIn, backOut, bounceOut } from "svelte/easing";
@@ -59,50 +59,63 @@
         showJsButtons.set(true);
         // sendEvent('resize');
     });
-    
-    narrow.subscribe(n=>{
+
+    narrow.subscribe((n) => {
         // console.log('narrowsubfire: ' + n)
-        sendEvent('resize');
-    })
+        // sendEvent("resize");
+        if($sideBarState == 'fullOpen' || $sideBarState == 'comingIn'){
+            if($contactMenuState == 'fullOpen' || $contactMenuState == 'comingIn'){
+                $contactMenuState = 'goingOut'
+                $contactMenuSpeed = 0
+            }
+            if($settingsMenuState == 'fullOpen' || $settingsMenuState == 'comingIn'){
+                $settingsMenuState = 'goingOut'
+                $settingsMenuSpeed = 0
+            }
+        }
+    });
 
     // afterNavigate((e) => {
-        // console.log("afterNavigate");
-        // bug? svelte tries to maintain window scroll between routes
-        // window.scrollTo(0, 1);
+    // console.log("afterNavigate");
+    // bug? svelte tries to maintain window scroll between routes
+    // window.scrollTo(0, 1);
     // });
 
-    // let lastWindowWidth = 0;
-    // function mayberesizeEvent() {
-    //         uIEvent.set({
-    //             kind:'resize',
-    //             narrowScreenState: $narrowScreenState,
-    //             sidebarState: $sideBarState,
-    //             topMenuState.contact: $topMenuState.contact,
-    //             settingsMenuState: $settingsMenuState,
-    //             screenWidth: $screenWidth,
-    //         });
-    //     }
-        function sendEvent(kind: UiEventKind){
-            console.log('sending event' + kind)
-            uIEvent.set({
-                kind: kind,
-                narrow:$narrow,
-                sidebarState: $sideBarState,
-                // topMenuState.contact: $topMenuState.contact,
-                topMenuState:  $topMenuState,
-                // topMenuState:{
-                //     settings:{
-                //         // menu: structuredClone($topMenuState.settings.menu),
-                //         menu: 'fullClosed',
-                //         outSpeed:0,
-                //         left:3,
 
-                //     },
-                //     contact:$topMenuState.contact,
-                // },
-                screenWidth: $screenWidth,
-            });
+    function aMenuIsAnimating() {
+        if (
+            $settingsMenuState == "comingIn" ||
+            $settingsMenuState == "goingOut" ||
+            $contactMenuState == "comingIn" ||
+            $contactMenuState == "goingOut" ||
+            $sideBarState == "comingIn" ||
+            $sideBarState == "goingOut"
+        ) {
+            return true;
+        }
+        return false;
+    }
 
+    function burgclick() {
+            if(aMenuIsAnimating()){
+                return
+            }
+            if ($sideBarState == "fullOpen") {
+                $sideBarState = "goingOut",
+                $sideBarSpeed = SIDEBAR_OUT_DURATION
+            }
+            if ($sideBarState == "fullClosed") {
+                $sideBarState = "comingIn"
+                $sideBarSpeed = SIDEBAR_IN_DURATION
+                if($contactMenuState == 'fullOpen' && $narrow == 'narrow'){
+                    $contactMenuState = 'goingOut'
+                    $contactMenuSpeed = 0
+                }
+                if($settingsMenuState == 'fullOpen' && $narrow == 'narrow'){
+                    $settingsMenuState = 'goingOut'
+                    $settingsMenuSpeed = 0
+                }
+            }
     }
 
     // let preloadedImages = [xbig, biggy];
@@ -181,10 +194,12 @@
             style:width="calc(100vw - {$sidebarwidth}px)"
             style:top="{$topbarheight}px"
             on:click|preventDefault="{() => {
-                sendEvent('burgerClicked')
+                // sendEvent('burgerClicked');
+                burgclick()
             }}"
             on:touchstart|preventDefault="{() => {
-                sendEvent('burgerClicked')
+                // sendEvent('burgerClicked');
+                burgclick()
             }}"
             aria-hidden="true"
             on:keyup
@@ -201,7 +216,8 @@
         class:brutal-border="{$topbarColorState.color == 'solid' ||
             $topbarColorState.color == 'blur'}"
         class:blurbar="{$topbarColorState.color == 'blur'}"
-        class:quick-transition="{$topbarColorState.speed == 'instant'}"
+        class:quick-transition="{$topbarColorState.speed ==
+            'instant'}"
         bind:clientHeight="{$topbarheight}"
         on:touchmove|nonpassive="{(e) => {
             e.preventDefault();
@@ -212,15 +228,16 @@
     >
         <TopBarIcon
             push="{() => {
-                sendEvent('burgerClicked')
+                // sendEvent('burgerClicked');
+                burgclick()
             }}"
             state="{$burgIconState}"
         >
             <Hamburger
                 size="{1}"
                 padding="{5}"
-                lilShrink="{$sideBarState.state == 'fullOpen' ||
-                    $sideBarState.state == 'comingIn'}"
+                lilShrink="{$sideBarState == 'fullOpen' ||
+                    $sideBarState == 'comingIn'}"
                 gone="{!$showJsButtons}"
             />
         </TopBarIcon>
@@ -228,56 +245,96 @@
         <!-- {$narrowScreenState && $sideBarState} -->
         <TopBarIcon
             push="{() => {
-                sendEvent('contactClicked')
+                // sendEvent('contactClicked')
+                if(aMenuIsAnimating()) {
+                    return
+                }
+                if($contactMenuState == 'fullOpen'){
+                    $contactMenuState = 'goingOut'
+                    $contactMenuSpeed = SHELF_OUT_DURATION
+                }
+                if($contactMenuState == 'fullClosed'){
+                    $contactMenuState = 'comingIn'
+                    if($narrow == 'narrow' && $sideBarState == 'fullOpen'){
+                        $sideBarState = 'goingOut'
+                        $sideBarSpeed = 0
+                    }
+                    if($settingsMenuState == 'fullOpen'){
+                        $settingsMenuState = 'goingOut'
+                        $settingsMenuSpeed = 0
+                    }
+                }
             }}"
             state="{$contactIconState}"
         >
             <Hand
                 padding="{5}"
-                lilShrink="{$topMenuState.contact.menu == 'comingIn' ||
-                    $topMenuState.contact.menu == 'fullOpen'}"
+                lilShrink="{$contactMenuState ==
+                    'comingIn' ||
+                    $contactMenuState == 'fullOpen'}"
                 gone="{!$showJsButtons}"
             />
         </TopBarIcon>
         <TopBarIcon
             push="{() => {
-                // console.log('setclick: ')
-                // console.log($topMenuState.settings)
-                sendEvent('settingsClicked')
+                // sendEvent('settingsClicked');
+                if(aMenuIsAnimating()) return
+                if($settingsMenuState == 'fullOpen'){
+                    $settingsMenuState = 'goingOut'
+                    $settingsMenuSpeed = SHELF_OUT_DURATION
+                }
+                if($settingsMenuState == 'fullClosed'){
+                    $settingsMenuState = 'comingIn'
+                    if($narrow == 'narrow' && $sideBarState == 'fullOpen'){
+                        $sideBarState = 'goingOut'
+                        $sideBarSpeed = 0
+                    }
+                    if($contactMenuState == 'fullOpen'){
+                        $contactMenuState = "goingOut"
+                        $contactMenuSpeed = 0
+                    }
+                }
             }}"
             state="{$settingsIconState}"
         >
             <Gear
-                lilShrink="{$topMenuState.settings.menu == 'comingIn' ||
-                    $topMenuState.settings.menu == 'fullOpen'}"
+                lilShrink="{$settingsMenuState ==
+                    'comingIn' ||
+                    $settingsMenuState == 'fullOpen'}"
                 padding="{5}"
                 gone="{!$showJsButtons}"
             />
         </TopBarIcon>
     </div>
-    {#if $sideBarState.state == "fullOpen" || $sideBarState.state == "comingIn"}
+    {#if $sideBarState == "fullOpen" || $sideBarState == "comingIn"}
         <div
             class="sidebar brutal-border"
             bind:offsetWidth="{$sidebarwidth}"
             style:top="{$topbarheight + 2}px"
             out:slide="{{
                 delay: 0,
-                duration: $sideBarState.speed,
+                duration: $sideBarSpeed,
                 axis: 'x',
                 // easing: backIn,
             }}"
             in:slide="{{
                 delay: 0,
-                duration: $sideBarState.speed,
+                duration: $sideBarSpeed,
                 axis: 'x',
                 easing: backOut,
             }}"
             on:outroend="{() => {
                 $sidebarwidth = 0;
-                sendEvent('sidebarAnimationFinish')
+                // sendEvent('sidebarAnimationFinish')
+                $sideBarState =
+                        $sideBarState == 'comingIn'
+                            ? 'fullOpen'
+                            : 'fullClosed'
+                
             }}"
             on:introend="{() => {
-                sendEvent('sidebarAnimationFinish')
+                // sendEvent('sidebarAnimationFinish')
+                $sideBarState = $sideBarState == 'comingIn' ? 'fullOpen' : 'fullClosed'
             }}"
             on:wheel|nonpassive="{(e) => {
                 if (!sidenav) return;
@@ -327,8 +384,8 @@
             </nav>
         </div>
     {/if}
-    {#if $topMenuState.contact.menu == "fullOpen" || $topMenuState.contact.menu == "comingIn"}
-    <!-- style:left="{$narrow == 'narrow' && $sideBarState.state == 'fullClosed' ? 3 : $sidebarwidth + 3}px" -->
+    {#if $contactMenuState == "fullOpen" || $contactMenuState == "comingIn"}
+        <!-- style:left="{$narrow == 'narrow' && $sideBarState.state == 'fullClosed' ? 3 : $sidebarwidth + 3}px" -->
         <div
             class="topnav brutal-border"
             bind:clientHeight="{$contactHeight}"
@@ -337,45 +394,49 @@
             style:left="{$shelfLeft}px"
             in:slide|global="{{
                 duration: SHELF_IN_DURATION,
-                easing: bounceOut
+                easing: bounceOut,
             }}"
             out:slide|global="{{
-                duration: $topMenuState.contact.outSpeed,
-                easing:backIn,
+                duration: $contactMenuSpeed,
+                easing: backIn,
             }}"
             on:outroend="{() => {
                 $contactHeight = 0;
-                sendEvent('contactAnimationFinish')
+                // sendEvent('contactAnimationFinish');
+                $contactMenuState = 'fullClosed'
             }}"
             on:introend="{() => {
-                sendEvent('contactAnimationFinish')
+                // sendEvent('contactAnimationFinish');
+                $contactMenuState = 'fullOpen'
             }}"
         >
             <Contact />
         </div>
     {/if}
-    {#if $topMenuState.settings.menu == "fullOpen" || $topMenuState.settings.menu == "comingIn"}
-    <!-- style:left="{$narrow == 'narrow' ? 3 : $sidebarwidth + 3}px" -->
-    <div
-    class="topnav brutal-border"
-    bind:clientHeight="{$settingsHeight}"
+    {#if $settingsMenuState == "fullOpen" || $settingsMenuState == "comingIn"}
+        <!-- style:left="{$narrow == 'narrow' ? 3 : $sidebarwidth + 3}px" -->
+        <div
+            class="topnav brutal-border"
+            bind:clientHeight="{$settingsHeight}"
             style:left="{$shelfLeft}px"
             style:top="{$topbarheight + 2}px"
             style:max-height="calc(100vh - {$topbarheight + 8}px)"
             in:slide|global="{{
                 duration: SHELF_IN_DURATION,
-                easing: bounceOut
+                easing: bounceOut,
             }}"
             out:slide|global="{{
-                duration: $topMenuState.settings.outSpeed,
-                easing: backIn
+                duration: $settingsMenuSpeed,
+                easing: backIn,
             }}"
             on:outroend="{() => {
                 $settingsHeight = 0;
-                sendEvent('settingsAnimationFinish')
+                $settingsMenuState = 'fullClosed'
+                // sendEvent('settingsAnimationFinish');
             }}"
             on:introend="{() => {
-                sendEvent('settingsAnimationFinish')
+                $settingsMenuState = 'fullOpen'
+                // sendEvent('settingsAnimationFinish');
             }}"
         >
             <Settings />
@@ -388,7 +449,9 @@
             style:padding-top="{$contactHeight > $settingsHeight
                 ? $contactHeight
                 : $settingsHeight}px"
-            style:padding-left="{$narrow == 'narrow' ? 0 : $sidebarwidth}px"
+            style:padding-left="{$narrow == "narrow"
+                ? 0
+                : $sidebarwidth}px"
         >
             <slot />
             <footer>
@@ -573,12 +636,12 @@
     :global(a:focus, a:active) {
         outline: none;
     }
-    
+
     :global(p, span, h1, a, h2, h3) {
         color: var(--colortext);
         /* transition: color 1s; */
     }
-    
+
     :global(html) {
         transition: background-color 1s ease-in-out;
         box-sizing: border-box;

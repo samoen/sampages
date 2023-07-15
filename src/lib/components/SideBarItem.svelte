@@ -1,48 +1,50 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import Hand from "$lib/assets/Hand.svelte";
-    import { modBase, topMenuState, sideBarState, uIEvent, screenWidth, narrow } from "$lib/stores";
+    import {
+        SIDEBAR_OUT_DURATION,
+        modBase,
+        narrow,
+        sideBarSpeed,
+        sideBarState
+    } from "$lib/stores";
     import type { ComponentType } from "svelte";
-    import { get } from "svelte/store";
 
-    export let txt : string = "placeholder"
-    export let icon : ComponentType = Hand
-    export let path : string = modBase
+    export let txt: string = "placeholder";
+    export let icon: ComponentType = Hand;
+    export let path: string = modBase;
 </script>
 
 <a
-href="{path}"
-class:inset-brutal="{$page.url.pathname ==`${path}`}"
-class:grow="{$page.url.pathname ==`${path}`}"
-class:brutal-border="{$page.url.pathname != `${path}`}"
-on:click="{
-    (e)=>{
-        if($sideBarState.state != 'fullOpen' || $page.url.pathname ==`${path}`){
-            e.preventDefault()
-            return
+    href="{path}"
+    class:inset-brutal="{$page.url.pathname == `${path}`}"
+    class:grow="{$page.url.pathname == `${path}`}"
+    class:brutal-border="{$page.url.pathname != `${path}`}"
+    on:click="{(e) => {
+        if (
+            $sideBarState != 'fullOpen' ||
+            $page.url.pathname == `${path}`
+        ) {
+            e.preventDefault();
+            return;
         }
-        if ($narrow == 'narrow' && $sideBarState.state == 'fullOpen') {
-            uIEvent.set({
-                kind: "burgerClicked",
-                narrow:$narrow,
-                topMenuState: $topMenuState,
-                sidebarState: $sideBarState,
-                screenWidth: $screenWidth,
-            });
+        if ($narrow == 'narrow' && $sideBarState == 'fullOpen') {
+            if ($sideBarState == 'fullOpen') {
+                ($sideBarState = 'goingOut'),
+                    ($sideBarSpeed = SIDEBAR_OUT_DURATION);
+            }
         }
-    }
-}"
+    }}"
 >
-<div
-    class="sideitem"
-    class:lil-shrinky="{$page.url
-        .pathname == `${path}`}"
->
+    <div
+        class="sideitem"
+        class:lil-shrinky="{$page.url.pathname == `${path}`}"
+    >
         <div class="icon">
-            <svelte:component this={icon} />
+            <svelte:component this="{icon}" />
         </div>
-    <span>{txt}</span>
-</div>
+        <span>{txt}</span>
+    </div>
 </a>
 
 <style>
@@ -64,11 +66,11 @@ on:click="{
         align-items: center;
         column-gap: 5px;
     }
-    .icon{
-        height:1.6rem;
+    .icon {
+        height: 1.6rem;
         width: 1.6rem;
     }
-    
+
     .sideitem span {
         white-space: nowrap;
         max-width: max-content;
