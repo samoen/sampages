@@ -432,11 +432,9 @@
             on:outroend="{() => {
                 $settingsHeight = 0;
                 $settingsMenuState = 'fullClosed'
-                // sendEvent('settingsAnimationFinish');
             }}"
             on:introend="{() => {
                 $settingsMenuState = 'fullOpen'
-                // sendEvent('settingsAnimationFinish');
             }}"
         >
             <Settings />
@@ -466,6 +464,7 @@
     .top {
         /* position: relative; */
         /* so backdrop can position absolute */
+        /* overflow-x: hidden; */
     }
 
     .slotandfoot {

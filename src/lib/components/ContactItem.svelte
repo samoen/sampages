@@ -10,16 +10,16 @@
 </script>
 
 <div class="contactItem brutal-border">
+    <!-- style:height="{40}px" -->
     <a 
     class="barlink" 
     href="{path}"
-    style:height="{rightHeight}px"
     >
             <svelte:component this={icon} />
     </a>
+    <!-- bind:offsetHeight="{rightHeight}" -->
     <div
         class="right"
-        bind:offsetHeight="{rightHeight}"
     >
         <span>{title}</span>
         <span class="detail">{detail}</span>
@@ -35,13 +35,13 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap:7px;
+        gap:3px;
         overflow: hidden;
     }
     .barlink{
-        /* width: 2em; */
-        /* height:2em; */
-        aspect-ratio: 1/1;
+        width: 2.3em;
+        height:2.3em;
+        /* aspect-ratio: 1/1; */
     }
     .detail{
         display: inline-block;
@@ -52,6 +52,7 @@
         line-height:0.9em;
     }
     .right{
+        /* background-color: aqua; */
         padding-bottom: 6px;
         display: flex;
         flex-direction: column;

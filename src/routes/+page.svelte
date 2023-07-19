@@ -87,9 +87,7 @@
                     <HappyMessage></HappyMessage>
                 </div>
                 <div class="cardtxt">
-                    <p>
-                        Joyful collaboration
-                    </p>
+                    <p>Joyful collaboration</p>
                 </div>
             </div>
             <div class="brutal-border">
@@ -97,7 +95,9 @@
                     <Wallet></Wallet>
                 </div>
                 <div class="cardtxt">
-                    <p>Easy on the front pocket</p>
+                    <p>
+                        Easy on the front pocket
+                    </p>
                 </div>
             </div>
         </div>
@@ -127,7 +127,7 @@
 <style>
     .container {
         padding-inline: calc(3vw);
-        /* overflow-x: hidden; */
+        overflow-x: hidden;
     }
     .splash {
         padding-inline: 20px;
@@ -172,44 +172,53 @@
         margin-bottom: 0.5em;
     }
     .fourcards{
+        /* overflow-x: hidden; */
         margin-block:20px;
-        /* display: flex; */
-        /* flex-wrap: wrap; */
+        display: flex;
+        flex-wrap: wrap;
         gap:20px;
         /* justify-content: center; */
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(47%,1fr));
-        grid-auto-rows:1fr;
-
+        /* display: grid; */
+        /* grid-template-columns: repeat(auto-fit, minmax(2px,1fr)); */
+        /* grid-template-columns: 50% 50%; */
+        /* grid-auto-rows:auto; */
+        
     }
     .twocards{
-        /* flex-basis: 0px; */
-        /* flex-grow: 1; */
-        /* flex-shrink: 1; */
+        flex-basis: 134px;
+        flex-grow: 1;
+        flex-shrink: 1;
         /* min-width: 17rem; */
 
-        /* display:flex; */
-        /* flex-wrap: nowrap; */
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
-        grid-auto-rows:1fr;
+        display:flex;
+        flex-wrap: wrap;
+        /* align-items: center; */
+
+        /* display: grid; */
+        /* grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); */
+        /* grid-auto-rows:1fr; */
+        min-width:0;
         gap:20px;
     }
     .twocards > div{
-        /* flex-basis: 0px; */
-        /* flex-grow: 1; */
-        /* flex-shrink:1; */
+        flex-basis: 150px;
+        flex-grow: 1;
+        flex-shrink:1;
         /* min-height: 1px; */
-        min-width: 50px;
+        /* min-width: 50px; */
+        /* max-width: 20px; */
         background-color: var(--colorsecondary);
         padding:20px;
+
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        align-items: center;
+        /* align-items: center; */
         /* flex-wrap: nowrap; */
+        min-width:0;
+        min-height: 160px;
         gap:10px;
-        /* gap:15px; */
+        word-wrap:break-word;
     }
     .cardim{
         min-height:1px;
@@ -220,18 +229,22 @@
     }
     
     .cardtxt{
-        flex-basis: auto;
+        flex-basis: 0px;
         text-align:center;
         margin-block: auto;
-        /* flex-grow: 1; */
-        /* flex-shrink: 1; */
+        flex-grow: 1;
+        flex-shrink: 1;
         display: flex;
+        /* flex-direction: column; */
+        min-width: 0;
         align-items: center;
-        /* background-color: aqua; */
-        
+        justify-content: center;
+        word-wrap: break-word;
     }
     .cardtxt > p {
         text-wrap:balance;
+        min-width: 0;
+        word-wrap: break-word;
     }
     .glowing {
         animation: move-bg 3500ms infinite;
