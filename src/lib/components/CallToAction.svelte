@@ -155,7 +155,7 @@
         transition: min-height 1s ease-in-out;
     }
     .gagintro {
-        margin-bottom: 10px;
+        /* margin-bottom: 10px; */
     }
     .gagstart {
         display: inline-flex;

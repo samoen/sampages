@@ -6,6 +6,7 @@
     import Hamburger from "$lib/assets/Hamburger.svelte";
     import Hand from "$lib/assets/Hand.svelte";
     import House from "$lib/assets/House.svelte";
+    import Spinner from "$lib/assets/Spinner.svelte";
     import User from "$lib/assets/User.svelte";
     import Contact from "$lib/components/Contact.svelte";
     import Settings from "$lib/components/Settings.svelte";
@@ -15,7 +16,6 @@
         SHELF_IN_DURATION,
         SHELF_OUT_DURATION,
         SIDEBAR_IN_DURATION,
-
         SIDEBAR_OUT_DURATION,
         burgIconState,
         contactHeight,
@@ -39,7 +39,7 @@
         themes,
         topbarColorState,
         topbarheight,
-        wscrollY
+        wscrollY,
     } from "$lib/stores";
     import { onMount } from "svelte";
     import { backIn, backOut, bounceOut } from "svelte/easing";
@@ -63,14 +63,23 @@
     narrow.subscribe((n) => {
         // console.log('narrowsubfire: ' + n)
         // sendEvent("resize");
-        if($sideBarState == 'fullOpen' || $sideBarState == 'comingIn'){
-            if($contactMenuState == 'fullOpen' || $contactMenuState == 'comingIn'){
-                $contactMenuState = 'goingOut'
-                $contactMenuSpeed = 0
+        if (
+            $sideBarState == "fullOpen" ||
+            $sideBarState == "comingIn"
+        ) {
+            if (
+                $contactMenuState == "fullOpen" ||
+                $contactMenuState == "comingIn"
+            ) {
+                $contactMenuState = "goingOut";
+                $contactMenuSpeed = 0;
             }
-            if($settingsMenuState == 'fullOpen' || $settingsMenuState == 'comingIn'){
-                $settingsMenuState = 'goingOut'
-                $settingsMenuSpeed = 0
+            if (
+                $settingsMenuState == "fullOpen" ||
+                $settingsMenuState == "comingIn"
+            ) {
+                $settingsMenuState = "goingOut";
+                $settingsMenuSpeed = 0;
             }
         }
     });
@@ -80,7 +89,6 @@
     // bug? svelte tries to maintain window scroll between routes
     // window.scrollTo(0, 1);
     // });
-
 
     function aMenuIsAnimating() {
         if (
@@ -97,25 +105,31 @@
     }
 
     function burgclick() {
-            if(aMenuIsAnimating()){
-                return
+        if (aMenuIsAnimating()) {
+            return;
+        }
+        if ($sideBarState == "fullOpen") {
+            ($sideBarState = "goingOut"),
+                ($sideBarSpeed = SIDEBAR_OUT_DURATION);
+        }
+        if ($sideBarState == "fullClosed") {
+            $sideBarState = "comingIn";
+            $sideBarSpeed = SIDEBAR_IN_DURATION;
+            if (
+                $contactMenuState == "fullOpen" &&
+                $narrow == "narrow"
+            ) {
+                $contactMenuState = "goingOut";
+                $contactMenuSpeed = 0;
             }
-            if ($sideBarState == "fullOpen") {
-                $sideBarState = "goingOut",
-                $sideBarSpeed = SIDEBAR_OUT_DURATION
+            if (
+                $settingsMenuState == "fullOpen" &&
+                $narrow == "narrow"
+            ) {
+                $settingsMenuState = "goingOut";
+                $settingsMenuSpeed = 0;
             }
-            if ($sideBarState == "fullClosed") {
-                $sideBarState = "comingIn"
-                $sideBarSpeed = SIDEBAR_IN_DURATION
-                if($contactMenuState == 'fullOpen' && $narrow == 'narrow'){
-                    $contactMenuState = 'goingOut'
-                    $contactMenuSpeed = 0
-                }
-                if($settingsMenuState == 'fullOpen' && $narrow == 'narrow'){
-                    $settingsMenuState = 'goingOut'
-                    $settingsMenuSpeed = 0
-                }
-            }
+        }
     }
 
     // let preloadedImages = [xbig, biggy];
@@ -195,11 +209,11 @@
             style:top="{$topbarheight}px"
             on:click|preventDefault="{() => {
                 // sendEvent('burgerClicked');
-                burgclick()
+                burgclick();
             }}"
             on:touchstart|preventDefault="{() => {
                 // sendEvent('burgerClicked');
-                burgclick()
+                burgclick();
             }}"
             aria-hidden="true"
             on:keyup
@@ -229,7 +243,7 @@
         <TopBarIcon
             push="{() => {
                 // sendEvent('burgerClicked');
-                burgclick()
+                burgclick();
             }}"
             state="{$burgIconState}"
         >
@@ -246,22 +260,25 @@
         <TopBarIcon
             push="{() => {
                 // sendEvent('contactClicked')
-                if(aMenuIsAnimating()) {
-                    return
+                if (aMenuIsAnimating()) {
+                    return;
                 }
-                if($contactMenuState == 'fullOpen'){
-                    $contactMenuState = 'goingOut'
-                    $contactMenuSpeed = SHELF_OUT_DURATION
+                if ($contactMenuState == 'fullOpen') {
+                    $contactMenuState = 'goingOut';
+                    $contactMenuSpeed = SHELF_OUT_DURATION;
                 }
-                if($contactMenuState == 'fullClosed'){
-                    $contactMenuState = 'comingIn'
-                    if($narrow == 'narrow' && $sideBarState == 'fullOpen'){
-                        $sideBarState = 'goingOut'
-                        $sideBarSpeed = 0
+                if ($contactMenuState == 'fullClosed') {
+                    $contactMenuState = 'comingIn';
+                    if (
+                        $narrow == 'narrow' &&
+                        $sideBarState == 'fullOpen'
+                    ) {
+                        $sideBarState = 'goingOut';
+                        $sideBarSpeed = 0;
                     }
-                    if($settingsMenuState == 'fullOpen'){
-                        $settingsMenuState = 'goingOut'
-                        $settingsMenuSpeed = 0
+                    if ($settingsMenuState == 'fullOpen') {
+                        $settingsMenuState = 'goingOut';
+                        $settingsMenuSpeed = 0;
                     }
                 }
             }}"
@@ -269,8 +286,7 @@
         >
             <Hand
                 padding="{5}"
-                lilShrink="{$contactMenuState ==
-                    'comingIn' ||
+                lilShrink="{$contactMenuState == 'comingIn' ||
                     $contactMenuState == 'fullOpen'}"
                 gone="{!$showJsButtons}"
             />
@@ -278,28 +294,30 @@
         <TopBarIcon
             push="{() => {
                 // sendEvent('settingsClicked');
-                if(aMenuIsAnimating()) return
-                if($settingsMenuState == 'fullOpen'){
-                    $settingsMenuState = 'goingOut'
-                    $settingsMenuSpeed = SHELF_OUT_DURATION
+                if (aMenuIsAnimating()) return;
+                if ($settingsMenuState == 'fullOpen') {
+                    $settingsMenuState = 'goingOut';
+                    $settingsMenuSpeed = SHELF_OUT_DURATION;
                 }
-                if($settingsMenuState == 'fullClosed'){
-                    $settingsMenuState = 'comingIn'
-                    if($narrow == 'narrow' && $sideBarState == 'fullOpen'){
-                        $sideBarState = 'goingOut'
-                        $sideBarSpeed = 0
+                if ($settingsMenuState == 'fullClosed') {
+                    $settingsMenuState = 'comingIn';
+                    if (
+                        $narrow == 'narrow' &&
+                        $sideBarState == 'fullOpen'
+                    ) {
+                        $sideBarState = 'goingOut';
+                        $sideBarSpeed = 0;
                     }
-                    if($contactMenuState == 'fullOpen'){
-                        $contactMenuState = "goingOut"
-                        $contactMenuSpeed = 0
+                    if ($contactMenuState == 'fullOpen') {
+                        $contactMenuState = 'goingOut';
+                        $contactMenuSpeed = 0;
                     }
                 }
             }}"
             state="{$settingsIconState}"
         >
             <Gear
-                lilShrink="{$settingsMenuState ==
-                    'comingIn' ||
+                lilShrink="{$settingsMenuState == 'comingIn' ||
                     $settingsMenuState == 'fullOpen'}"
                 padding="{5}"
                 gone="{!$showJsButtons}"
@@ -321,20 +339,22 @@
                 delay: 0,
                 duration: $sideBarSpeed,
                 axis: 'x',
-                easing: backOut,
+                // easing: backOut,
             }}"
             on:outroend="{() => {
                 $sidebarwidth = 0;
                 // sendEvent('sidebarAnimationFinish')
                 $sideBarState =
-                        $sideBarState == 'comingIn'
-                            ? 'fullOpen'
-                            : 'fullClosed'
-                
+                    $sideBarState == 'comingIn'
+                        ? 'fullOpen'
+                        : 'fullClosed';
             }}"
             on:introend="{() => {
                 // sendEvent('sidebarAnimationFinish')
-                $sideBarState = $sideBarState == 'comingIn' ? 'fullOpen' : 'fullClosed'
+                $sideBarState =
+                    $sideBarState == 'comingIn'
+                        ? 'fullOpen'
+                        : 'fullClosed';
             }}"
             on:wheel|nonpassive="{(e) => {
                 if (!sidenav) return;
@@ -375,6 +395,13 @@
                     </li>
                     <li>
                         <SideBarItem
+                            txt="Experience"
+                            icon="{Spinner}"
+                            path="{base}/experience"
+                        />
+                    </li>
+                    <li>
+                        <SideBarItem
                             txt="About"
                             icon="{User}"
                             path="{base}/about"
@@ -403,11 +430,11 @@
             on:outroend="{() => {
                 $contactHeight = 0;
                 // sendEvent('contactAnimationFinish');
-                $contactMenuState = 'fullClosed'
+                $contactMenuState = 'fullClosed';
             }}"
             on:introend="{() => {
                 // sendEvent('contactAnimationFinish');
-                $contactMenuState = 'fullOpen'
+                $contactMenuState = 'fullOpen';
             }}"
         >
             <Contact />
@@ -431,10 +458,10 @@
             }}"
             on:outroend="{() => {
                 $settingsHeight = 0;
-                $settingsMenuState = 'fullClosed'
+                $settingsMenuState = 'fullClosed';
             }}"
             on:introend="{() => {
-                $settingsMenuState = 'fullOpen'
+                $settingsMenuState = 'fullOpen';
             }}"
         >
             <Settings />
@@ -610,18 +637,23 @@
     }
     :global(h1) {
         font-size: clamp(1.2rem, 4vw + 0.6rem, 3rem);
-        margin-bottom: 0.6em;
         text-wrap: balance;
     }
     :global(h2) {
         font-size: clamp(1.1rem, 2vw + 0.4rem, 2rem);
-        margin-bottom: 0.6em;
         text-wrap: balance;
     }
     :global(h3) {
         font-size: clamp(1rem, 1vw + 0.3rem, 1.5rem);
         text-wrap: balance;
         font-weight: 500;
+    }
+    :global(h1,h2,h3,p){
+    margin-bottom: 0.6em;
+
+    }
+    :global(p + h2, p + h1, p + h3) {
+        margin-top: 0.6em;
     }
     :global(button, a) {
         -webkit-tap-highlight-color: transparent;
@@ -636,7 +668,7 @@
         outline: none;
     }
 
-    :global(p, span, h1, a, h2, h3) {
+    :global(p, span, h1, a, h2, h3,div) {
         color: var(--colortext);
         /* transition: color 1s; */
     }

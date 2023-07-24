@@ -108,6 +108,8 @@
     }
     .cream {
         background-color: beige;
+    }
+    .cream div{
         color: black;
     }
     .borderCream {

@@ -1,56 +1,46 @@
-<script lang='ts'>
-    import biggy from "$lib/assets/biggy.png";
+<script lang="ts">
+    import perth from "$lib/assets/perth.jpg";
     import Footer from "$lib/components/Footer.svelte";
     import { onMount } from "svelte";
 
+    import Profile from "$lib/components/Profile.svelte";
+
     // let dum:HTMLElement;
     onMount(() => {
-        console.log('about mounted')
+        console.log("about mounted");
         // setTimeout(()=>{
         //     window.scrollTo(0,1)
 
         // },500)
         // dum?.scrollIntoView();
-
     });
-    
 </script>
+
 <!-- <div bind:this={dum} class="dum"></div> -->
 <div class="cont">
     <h1>About</h1>
     <p>Made with &hearts; by Sam Oen</p>
+    <div class="mugTextOuter">
+        <Profile></Profile>
+    </div>
     <div class="imgwithtext brutal-border">
         <div class="myimgcont">
             <img
                 class="myimg"
                 height="500"
                 width="500"
-                src="{biggy}"
-                alt="bigish"
+                src="{perth}"
+                alt="perth"
             />
         </div>
         <div class="cardtxt">
             <p class="cardp">
-                Sam Oen is a software engineer based in Perth, Western
-                Australia. When he's not immersed in lines of code,
-                you can find him on the the sports field or wandering in
-                nature with his partner Ashleigh.
+                Living in the vibrant city of Perth, Sam draws
+                inspiration from its dynamic atmosphere and the beauty
+                of Western Australia's surroundings.
             </p>
         </div>
     </div>
-    <p>
-        Living in the vibrant city of Perth, Sam draws inspiration
-        from its dynamic atmosphere and the beauty of Western
-        Australia's surroundings.
-    </p>
-    <p>
-        With a solid foundation in software engineering principles and
-        a genuine passion for his work, Sam continues to push
-        boundaries and explore new horizons in the ever-evolving world
-        of technology. Sam's energy and enthusiasm are contagious,
-        making him an exceptional software engineer with a zest for
-        life.
-    </p>
 </div>
 
 <style>
@@ -63,16 +53,21 @@
         --maximagewidth: 600px;
         /* container: conty / inline-size; */
     }
+    .mugTextOuter {
+        margin-top:30px;
+        max-width: 900px;
+        margin-inline:auto;
+    }
+
     .cont > p {
         display: block;
         margin-inline: auto;
-        max-width: 120rch;
-        margin-bottom: 1rem;
+        max-width: 900px;
     }
     .cont > h1 {
         display: block;
         /* background-color: blue; */
-        max-width: 120rch;
+        max-width: 900px;
         /* width: clamp(0px,100%,600px); */
 
         margin-inline: auto;
