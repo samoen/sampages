@@ -51,7 +51,7 @@
         /* background-color: aqua; */
         --textwidth: 300px;
         --maximagewidth: 600px;
-        /* container: conty / inline-size; */
+        container: conty / inline-size;
     }
     .mugTextOuter {
         margin-top:30px;
@@ -82,8 +82,12 @@
         padding: 1rem;
         background-color: var(--colorsecondary);
     }
-
-    @media only screen and (min-width: 600px) {
+    .myimg{
+        border-radius: 3px;
+    }
+    
+    @container conty (min-width: 600px) {
+    /* @media only screen and (min-width: 600px) { */
         .imgwithtext {
             margin-left: auto;
             margin-right: auto;
@@ -97,6 +101,7 @@
             position: relative;
             align-self: stretch;
             max-width: var(--maximagewidth);
+            order:1;
         }
 
         .myimg {
@@ -110,8 +115,8 @@
             width: var(--textwidth);
         }
     }
-    /* @container conty (max-width: 600px) { */
-    @media only screen and (max-width: 599px) {
+    @container conty (max-width: 599px) {
+    /* @media only screen and (max-width: 599px) { */
         .myimg {
             display: block;
             max-height: 100px;

@@ -18,17 +18,15 @@
             <p>
                 Sam Oen is a software engineer based in Perth, Western
                 Australia.
-            </p>
-            <p>
                 When he's not immersed in lines of code, you can find
                 him on the the sports field or wandering in nature
                 with his partner Ashleigh.
             </p>
-            <p>
+            <!-- <p>
                 With a solid foundation in software engineering
                 principles and a genuine passion for his work, Sam strives to push boundaries
                 in the ever-evolving world of technology. 
-            </p>
+            </p> -->
         </div>
     </div>
 </div>
@@ -37,7 +35,7 @@
     .cont {
         container: mugout / inline-size;
     }
-    @container mugout (min-width: 600px) {
+    @container mugout (min-width: 500px) {
     .mugAndText {
         display: flex;
         flex-wrap: nowrap;
@@ -83,27 +81,27 @@
     .mugText {
         flex-basis: 40ch;
         flex-grow: 1;
-        /* max-width: 60ch; */
+        max-width: 50ch;
         margin-inline: auto;
         padding: 15px;
     }
     }
-    @container mugout (max-width: 599px) {
+    @container mugout (max-width: 499px) {
         .mugText > p {
             text-wrap: balance;
         }
         .mugAndText {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
             background-color: var(--colorsecondary);
-            /* gap:10px; */
-            /* padding:10px; */
+        }
+        .mugHolder {
+            display: grid;
         }
         .grad {
-            /* fill: linear-gradient(transparent, yellow); */
-            background-image: linear-gradient(
+            background: linear-gradient(
                 transparent 60%,
                 var(--colorsecondary)
             );
@@ -111,27 +109,20 @@
             grid-column: 1 / 1;
             height: 100%;
             width: 100%;
-            z-index: 0;
+            z-index: 1;
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
         }
         .headshot {
+            z-index:0;
             grid-row: 1 / 1;
             grid-column: 1 / 1;
             object-fit: cover;
             object-position: 0% 35%;
-            width: 100%;
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
             max-height: 300px;
         }
-        /* } */
-
-        .mugHolder {
-            display: grid;
-            width: 100%;
-        }
-
         .mugText {
             padding: 10px;
             text-align: center;
