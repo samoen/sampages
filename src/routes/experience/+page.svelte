@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { base } from '$app/paths';
 import druref from '$lib/assets/DruReference.pdf'
     import { modBase } from '$lib/stores';
 </script>
@@ -8,7 +9,7 @@ import druref from '$lib/assets/DruReference.pdf'
     <h2>Ernst & Young</h2>
     <p>Mar 2014 - Feb 2016</p>
     <p>Research & Development Tax Consultant</p>
-    <a class="pRef brutal-border" href="{modBase}RobinRef.pdf">Personal Reference</a>
+    <a class="pRef brutal-border" href="{base}/RobinRef.pdf">Personal Reference</a>
     <h2>Norwood Systems</h2>
     <p>Sep 2017 - May 2019</p>
     <p>Android Application Developer</p>
