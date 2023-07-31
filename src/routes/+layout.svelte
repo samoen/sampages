@@ -646,7 +646,7 @@
     :global(h3) {
         font-size: clamp(1rem, 1vw + 0.3rem, 1.5rem);
         text-wrap: balance;
-        font-weight: 500;
+        font-weight: 550;
     }
     :global(h1,h2,h3,p){
     margin-bottom: 0.6em;
