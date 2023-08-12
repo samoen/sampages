@@ -14,10 +14,12 @@
     <div class="job brutal-border">
         <h2>One More Cloud Inc.</h2>
         <a href="https://omc.io/" class="extLink brutal-border">
-            <div>
+            <div class="lIcon">
                 <ExternalLink></ExternalLink>
             </div>
-            omc.io
+            <div>
+                omc.io
+            </div>
         </a>
         <h3>Cloud Platform Engineer</h3>
         <p>Nov 2020 - May 2023</p>
@@ -34,10 +36,12 @@
     <div class="job brutal-border">
         <h2>Advanced Human Intelligence</h2>
         <a href="https://www.ahi.tech/" class="extLink brutal-border">
-            <div>
+            <div class="lIcon">
                 <ExternalLink></ExternalLink>
             </div>
-            ahi.tech
+            <div>
+                ahi.tech
+            </div>
         </a>
         <h3>Android Application Developer</h3>
         <p>May 2019 - Nov 2020</p>
@@ -58,10 +62,12 @@
     <div class="job brutal-border">
         <h2>Norwood Systems</h2>
         <a href="https://norwoodsystems.com/" class="extLink brutal-border">
-            <div>
+            <div class="lIcon">
                 <ExternalLink></ExternalLink>
             </div>
-            norwoodsystems.com
+            <div >
+                norwoodsystems.com
+            </div>
         </a>
         
         <h3>Android Application Developer</h3>
@@ -80,10 +86,12 @@
     <div class="job brutal-border">
         <h2>Ernst & Young</h2>
         <a href="https://www.ey.com/" class="extLink brutal-border">
-            <div>
+            <div class="lIcon">
                 <ExternalLink></ExternalLink>
             </div>
-            ey.com
+            <div>
+                ey.com
+            </div>
         </a>
         <h3>R&D Tax Incentives Consultant</h3>
         <p>Mar 2014 - Feb 2016</p>
@@ -128,8 +136,9 @@
         padding:6px;
         margin-bottom: 10px;
     }
-    .extLink div {
+    .lIcon{
         height:20px;
+        width:20px;
     }
     .pRef {
         display: inline-block;
